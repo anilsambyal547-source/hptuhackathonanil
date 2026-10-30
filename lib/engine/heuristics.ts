@@ -151,7 +151,7 @@ const HEURISTIC_RULES: RuleDefinition[] = [
     weight: 30,
     title: "Part-Time Task / Telegram Job Scam",
     explanation: "Promises high daily income (Rs 3000-8000/day) for liking YouTube videos or Google reviews, leading to fake prepaid investment traps.",
-    regex: /\b(work\s+from\s+home\s+job|earn\s+daily\s+(rs|inr|\$)\s*\d+|part[-\s]?time\s+job\s+offer|like\s+youtube\s+videos\s+and\s+earn|hotel\s+review\s+rating\s+job|contact\s+hr\s+on\s+telegram)\b/i,
+    regex: /\b(work\s+from\s+home|earn\s+.*(rs|inr|\$)\s*[\d,]+.*daily|daily\s+(rs|inr|\$)\s*[\d,]+|part[-\s]?time\s+job|youtube\s+video\s+liking|like\s+youtube\s+videos|video\s+liking\s+job|review\s+rating\s+job|contact\s+.*telegram|telegram\s*:\s*@)\b/i,
   },
   {
     id: "fin-tax-refund-claim",

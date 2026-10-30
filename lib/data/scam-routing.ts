@@ -487,6 +487,8 @@ export const SCAM_CATEGORIES: ScamCategoryDetail[] = [
 // Map a scan result from the detection engine to a recommended victim category
 export function mapAnalysisResultToCategory(result: ScamAnalysisResult): ScamCategoryType {
   const textLower = result.inputText.toLowerCase();
+  const hits = result.heuristicsHits || [];
+  const imp = result.impersonationMatch || (result as { impersonation?: { entityCategory?: string } }).impersonation;
 
   // Check for Digital Arrest
   if (
@@ -495,14 +497,14 @@ export function mapAnalysisResultToCategory(result: ScamAnalysisResult): ScamCat
     textLower.includes("police warrant") ||
     textLower.includes("narcotics") ||
     textLower.includes("customs seizure") ||
-    result.heuristicHits.some((h) => h.id.includes("fear-digital-arrest") || h.id.includes("cbi"))
+    hits.some((h) => h.id.includes("fear-digital-arrest") || h.id.includes("cbi"))
   ) {
     return "digital_arrest";
   }
 
   // Check for Banking / UPI / KYC
   if (
-    result.impersonation?.entityCategory === "bank" ||
+    imp?.entityCategory === "bank" ||
     textLower.includes("kyc") ||
     textLower.includes("sbi") ||
     textLower.includes("hdfc") ||
@@ -510,7 +512,7 @@ export function mapAnalysisResultToCategory(result: ScamAnalysisResult): ScamCat
     textLower.includes("netbanking") ||
     textLower.includes("pan update") ||
     textLower.includes("account block") ||
-    result.heuristicHits.some((h) => h.id.includes("cred-") || h.id.includes("upi-"))
+    hits.some((h) => h.id.includes("cred-") || h.id.includes("upi-"))
   ) {
     return "banking_upi";
   }
@@ -530,7 +532,7 @@ export function mapAnalysisResultToCategory(result: ScamAnalysisResult): ScamCat
 
   // Check for Shopping / Courier
   if (
-    result.impersonation?.entityCategory === "courier" ||
+    imp?.entityCategory === "courier" ||
     textLower.includes("courier") ||
     textLower.includes("parcel") ||
     textLower.includes("india post") ||

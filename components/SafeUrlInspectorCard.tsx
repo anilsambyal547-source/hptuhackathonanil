@@ -38,7 +38,7 @@ export const SafeUrlInspectorCard: React.FC<SafeUrlInspectorCardProps> = ({ urlR
           </span>
         </div>
 
-        {/* Security guarantee banner */}
+        {/* Zero-fetch safety notice */}
         <div className="flex items-center gap-1.5 text-[11px] text-slate-400 bg-slate-950/80 px-2.5 py-1 rounded-md border border-slate-800">
           <EyeOff className="w-3.5 h-3.5 text-cyan-400" />
           <span>Zero-Fetch: Inspected strictly without network requests</span>
@@ -134,7 +134,7 @@ export const SafeUrlInspectorCard: React.FC<SafeUrlInspectorCardProps> = ({ urlR
                   </span>
                 )}
 
-                {report.subdomainCount >= 3 && (
+                {(report.subdomainCount ?? 0) >= 3 && (
                   <span className="text-[11px] px-2 py-0.5 rounded bg-amber-950/60 text-amber-300 border border-amber-700/50">
                     {report.subdomainCount} Subdomain Levels
                   </span>

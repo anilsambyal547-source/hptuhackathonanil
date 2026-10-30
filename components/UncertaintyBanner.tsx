@@ -63,7 +63,7 @@ export const UncertaintyBanner: React.FC<UncertaintyBannerProps> = ({ uncertaint
         {uncertainty.reasons && uncertainty.reasons.length > 0 && (
           <div className="pt-2">
             <span className="text-[11px] font-medium text-slate-400 block mb-1">
-              Calibration Factors:
+              Confidence Assessment Factors:
             </span>
             <ul className="list-disc list-inside space-y-1 text-xs text-slate-300">
               {uncertainty.reasons.map((reason, idx) => (
@@ -78,4 +78,3 @@ export const UncertaintyBanner: React.FC<UncertaintyBannerProps> = ({ uncertaint
     </div>
   );
 };
-

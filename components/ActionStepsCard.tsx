@@ -75,7 +75,7 @@ export const ActionStepsCard: React.FC<ActionStepsCardProps> = ({
                     {idx + 1}
                   </span>
                   <h5 className="text-xs sm:text-sm font-semibold text-slate-100">
-                    {step.title}
+                    {step.action || step.title}
                   </h5>
                 </div>
 
@@ -93,33 +93,35 @@ export const ActionStepsCard: React.FC<ActionStepsCardProps> = ({
               </div>
 
               <p className="text-xs text-slate-300 leading-relaxed pl-7">
-                {step.instruction}
+                {step.explanation || step.instruction}
               </p>
 
-              <div className="mt-2 pl-7 pt-2 border-t border-slate-900 flex flex-wrap items-center justify-between gap-2 text-[11px] text-slate-400">
-                <span className="italic">Why: {step.why}</span>
+              {(step.why || step.phoneHelpline || step.officialPortalUrl) && (
+                <div className="mt-2 pl-7 pt-2 border-t border-slate-900 flex flex-wrap items-center justify-between gap-2 text-[11px] text-slate-400">
+                  {step.why && <span className="italic">Why: {step.why}</span>}
 
-                <div className="flex items-center gap-2 shrink-0">
-                  {step.phoneHelpline && (
-                    <span className="flex items-center gap-1 text-emerald-400 bg-emerald-950/50 px-2 py-0.5 rounded border border-emerald-800/40 font-mono">
-                      <PhoneCall className="w-3 h-3" />
-                      <span>{step.phoneHelpline}</span>
-                    </span>
-                  )}
+                  <div className="flex items-center gap-2 shrink-0">
+                    {step.phoneHelpline && (
+                      <span className="flex items-center gap-1 text-emerald-400 bg-emerald-950/50 px-2 py-0.5 rounded border border-emerald-800/40 font-mono">
+                        <PhoneCall className="w-3 h-3" />
+                        <span>{step.phoneHelpline}</span>
+                      </span>
+                    )}
 
-                  {step.officialPortalUrl && (
-                    <a
-                      href={step.officialPortalUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-1 text-cyan-400 hover:text-cyan-300 bg-cyan-950/50 px-2 py-0.5 rounded border border-cyan-800/40"
-                    >
-                      <span>Official Portal</span>
-                      <ExternalLink className="w-3 h-3" />
-                    </a>
-                  )}
+                    {step.officialPortalUrl && (
+                      <a
+                        href={step.officialPortalUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-1 text-cyan-400 hover:text-cyan-300 bg-cyan-950/50 px-2 py-0.5 rounded border border-cyan-800/40"
+                      >
+                        <span>Official Portal</span>
+                        <ExternalLink className="w-3 h-3" />
+                      </a>
+                    )}
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
           ))}
         </div>
@@ -127,4 +129,3 @@ export const ActionStepsCard: React.FC<ActionStepsCardProps> = ({
     </div>
   );
 };
-

@@ -47,11 +47,13 @@ export function detectImpersonation(
   }
 
   // 3. Determine if impersonated
-  // High risk if entity is claimed AND:
-  // - A URL is provided that is NOT one of the official domains
-  // - Or it's a police/CBI/ED/digital-arrest entity (enforcement never operates via SMS/WhatsApp)
   const isEnforcementOrArrest = matchedEntity.category === "police_legal";
   const isUnauthorizedDomain = hasUrls && !isLegitDomainFound;
+
+  // Unofficial personal contact detection for official brands (banks/couriers/gov never use random 10-digit mobile or personal UPI)
+  const hasPersonalPhone = /(?:\+91[-.\s]?)?[6-9]\d{9}\b/.test(text);
+  const hasUpiId = /[a-zA-Z0-9.\-_]{2,256}@(okhdfcbank|okaxis|okicici|oksbi|paytm|ybl|ibl|axl|upi|apl|sbi|postbank)/i.test(text);
+  const hasSevereThreatOrAction = /\b(kyc|pan|aadhaar|blocked?|suspended?|disconnect(ed)?|power\s+cut|deactivat(ed)?|arrest|warrant|fir|bail|seized?|fine|security\s+deposit|processing\s+fee|stamp\s+fee|lottery|inam|reward)\b/i.test(text);
 
   let isImpersonated = false;
   let mismatchReason: string | undefined;
@@ -60,19 +62,28 @@ export function detectImpersonation(
   if (isEnforcementOrArrest) {
     isImpersonated = true;
     riskScore = 85;
-    mismatchReason = `Fabricated law enforcement / CBI / Police notice. Indian judicial and police agencies NEVER issue arrest warrants, FIR notices, or seize property via SMS/WhatsApp.`;
+    mismatchReason = `Fabricated judicial or law enforcement authority. Indian judicial and police agencies NEVER issue arrest warrants, FIR notices, or conduct interrogation sessions over WhatsApp/Skype/SMS.`;
   } else if (isUnauthorizedDomain) {
     isImpersonated = true;
     riskScore = 80;
     mismatchReason = `Message claims to be from ${matchedEntity.name}, but links to unauthorized domain '${detectedDomains[0]}' instead of official domains (${matchedEntity.officialDomains.join(", ")}).`;
-  } else if (!hasUrls) {
-    // If no URL but mentions sensitive actions like KYC or electricity cut
-    riskScore = 30;
+  } else if (!hasUrls && (hasUpiId || (hasPersonalPhone && hasSevereThreatOrAction))) {
+    isImpersonated = true;
+    riskScore = 75;
+    mismatchReason = `Message claims to be from ${matchedEntity.name}, but directs user to unverified personal channels (${hasUpiId ? "individual UPI handle" : "unauthorized personal mobile number"}) under administrative threat or fee demand.`;
+  } else if (!hasUrls && hasSevereThreatOrAction) {
+    riskScore = 40;
+    mismatchReason = `Message invokes ${matchedEntity.name} in an urgent administrative demand or threat.`;
+  } else if (isLegitDomainFound) {
+    riskScore = 0;
+    isImpersonated = false;
   }
 
   const match: ImpersonationMatch = {
     claimedEntity: matchedEntity.name,
+    category: matchedEntity.category,
     entityCategory: matchedEntity.category,
+    officialDomains: matchedEntity.officialDomains,
     verifiedDomains: matchedEntity.officialDomains,
     isImpersonated,
     mismatchReason,
@@ -101,4 +112,3 @@ export function detectImpersonation(
     impersonationRiskScore: riskScore,
   };
 }
-

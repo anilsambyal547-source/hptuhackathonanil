@@ -2,13 +2,18 @@ export type RiskLevel = "low" | "suspicious" | "high";
 
 export type EvidenceCategory =
   | "urgency"
+  | "fear_intimidation"
   | "fear_coercion"
   | "credential_harvesting"
   | "financial_solicitation"
   | "impersonation"
-  | "suspicious_link";
+  | "suspicious_url"
+  | "suspicious_link"
+  | "homoglyph_attack"
+  | "typosquatting"
+  | "shortener";
 
-export type SeverityLevel = "info" | "low" | "medium" | "high" | "critical";
+export type SeverityLevel = "low" | "medium" | "high" | "critical";
 
 export interface EvidentiarySpan {
   id: string;
@@ -16,61 +21,85 @@ export interface EvidentiarySpan {
   end: number;
   text: string;
   category: EvidenceCategory;
-  severity: SeverityLevel;
-  title: string;
-  explanation: string;
-}
-
-export interface UrlInspectionReport {
-  originalUrl: string;
-  normalizedDomain: string;
-  protocol: string;
-  isIpAddress: boolean;
-  subdomainCount: number;
-  subdomains: string[];
-  isShortener: boolean;
-  shortenerProvider?: string;
-  suspiciousTld: boolean;
-  tld: string;
-  hasHomoglyphs: boolean;
-  homoglyphDetails?: string[];
-  typosquattingTarget?: string;
-  typosquattingDistance?: number;
-  openRedirectRisk: boolean;
-  riskScore: number; // 0 - 100
-  reasons: string[];
-  isSafe: boolean;
+  severity: "low" | "medium" | "high" | "critical";
+  description?: string;
+  explanation?: string;
+  title?: string;
 }
 
 export interface HeuristicHit {
   id: string;
-  category: EvidenceCategory;
-  matchedText: string;
-  severity: SeverityLevel;
-  weight: number;
+  category: string;
   title: string;
+  matchedText: string;
+  severity: "low" | "medium" | "high" | "critical";
+  riskWeight?: number;
+  weight?: number;
   explanation: string;
   startIndex?: number;
   endIndex?: number;
 }
 
+export interface UrlInspectionReport {
+  rawUrl?: string;
+  originalUrl?: string;
+  domain?: string;
+  normalizedDomain?: string;
+  protocol: string;
+  isShortener: boolean;
+  shortenerProvider?: string;
+  isOpenRedirect?: boolean;
+  openRedirectRisk?: boolean;
+  isBareIp?: boolean;
+  isIpAddress?: boolean;
+  hasSuspiciousTld?: boolean;
+  suspiciousTld?: boolean;
+  tld: string;
+  homoglyphDetected?: boolean;
+  hasHomoglyphs?: boolean;
+  homoglyphDetails?: (
+    | {
+        originalChar: string;
+        confusableWith: string;
+        script: string;
+      }
+    | string
+  )[];
+  typosquattingDetected?: boolean;
+  targetBrand?: string;
+  typosquattingTarget?: string;
+  levenshteinDistance?: number;
+  typosquattingDistance?: number;
+  passiveRiskScore?: number;
+  riskScore: number;
+  riskReasons?: string[];
+  reasons?: string[];
+  subdomainCount: number;
+  subdomains?: string[];
+  isSafe?: boolean;
+}
+
 export interface ImpersonationMatch {
   claimedEntity: string;
-  entityCategory: "bank" | "courier" | "government" | "telecom" | "utility" | "police_legal" | "tech";
-  verifiedDomains: string[];
   isImpersonated: boolean;
+  officialDomains: string[];
+  verifiedDomains?: string[];
+  mismatchedDomain?: string;
   mismatchReason?: string;
   officialHelpline?: string;
   officialPortal?: string;
+  category?: "bank" | "courier" | "government" | "telecom" | "utility" | "police_legal" | "tech" | "job_portal";
+  entityCategory?: "bank" | "courier" | "government" | "telecom" | "utility" | "police_legal" | "tech" | "job_portal";
+  confidence?: number;
 }
 
 export interface AiAnalysisResult {
-  riskScore: number; // 0 - 100
+  riskScore: number;
   riskLevel: RiskLevel;
   reasoning: string;
   manipulationTactics: string[];
   plainLanguageExplanation: string;
-  confidenceScore: number; // 0 - 1
+  confidenceScore: number;
   safeNextSteps: string[];
 }
 
@@ -83,13 +112,15 @@ export interface UncertaintyReport {
 }
 
 export interface SafeActionStep {
-  id: string;
-  title: string;
-  instruction: string;
-  why: string;
-  priority: "immediate" | "recommended" | "general";
-  officialPortalUrl?: string;
+  id?: string;
+  priority: "immediate" | "recommended" | "optional";
+  action: string;
+  explanation: string;
+  title?: string;
+  instruction?: string;
+  why?: string;
   phoneHelpline?: string;
+  officialPortalUrl?: string;
 }
 
 export interface OcrQualityReport {
@@ -110,41 +141,31 @@ export interface ScamAnalysisResult {
   uncertainty: UncertaintyReport;
   plainLanguageSummary: string;
   evidenceSpans: EvidentiarySpan[];
-  heuristicHits: HeuristicHit[];
-  urlReports: UrlInspectionReport[];
-  impersonation: ImpersonationMatch | null;
-  aiAnalysis: AiAnalysisResult | null;
   actionSteps: SafeActionStep[];
+  heuristicsHits: HeuristicHit[];
+  urlReports: UrlInspectionReport[];
+  impersonationMatch: ImpersonationMatch | null;
+  aiAnalysis: AiAnalysisResult | null;
   disclaimer: string;
   metricsBreakdown: {
     heuristicScore: number;
     urlScore: number;
     impersonationScore: number;
-    aiScore: number;
+    aiScore: number | null;
+    aiAvailable: boolean;
   };
 }
 
 export interface BenchmarkSample {
   id: string;
   title: string;
-  category:
-    | "bank_phishing"
-    | "courier_scam"
-    | "digital_arrest"
-    | "fear_coercion"
-    | "financial_solicitation"
-    | "job_scam"
-    | "lottery_fraud"
-    | "electricity_cut"
-    | "crypto_investment"
-    | "legitimate_bank"
-    | "legitimate_courier"
-    | "legitimate_otp"
-    | "legitimate_work"
-    | "legitimate_bill";
+  category: string;
   groundTruth: RiskLevel;
   text: string;
   notes: string;
+  split: "dev" | "holdout";
+  isSynthetic: boolean;
+  sourceOrigin: "real_advisory_case" | "synthetic";
 }
 
 export interface BenchmarkResultItem {
@@ -158,10 +179,49 @@ export interface BenchmarkResultItem {
   isCorrect: boolean;
   latencyMs: number;
   triggerCount: number;
+  split: "dev" | "holdout";
+  rulesFired: string[];
+}
+
+export interface BenchmarkMisclassifiedItem {
+  id: string;
+  title: string;
+  text: string;
+  groundTruth: RiskLevel;
+  predictedRisk: RiskLevel;
+  riskScore: number;
+  rulesFired: string[];
+  split: "dev" | "holdout";
+}
+
+export interface SplitMetrics {
+  totalSamples: number;
+  correctPredictions: number;
+  accuracy: number;
+  precision: {
+    low: number;
+    suspicious: number;
+    high: number;
+    macroAvg: number;
+  };
+  recall: {
+    low: number;
+    suspicious: number;
+    high: number;
+    macroAvg: number;
+  };
+  f1Score: {
+    low: number;
+    suspicious: number;
+    high: number;
+    macroAvg: number;
+  };
 }
 
 export interface BenchmarkSummaryMetrics {
   totalSamples: number;
+  scamSamples: number;
+  legitimateSamples: number;
   correctPredictions: number;
   accuracy: number;
   precision: {
@@ -194,4 +254,8 @@ export interface BenchmarkSummaryMetrics {
     actualLow_predLow: number;
   };
   averageLatencyMs: number;
+  devMetrics: SplitMetrics;
+  holdoutMetrics: SplitMetrics;
+  misclassifiedSamples: BenchmarkMisclassifiedItem[];
+  sampleSizeNote: string;
 }

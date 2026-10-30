@@ -11,13 +11,14 @@ import { ActionStepsCard } from "@/components/ActionStepsCard";
 import { BenchmarkDashboard } from "@/components/BenchmarkDashboard";
 import { ArchitectureDiagram } from "@/components/ArchitectureDiagram";
 import { VictimRecoveryDashboard } from "@/components/VictimAssistance/VictimRecoveryDashboard";
+import { ScamIqSuite } from "@/components/scam-iq/ScamIqSuite";
 import { mapAnalysisResultToCategory } from "@/lib/data/scam-routing";
 import { ScamCategoryType } from "@/lib/types/recovery";
 import { ScamAnalysisResult, OcrQualityReport } from "@/lib/types";
 import { Shield, Lock, PhoneCall, Sparkles } from "lucide-react";
 
 export default function Home() {
-  const [activeTab, setActiveTab] = useState<"scanner" | "recovery" | "benchmark" | "architecture">("scanner");
+  const [activeTab, setActiveTab] = useState<"scanner" | "recovery" | "benchmark" | "architecture" | "scam-iq">("scanner");
   const [isLoading, setIsLoading] = useState(false);
   const [analysisResult, setAnalysisResult] = useState<ScamAnalysisResult | null>(null);
 
@@ -147,6 +148,8 @@ export default function Home() {
         {activeTab === "benchmark" && <BenchmarkDashboard />}
 
         {activeTab === "architecture" && <ArchitectureDiagram />}
+
+        {activeTab === "scam-iq" && <ScamIqSuite />}
       </main>
 
       {/* Footer */}

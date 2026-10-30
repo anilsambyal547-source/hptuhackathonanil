@@ -1,5 +1,5 @@
 import { UrlInspectionReport, EvidentiarySpan } from "../types";
-import { SUSPICIOUS_TLDS, HIGH_RISK_KEYWORDS_IN_DOMAIN, URL_SHORTENERS } from "../data/suspicious-tlds";
+import { SUSPICIOUS_TLDS, HIGH_RISK_KEYWORDS_IN_DOMAIN, URL_SHORTENERS, ABUSED_FREE_HOSTS } from "../data/suspicious-tlds";
 import { TRUSTED_ENTITIES } from "../data/trusted-entities";
 
 // Common Cyrillic / Greek homoglyphs mapped to their visual Latin equivalents
@@ -55,13 +55,13 @@ export function damerauLevenshtein(a: string, b: string): number {
 }
 
 // Regex to extract all URLs safely from raw text without navigating
-const URL_REGEX = /(?:https?:\/\/|www\.)[^\s<>"'{}|\\^`\[\]]+|[a-zA-Z0-9.-]+\.(?:com|org|net|in|gov|edu|xyz|top|io|co|live|buzz|sbs|app|link|site|online|icu)(?:\/[^\s<>"'{}|\\^`\[\]]*)?/gi;
+const URL_REGEX = /(?:https?:\/\/|www\.)[^\s<>"'{}|\\^`\[\]]+|[a-zA-Z0-9.-]+\.(?:com|org|net|in|gov|edu|xyz|top|io|co|live|buzz|sbs|app|link|site|online|icu|store|info|cc|work|click)(?:\/[^\s<>"'{}|\\^`\[\]]*)?/gi;
 
 // IP Address hostname regex
 const IP_HOST_REGEX = /^(?:https?:\/\/)?((?:\d{1,3}\.){3}\d{1,3})(?::\d+)?(?:\/.*)?$/i;
 
 // Open redirect parameter pattern
-const OPEN_REDIRECT_REGEX = /[?&](redirect|url|next|goto|return|dest|target|rdir|link)=https?:/i;
+const OPEN_REDIRECT_REGEX = /[?&](redirect|url|next|goto|return|dest|target|rdir|link|returnUrl)=https?:/i;
 
 export function inspectUrlsPassively(text: string): {
   reports: UrlInspectionReport[];
@@ -76,8 +76,13 @@ export function inspectUrlsPassively(text: string): {
   let match: RegExpExecArray | null;
 
   while ((match = urlRegex.exec(text)) !== null) {
-    const rawUrl = match[0];
-    const startIndex = match.index;
+    let rawUrl = match[0];
+    const rawStartIndex = match.index;
+
+    // Clean URL Tokenization: Strip trailing sentence punctuation
+    const stripped = rawUrl.replace(/[.,!?;:)'"]+$/, "");
+    rawUrl = stripped;
+    const startIndex = rawStartIndex;
     const endIndex = startIndex + rawUrl.length;
 
     // Normalize URL string for structural parsing (NEVER navigate/fetch)
@@ -90,7 +95,6 @@ export function inspectUrlsPassively(text: string): {
     try {
       parsedUrl = new URL(urlString);
     } catch {
-      // If parsing fails, skip or record malformed
       continue;
     }
 
@@ -102,16 +106,29 @@ export function inspectUrlsPassively(text: string): {
     // 1. IP Address check
     const isIpAddress = IP_HOST_REGEX.test(rawUrl) || /^(?:\d{1,3}\.){3}\d{1,3}$/.test(hostname);
     if (isIpAddress) {
-      riskScore += 45;
+      riskScore += 50;
       reasons.push("Host is a bare IP address rather than a registered domain name (common in phishing hosts).");
     }
 
-    // 2. Homoglyph / Punycode (IDN) check
+    // 2. Credential Delimiter / '@' host spoofing
+    if (parsedUrl.username || parsedUrl.password || rawUrl.includes("@")) {
+      riskScore += 45;
+      reasons.push("URL uses '@' userinfo credential syntax to visually camouflage the true destination host.");
+    }
+
+    // 3. Dangerous file extension check (.apk, .exe, .scr, etc.)
+    const dangerousExt = /\.(apk|exe|scr|bat|msi|vbs|cmd)($|\?)/i.test(parsedUrl.pathname + parsedUrl.search);
+    if (dangerousExt) {
+      riskScore += 55;
+      reasons.push("URL points directly to an executable binary or application package (.apk/.exe) payload.");
+    }
+
+    // 4. Homoglyph / Punycode (IDN) check
     let hasHomoglyphs = false;
     const homoglyphDetails: string[] = [];
     if (hostname.startsWith("xn--") || hostname.includes(".xn--")) {
       hasHomoglyphs = true;
-      riskScore += 40;
+      riskScore += 45;
       reasons.push("Uses Internationalized Domain Name (Punycode 'xn--') which frequently conceals lookalike spoofed characters.");
       homoglyphDetails.push("Punycode encoded domain");
     }
@@ -128,16 +145,16 @@ export function inspectUrlsPassively(text: string): {
       reasons.push(`Detected visually deceptive homoglyphs: ${homoglyphDetails.join(", ")}`);
     }
 
-    // 3. Domain decomposition
+    // 5. Domain decomposition
     const parts = hostname.split(".");
     const tld = parts.length > 1 ? parts[parts.length - 1] : "";
     const isSuspiciousTld = SUSPICIOUS_TLDS.has(tld);
     if (isSuspiciousTld) {
-      riskScore += 30;
+      riskScore += 35;
       reasons.push(`Uses high-risk, low-reputation top-level domain (TLD) '.${tld}' commonly abused in smishing.`);
     }
 
-    // 4. Excessive subdomains
+    // 6. Excessive subdomains
     const subdomainCount = Math.max(0, parts.length - 2);
     const subdomains = parts.slice(0, parts.length - 2);
     if (subdomainCount >= 3) {
@@ -145,50 +162,63 @@ export function inspectUrlsPassively(text: string): {
       reasons.push(`Excessive subdomain nesting (${subdomainCount} levels) used to visually obscure the apex domain.`);
     }
 
-    // Check for deceptive brand/security keywords in subdomain
+    // Check for deceptive security keywords in subdomain
     const deceptiveKeywordsFound = HIGH_RISK_KEYWORDS_IN_DOMAIN.filter(
       (kw) => subdomains.some((sub) => sub.includes(kw))
     );
     if (deceptiveKeywordsFound.length > 0) {
-      riskScore += 25;
+      riskScore += 30;
       reasons.push(`Subdomains contain deceptive security keywords: [${deceptiveKeywordsFound.join(", ")}]`);
     }
 
-    // 5. Shortener check
-    const isShortener = URL_SHORTENERS.has(hostname) || URL_SHORTENERS.has(parts.slice(-2).join("."));
+    // 7. Check if domain is verified official domain for trusted brands or government
+    const isGovNic = hostname.endsWith(".gov.in") || hostname.endsWith(".nic.in");
+    const isLegitOfficialDomain = isGovNic || TRUSTED_ENTITIES.some((entity) =>
+      entity.officialDomains.some((d) => hostname === d || hostname.endsWith(`.${d}`))
+    );
+
+    // 8. Shortener check (only when not a verified official domain like amzn.to)
+    const isShortener = !isLegitOfficialDomain && (URL_SHORTENERS.has(hostname) || URL_SHORTENERS.has(parts.slice(-2).join(".")));
     let shortenerProvider: string | undefined;
     if (isShortener) {
-      riskScore += 20;
+      riskScore += 25;
       shortenerProvider = hostname;
       reasons.push(`URL uses shortening service '${hostname}', hiding the actual destination.`);
     }
 
-    // 6. Open redirect risk
+    // 9. Free Hosting / Tunnels / Dynamic DNS
+    const isAbusedFreeHost = !isLegitOfficialDomain && (
+      ABUSED_FREE_HOSTS.has(hostname) ||
+      Array.from(ABUSED_FREE_HOSTS).some((h) => hostname.endsWith(`.${h}`))
+    );
+    if (isAbusedFreeHost) {
+      riskScore += 45;
+      reasons.push(`URL uses free hosting, tunnel, or dynamic DNS service '${hostname}' frequently abused in smishing.`);
+    }
+
+    // 10. Open redirect risk
     const openRedirectRisk = OPEN_REDIRECT_REGEX.test(parsedUrl.search);
     if (openRedirectRisk) {
       riskScore += 35;
       reasons.push("URL contains an open redirect parameter pointing to an external destination.");
     }
 
-    // 7. Typosquatting / Lookalike check against known trusted entities
+    // 11. Subdomain Brand-Stuffing & Typosquatting / Lookalike check
     let typosquattingTarget: string | undefined;
     let closestDistance = 999;
     const brandPortion = parts.length >= 2 ? parts[parts.length - 2] : parts[0];
 
-    // Check if the domain is legitimately an official domain of any trusted brand
-    const isLegitOfficialDomain = TRUSTED_ENTITIES.some((entity) =>
-      entity.officialDomains.some((d) => hostname === d || hostname.endsWith(`.${d}`))
-    );
-
-    if (!isLegitOfficialDomain) {
+    if (!isLegitOfficialDomain && !isShortener) {
       for (const entity of TRUSTED_ENTITIES) {
-        // Direct brand alias containment check in domain name
         for (const alias of entity.aliases) {
           const cleanAlias = alias.toLowerCase().replace(/\s+/g, "");
-          if (cleanAlias.length >= 3 && hostname.includes(cleanAlias)) {
-            typosquattingTarget = `${entity.name} (brand name embedded in deceptive domain)`;
-            closestDistance = 1;
-            break;
+          if (cleanAlias.length >= 3) {
+            // Check in subdomain, hostname, or pathname
+            if (hostname.includes(cleanAlias) || parsedUrl.pathname.toLowerCase().includes(cleanAlias)) {
+              typosquattingTarget = `${entity.name} (brand name embedded in deceptive domain/path)`;
+              closestDistance = 1;
+              break;
+            }
           }
         }
 
@@ -209,21 +239,30 @@ export function inspectUrlsPassively(text: string): {
     }
 
     if (typosquattingTarget && closestDistance <= 2) {
-      riskScore += 45;
-      reasons.push(`Suspected typosquatting attack: Domain '${hostname}' strongly resembles legitimate entity '${typosquattingTarget}'.`);
+      riskScore += 50;
+      reasons.push(`Suspected typosquatting / brand spoofing attack: URL structure strongly resembles legitimate entity '${typosquattingTarget}'.`);
     }
 
     // If completely legitimate official domain with no red flags
     if (isLegitOfficialDomain && riskScore === 0) {
-      reasons.push(`Verified official domain for ${TRUSTED_ENTITIES.find((e) => e.officialDomains.some((d) => hostname === d || hostname.endsWith(`.${d}`)))?.name}.`);
+      const legitEntity = TRUSTED_ENTITIES.find((e) =>
+        e.officialDomains.some((d) => hostname === d || hostname.endsWith(`.${d}`))
+      );
+      reasons.push(`Verified official domain for ${legitEntity?.name || "trusted service"}.`);
     }
 
-    const finalUrlRisk = Math.min(100, riskScore);
+    // Baseline suspicious score for unverified unknown domains with generic tracking or deals
+    if (!isLegitOfficialDomain && riskScore === 0 && (isSuspiciousTld || /(track|order|deals|claim|survey|status|dispatch)/i.test(hostname + parsedUrl.pathname))) {
+      riskScore = 38;
+      reasons.push(`Unverified domain '${hostname}' with generic transactional path.`);
+    }
+
+    const finalUrlRisk = isLegitOfficialDomain && riskScore < 20 ? 0 : Math.min(100, riskScore);
     if (finalUrlRisk > highestRisk) {
       highestRisk = finalUrlRisk;
     }
 
-    const isSafe = isLegitOfficialDomain && finalUrlRisk < 20;
+    const isSafe = isLegitOfficialDomain && finalUrlRisk === 0;
 
     reports.push({
       originalUrl: rawUrl,
@@ -253,7 +292,7 @@ export function inspectUrlsPassively(text: string): {
         end: endIndex,
         text: rawUrl,
         category: "suspicious_link",
-        severity: finalUrlRisk >= 70 ? "critical" : "high",
+        severity: finalUrlRisk >= 65 ? "critical" : "high",
         title: "Suspicious Passive URL Indicator",
         explanation: reasons.join(" "),
       });
@@ -266,4 +305,3 @@ export function inspectUrlsPassively(text: string): {
     highestUrlRiskScore: highestRisk,
   };
 }
-

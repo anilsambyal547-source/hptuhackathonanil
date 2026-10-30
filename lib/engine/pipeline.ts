@@ -2,39 +2,39 @@ import { ScamAnalysisResult, OcrQualityReport } from "../types";
 import { runHeuristics } from "./heuristics";
 import { inspectUrlsPassively } from "./passive-url";
 import { detectImpersonation } from "./impersonation";
-import { analyzeWithGemini, generateLocalSemanticAssessment } from "./ai-analyzer";
+import { analyzeWithGemini } from "./ai-analyzer";
 import { fuseAnalysisResults } from "./fusion";
 
-export async function analyzeScamMessage({
-  text,
+export async function runScamDetectionPipeline({
+  inputText,
   inputType = "text",
   ocrQuality,
   skipAi = false,
 }: {
-  text: string;
+  inputText: string;
   inputType?: "text" | "ocr_screenshot";
   ocrQuality?: OcrQualityReport;
   skipAi?: boolean;
 }): Promise<ScamAnalysisResult> {
-  const sanitizedText = text.trim();
+  const sanitizedText = inputText.trim();
   const id = `scan-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`;
   const timestamp = new Date().toISOString();
 
-  // 1. Run deterministic heuristics (urgency, fear, credentials, UPI)
+  // 1. Rule-based heuristic pattern matching
   const heuristics = runHeuristics(sanitizedText);
 
-  // 2. Safe passive URL inspection (NO outbound network fetch)
+  // 2. Safe passive URL inspection (zero network queries)
   const urlReports = inspectUrlsPassively(sanitizedText);
-  const detectedDomains = urlReports.reports.map((r) => r.normalizedDomain);
+  const detectedDomains = urlReports.reports
+    .map((r) => r.domain || r.normalizedDomain)
+    .filter((d): d is string => Boolean(d));
 
   // 3. Impersonation detection
   const impersonation = detectImpersonation(sanitizedText, detectedDomains);
 
-  // 4. Contextual AI semantic analysis (Gemini or local semantic parser)
+  // 4. Contextual AI semantic analysis
   let aiAnalysis = null;
-  if (skipAi) {
-    aiAnalysis = generateLocalSemanticAssessment(sanitizedText);
-  } else {
+  if (!skipAi) {
     const heuristicSummary = `
 - Heuristic hits count: ${heuristics.hits.length}
 - Triggers: ${heuristics.hits.map((h) => h.title).join(", ") || "None"}
@@ -46,7 +46,7 @@ export async function analyzeScamMessage({
     aiAnalysis = await analyzeWithGemini(sanitizedText, heuristicSummary);
   }
 
-  // 5. Multi-method fusion and calibrated uncertainty calculation
+  // 5. Multi-method fusion and uncertainty estimation (heuristic confidence estimate with hand-set weights)
   const fused = fuseAnalysisResults({
     heuristics,
     urlReports,
@@ -67,14 +67,25 @@ export async function analyzeScamMessage({
     uncertainty: fused.uncertainty,
     plainLanguageSummary: fused.plainLanguageSummary,
     evidenceSpans: fused.evidenceSpans,
-    heuristicHits: heuristics.hits,
-    urlReports: urlReports.reports,
-    impersonation: impersonation.match,
-    aiAnalysis,
     actionSteps: fused.actionSteps,
-    metricsBreakdown: fused.metricsBreakdown,
+    heuristicsHits: heuristics.hits,
+    urlReports: urlReports.reports,
+    impersonationMatch: impersonation.match,
+    aiAnalysis,
     disclaimer:
-      "SafeGuard analysis combines deterministic rules, passive link inspections, and AI heuristics. No links were visited during this analysis. While highly accurate, no automated tool can guarantee 100% safety. Exercise independent judgment before taking financial or security actions.",
+      "No automated system can detect 100% of scams or guarantee safety. Exercise independent judgment and independently verify via official direct channels.",
+    metricsBreakdown: fused.metricsBreakdown,
   };
 }
 
+export const analyzeScamMessage = ({
+  text,
+  inputType = "text",
+  ocrQuality,
+  skipAi = false,
+}: {
+  text: string;
+  inputType?: "text" | "ocr_screenshot";
+  ocrQuality?: OcrQualityReport;
+  skipAi?: boolean;
+}) => runScamDetectionPipeline({ inputText: text, inputType, ocrQuality, skipAi });

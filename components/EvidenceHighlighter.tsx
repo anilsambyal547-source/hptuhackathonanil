@@ -29,6 +29,7 @@ export const EvidenceHighlighter: React.FC<EvidenceHighlighterProps> = ({ text, 
           label: "Manufactured Urgency",
         };
       case "fear_coercion":
+      case "fear_intimidation":
         return {
           bg: "bg-red-600/25 text-red-300 border-b-2 border-red-500 hover:bg-red-600/35",
           badge: "bg-red-600/20 text-red-400 border border-red-600/30",
@@ -41,6 +42,10 @@ export const EvidenceHighlighter: React.FC<EvidenceHighlighterProps> = ({ text, 
           label: "Entity Impersonation",
         };
       case "suspicious_link":
+      case "suspicious_url":
+      case "homoglyph_attack":
+      case "typosquatting":
+      case "shortener":
         return {
           bg: "bg-cyan-500/20 text-cyan-300 border-b-2 border-cyan-500 hover:bg-cyan-500/30",
           badge: "bg-cyan-500/20 text-cyan-400 border border-cyan-500/30",
@@ -88,11 +93,20 @@ export const EvidenceHighlighter: React.FC<EvidenceHighlighterProps> = ({ text, 
         elements.push(
           <mark
             key={span.id}
+            tabIndex={0}
+            role="button"
+            aria-label={`${styles.label}: ${text.substring(start, end)}. Press Enter to view evidence breakdown.`}
             onClick={() => setSelectedSpan(span)}
-            className={`cursor-pointer px-1 py-0.5 rounded transition-all font-semibold ${
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                setSelectedSpan(span);
+              }
+            }}
+            className={`cursor-pointer px-1.5 py-0.5 rounded transition-all font-semibold outline-none focus:ring-2 focus:ring-cyan-400 ${
               styles.bg
-            } ${isSelected ? "ring-2 ring-white/50" : ""}`}
-            title={`${span.title}: Click to view evidence breakdown`}
+            } ${isSelected ? "ring-2 ring-white/70 underline underline-offset-4 decoration-2" : ""}`}
+            title={`${span.title || span.category.replace(/_/g, " ")}: Click or press Enter to view evidence breakdown`}
           >
             {text.substring(start, end)}
           </mark>
@@ -142,7 +156,7 @@ export const EvidenceHighlighter: React.FC<EvidenceHighlighterProps> = ({ text, 
                 {getCategoryStyles(selectedSpan.category).label}
               </span>
               <span className="text-xs font-semibold text-slate-200">
-                {selectedSpan.title}
+                {selectedSpan.title || selectedSpan.category.replace(/_/g, " ")}
               </span>
             </div>
             <span className="text-[11px] uppercase tracking-wider font-bold text-rose-400 px-1.5 py-0.5 bg-rose-950/50 rounded border border-rose-800/40">
@@ -151,7 +165,7 @@ export const EvidenceHighlighter: React.FC<EvidenceHighlighterProps> = ({ text, 
           </div>
 
           <p className="text-xs text-slate-300 leading-relaxed">
-            {selectedSpan.explanation}
+            {selectedSpan.description || selectedSpan.explanation || selectedSpan.text}
           </p>
 
           <div className="mt-2 text-[11px] text-slate-400 flex items-center gap-1.5">
@@ -163,10 +177,9 @@ export const EvidenceHighlighter: React.FC<EvidenceHighlighterProps> = ({ text, 
         </div>
       ) : spans.length === 0 ? (
         <div className="mt-4 text-xs text-slate-400 italic text-center py-2">
-          No explicit scam phrases or suspicious links extracted from this input.
+          No suspicious spans identified in this message text.
         </div>
       ) : null}
     </div>
   );
 };
-

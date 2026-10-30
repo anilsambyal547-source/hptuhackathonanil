@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { GoogleGenAI } from "@google/genai";
-import { assessImageQuality, formatOcrQualityReport } from "@/lib/ocr/image-quality";
+import { validateImageIntegrity, formatOcrQualityReport } from "@/lib/ocr/image-quality";
 
 export const dynamic = "force-dynamic";
 
@@ -29,14 +29,29 @@ export async function POST(req: NextRequest) {
     // Strip data URL prefix if present (e.g. data:image/png;base64,...)
     const cleanBase64 = imageBase64.replace(/^data:image\/[a-z]+;base64,/, "");
 
-    // 1. Assess image dimensions and degradation
-    const quality = assessImageQuality({
+    // 1. Assess image integrity, corruption, truncation, and bounds
+    const validation = validateImageIntegrity({
       base64Data: cleanBase64,
       mimeType,
       width,
       height,
       fileSizeBytes: fileSizeBytes || Math.round(cleanBase64.length * 0.75),
     });
+
+    if (!validation.isValid) {
+      return NextResponse.json(
+        {
+          error: validation.error,
+          extractedText: "",
+          ocrReport: formatOcrQualityReport({
+            extractedText: "",
+            qualityScore: 0,
+            rawWarnings: [validation.error || "Image validation error", ...validation.warnings],
+          }),
+        },
+        { status: 400 }
+      );
+    }
 
     let extractedText = "";
     const apiKey = process.env.GEMINI_API_KEY;
@@ -48,8 +63,8 @@ export async function POST(req: NextRequest) {
           extractedText: "",
           ocrReport: formatOcrQualityReport({
             extractedText: "",
-            qualityScore: quality.qualityScore,
-            rawWarnings: [...quality.warnings, "Cloud OCR unavailable: GEMINI_API_KEY unset. Local browser OCR should be used."],
+            qualityScore: validation.qualityScore,
+            rawWarnings: [...validation.warnings, "Cloud OCR unavailable: GEMINI_API_KEY unset. Local browser OCR should be used."],
           }),
         },
         { status: 200 }
@@ -81,8 +96,8 @@ export async function POST(req: NextRequest) {
           extractedText: "",
           ocrReport: formatOcrQualityReport({
             extractedText: "",
-            qualityScore: quality.qualityScore,
-            rawWarnings: [...quality.warnings, `Cloud OCR error: ${errMsg}`],
+            qualityScore: validation.qualityScore,
+            rawWarnings: [...validation.warnings, `Cloud OCR error: ${errMsg}`],
           }),
         },
         { status: 200 }
@@ -91,8 +106,8 @@ export async function POST(req: NextRequest) {
 
     const ocrReport = formatOcrQualityReport({
       extractedText,
-      qualityScore: quality.qualityScore,
-      rawWarnings: quality.warnings,
+      qualityScore: validation.qualityScore,
+      rawWarnings: validation.warnings,
     });
 
     return NextResponse.json({

@@ -12,7 +12,8 @@ interface RiskMeterProps {
     heuristicScore: number;
     urlScore: number;
     impersonationScore: number;
-    aiScore: number;
+    aiScore: number | null;
+    aiAvailable?: boolean;
   };
 }
 
@@ -35,7 +36,7 @@ export const RiskMeter: React.FC<RiskMeterProps> = ({ overallRisk, riskScore, br
           barColor: "bg-amber-500",
           glowColor: "shadow-amber-500/20",
           icon: AlertTriangle,
-          description: "Anomalous patterns or urgency indicators found. Extreme caution advised.",
+          description: "Anomalous patterns or urgency indicators found. Caution advised.",
         };
       case "low":
       default:
@@ -159,12 +160,14 @@ export const RiskMeter: React.FC<RiskMeterProps> = ({ overallRisk, riskScore, br
                 <Brain className="w-3.5 h-3.5 text-blue-400" />
                 <span>Contextual AI</span>
               </span>
-              <span className="font-mono text-slate-200">{breakdown.aiScore}%</span>
+              <span className="font-mono text-slate-200 text-[11px]">
+                {breakdown.aiScore !== null ? `${breakdown.aiScore}%` : "AI unavailable"}
+              </span>
             </div>
             <div className="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden mt-2">
               <div
-                className="h-full bg-blue-400 rounded-full"
-                style={{ width: `${breakdown.aiScore}%` }}
+                className={`h-full rounded-full ${breakdown.aiScore !== null ? "bg-blue-400" : "bg-slate-700"}`}
+                style={{ width: `${breakdown.aiScore ?? 0}%` }}
               />
             </div>
           </div>
@@ -173,4 +176,3 @@ export const RiskMeter: React.FC<RiskMeterProps> = ({ overallRisk, riskScore, br
     </div>
   );
 };
-

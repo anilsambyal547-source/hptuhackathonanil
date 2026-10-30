@@ -120,7 +120,8 @@ export interface ScamAnalysisResult {
     heuristicScore: number;
     urlScore: number;
     impersonationScore: number;
-    aiScore: number;
+    aiScore: number | null;
+    aiAvailable: boolean;
   };
 }
 

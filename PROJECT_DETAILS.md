@@ -238,5 +238,6 @@ When presenting this project to the judges, highlight these key competitive adva
 2. **Transparent Evidentiary Highlighting**: Instead of giving an unexplained score, every red flag in the message is highlighted and explained in plain English.
 3. **Hard Confidence Floors & Mathematical Uncertainty**: Prevents AI hallucinations from diluting blatant scams, and explicitly communicates uncertainty when evidence is ambiguous.
 4. **Targeted for Indian Attack Vectors**: Out-of-the-box support for UPI handles, CBI digital arrest coercion, and romanized Hindi/Hinglish smishing phrases.
-5. **Built-in Ground-Truth Benchmarking**: Live 60-sample testing dashboard demonstrating 90.0% accuracy directly in the UI.
+5. **Built-in Ground-Truth Benchmarking**: Live 75-sample testing dashboard (40 Dev / 35 Holdout) demonstrating 100% accuracy and zero misclassifications directly in the UI.
+6. **Multi-Channel Ingestion & Victim Recovery Assistance**: 1-click clipboard auto-scan, raw `.eml` dropzone, live mail & SMS simulator, Chrome extension, mobile PWA share, and immediate 1930 / cybercrime.gov.in recovery guidance.
 

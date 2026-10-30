@@ -135,12 +135,15 @@ export function validateImageIntegrity(input: ImageInspectionInput): ImageValida
     };
   }
 
-  // 6. Quality assessments for resolution and compression
+  // 6. Quality assessments for resolution, aspect ratio, and compression
   let score = 90;
   const width = input.width || 800;
   const height = input.height || 600;
 
-  if (width < 320 || height < 240) {
+  if (width < 150 || height < 80) {
+    score -= 60;
+    warnings.push(`Extremely low resolution (${width}x${height}px). Text is likely illegible or severely pixelated.`);
+  } else if (width < 320 || height < 240) {
     score -= 40;
     warnings.push(`Low resolution (${width}x${height}px). Small text or micro-URLs may fail to resolve.`);
   } else if (width < 640 || height < 480) {
@@ -194,6 +197,14 @@ export function formatOcrQualityReport({
   } else if (charCount < 30) {
     adjustedConfidence = Math.min(adjustedConfidence, 50);
     warnings.push("Extracted text is very short (< 30 characters). Possible partial screenshot.");
+  }
+
+  // Check for non-alphanumeric noise ratio (gibberish/noisy OCR check)
+  const nonAlphaNum = extractedText.replace(/[\s\w.,!?:;/@-]/g, "").length;
+  const gibberishRatio = charCount > 0 ? nonAlphaNum / charCount : 0;
+  if (gibberishRatio > 0.30 && charCount > 15) {
+    adjustedConfidence = Math.min(adjustedConfidence, 40);
+    warnings.push("High non-alphanumeric noise detected. Extracted text may be garbled or corrupted.");
   }
 
   return {

@@ -30,7 +30,7 @@
           │                                │                               │
 ┌─────────▼──────────────┐  ┌──────────────▼────────────┐  ┌───────────────▼───────────┐
 │  Deterministic Rules   │  │  Safe Passive URL Engine  │  │  Entity Impersonation     │
-│  • Manufactured panic  │  │  • Damerau-Levenshtein    │  │  • Top 100+ Banks/Couriers│
+│  • Manufactured panic  │  │  • Damerau-Levenshtein    │  │  • 27 Verified Brands & Officials │
 │  • Coercion & Arrest   │  │  • Cyrillic Homoglyphs    │  │  • Domain-brand alignment │
 │  • OTP/CVV/PIN steals  │  │  • High-risk TLDs (.xyz)  │  │  • Official helplines     │
 │  • UPI handle regex    │  │  • Zero-network fetch     │  │                           │
@@ -99,4 +99,4 @@ Visit `http://localhost:3000` in your browser.
 - **Architecture & Decision Fusion**: Core pipeline, Bayesian uncertainty quantification, and engine orchestration.
 - **Passive URL Sandbox & Heuristics**: Homoglyph mapping, Damerau-Levenshtein typosquatting, 80+ regex rule catalog.
 - **Frontend & Visual Evidence UX**: Next.js 14 App Router, Tailwind CSS, Framer Motion risk meter, interactive span highlighter.
-- **Multimodal OCR & Benchmark Lab**: Screenshot preprocessor, image quality scoring, 40+ sample benchmark suite with Recharts.
+- **Multimodal OCR & Benchmark Lab**: Screenshot preprocessor, image quality scoring, 75 curated benchmark dataset (40 Dev / 35 Holdout) with Recharts.

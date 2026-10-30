@@ -38,6 +38,11 @@ export const SUSPICIOUS_TLDS = new Set([
   "date",
   "faith",
   "accountant",
+  "cc",
+  "store",
+  "space",
+  "fit",
+  "info",
 ]);
 
 export const HIGH_RISK_KEYWORDS_IN_DOMAIN = [
@@ -88,5 +93,20 @@ export const URL_SHORTENERS = new Set([
   "linktr.ee",
   "wa.me",
   "t.me",
+]);
+
+export const ABUSED_FREE_HOSTS = new Set([
+  "ngrok-free.app",
+  "ngrok.io",
+  "trycloudflare.com",
+  "pages.dev",
+  "vercel.app",
+  "netlify.app",
+  "firebaseapp.com",
+  "web.app",
+  "github.io",
+  "duckdns.org",
+  "000webhostapp.com",
+  "blogspot.com",
 ]);
 

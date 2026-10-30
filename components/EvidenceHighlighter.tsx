@@ -93,11 +93,20 @@ export const EvidenceHighlighter: React.FC<EvidenceHighlighterProps> = ({ text, 
         elements.push(
           <mark
             key={span.id}
+            tabIndex={0}
+            role="button"
+            aria-label={`${styles.label}: ${text.substring(start, end)}. Press Enter to view evidence breakdown.`}
             onClick={() => setSelectedSpan(span)}
-            className={`cursor-pointer px-1 py-0.5 rounded transition-all font-semibold ${
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                setSelectedSpan(span);
+              }
+            }}
+            className={`cursor-pointer px-1.5 py-0.5 rounded transition-all font-semibold outline-none focus:ring-2 focus:ring-cyan-400 ${
               styles.bg
-            } ${isSelected ? "ring-2 ring-white/50" : ""}`}
-            title={`${span.title || span.category.replace(/_/g, " ")}: Click to view evidence breakdown`}
+            } ${isSelected ? "ring-2 ring-white/70 underline underline-offset-4 decoration-2" : ""}`}
+            title={`${span.title || span.category.replace(/_/g, " ")}: Click or press Enter to view evidence breakdown`}
           >
             {text.substring(start, end)}
           </mark>

@@ -55,7 +55,12 @@ export const RiskMeter: React.FC<RiskMeterProps> = ({ overallRisk, riskScore, br
   const IconComponent = config.icon;
 
   return (
-    <div className={`bg-slate-900/70 border border-slate-800 rounded-2xl p-6 shadow-xl backdrop-blur-sm ${config.glowColor}`}>
+    <div
+      role="region"
+      aria-label="Risk Assessment Meter"
+      aria-live="polite"
+      className={`bg-slate-900/70 border border-slate-800 rounded-2xl p-6 shadow-xl backdrop-blur-sm ${config.glowColor}`}
+    >
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-slate-800/80 pb-5">
         <div className="flex items-center gap-3">
           <div className={`p-3 rounded-xl border ${config.badgeBg}`}>

@@ -7,11 +7,13 @@ import { CheckSquare, PhoneCall, ExternalLink, LifeBuoy } from "lucide-react";
 interface ActionStepsCardProps {
   actionSteps: SafeActionStep[];
   plainLanguageSummary: string;
+  onOpenAssistance?: () => void;
 }
 
 export const ActionStepsCard: React.FC<ActionStepsCardProps> = ({
   actionSteps,
   plainLanguageSummary,
+  onOpenAssistance,
 }) => {
   return (
     <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-6 shadow-xl backdrop-blur-sm space-y-5">
@@ -26,6 +28,25 @@ export const ActionStepsCard: React.FC<ActionStepsCardProps> = ({
         <p className="text-sm text-slate-200 leading-relaxed bg-slate-950/80 p-4 rounded-xl border border-slate-800/80 font-normal">
           {plainLanguageSummary}
         </p>
+
+        {onOpenAssistance && (
+          <div className="mt-3 p-3.5 rounded-xl bg-gradient-to-r from-rose-950/60 via-slate-900 to-amber-950/40 border border-rose-500/40 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+            <div className="space-y-0.5">
+              <div className="text-xs font-bold text-rose-300 flex items-center gap-1.5">
+                <span>🚨 Already transferred money or shared sensitive details?</span>
+              </div>
+              <p className="text-[11px] text-slate-300">
+                Launch the Victim Recovery Assistant for immediate 1930 reporting, bank freeze steps, and official complaint filing.
+              </p>
+            </div>
+            <button
+              onClick={onOpenAssistance}
+              className="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs whitespace-nowrap shadow-md shadow-rose-600/20 transition-all shrink-0"
+            >
+              Get Emergency Assistance →
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Action Steps Checklist */}

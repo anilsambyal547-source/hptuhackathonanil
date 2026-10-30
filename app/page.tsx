@@ -10,14 +10,34 @@ import { SafeUrlInspectorCard } from "@/components/SafeUrlInspectorCard";
 import { ActionStepsCard } from "@/components/ActionStepsCard";
 import { BenchmarkDashboard } from "@/components/BenchmarkDashboard";
 import { ArchitectureDiagram } from "@/components/ArchitectureDiagram";
+import { VictimRecoveryDashboard } from "@/components/VictimAssistance/VictimRecoveryDashboard";
 import { ScamIqSuite } from "@/components/scam-iq/ScamIqSuite";
+import { mapAnalysisResultToCategory } from "@/lib/data/scam-routing";
+import { ScamCategoryType } from "@/lib/types/recovery";
 import { ScamAnalysisResult, OcrQualityReport } from "@/lib/types";
 import { Shield, Lock, PhoneCall, Sparkles } from "lucide-react";
 
 export default function Home() {
-  const [activeTab, setActiveTab] = useState<"scanner" | "benchmark" | "architecture" | "scam-iq">("scanner");
+  const [activeTab, setActiveTab] = useState<"scanner" | "recovery" | "benchmark" | "architecture" | "scam-iq">("scanner");
   const [isLoading, setIsLoading] = useState(false);
   const [analysisResult, setAnalysisResult] = useState<ScamAnalysisResult | null>(null);
+
+  // Victim assistance prefilled context
+  const [importedCategory, setImportedCategory] = useState<ScamCategoryType>("banking_upi");
+  const [prefilledUrl, setPrefilledUrl] = useState<string>("");
+  const [prefilledText, setPrefilledText] = useState<string>("");
+  const [isAiImported, setIsAiImported] = useState<boolean>(false);
+
+  const handleOpenRecoveryAssistant = () => {
+    if (analysisResult) {
+      const detectedCat = mapAnalysisResultToCategory(analysisResult);
+      setImportedCategory(detectedCat);
+      setPrefilledUrl(analysisResult.urlReports[0]?.originalUrl || "");
+      setPrefilledText(analysisResult.inputText);
+      setIsAiImported(true);
+    }
+    setActiveTab("recovery");
+  };
 
   const handleAnalyze = async (
     text: string,
@@ -99,6 +119,7 @@ export default function Home() {
                 <ActionStepsCard
                   actionSteps={analysisResult.actionSteps}
                   plainLanguageSummary={analysisResult.plainLanguageSummary}
+                  onOpenAssistance={handleOpenRecoveryAssistant}
                 />
 
                 {/* Safety & Compliance Disclaimer */}
@@ -112,6 +133,16 @@ export default function Home() {
               </div>
             )}
           </div>
+        )}
+
+        {activeTab === "recovery" && (
+          <VictimRecoveryDashboard
+            initialCategory={importedCategory}
+            prefilledUrl={prefilledUrl}
+            prefilledText={prefilledText}
+            isAiImported={isAiImported}
+            onBackToScanner={() => setActiveTab("scanner")}
+          />
         )}
 
         {activeTab === "benchmark" && <BenchmarkDashboard />}

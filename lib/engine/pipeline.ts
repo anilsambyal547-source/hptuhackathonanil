@@ -1,6 +1,6 @@
 import { ScamAnalysisResult, OcrQualityReport } from "../types";
-import { runHeuristicsEngine } from "./heuristics";
-import { inspectPassiveUrls } from "./passive-url";
+import { runHeuristics } from "./heuristics";
+import { inspectUrlsPassively } from "./passive-url";
 import { detectImpersonation } from "./impersonation";
 import { analyzeWithGemini } from "./ai-analyzer";
 import { fuseAnalysisResults } from "./fusion";
@@ -21,11 +21,13 @@ export async function runScamDetectionPipeline({
   const timestamp = new Date().toISOString();
 
   // 1. Rule-based heuristic pattern matching
-  const heuristics = runHeuristicsEngine(sanitizedText);
+  const heuristics = runHeuristics(sanitizedText);
 
   // 2. Safe passive URL inspection (zero network queries)
-  const urlReports = inspectPassiveUrls(sanitizedText);
-  const detectedDomains = urlReports.reports.map((r) => r.domain);
+  const urlReports = inspectUrlsPassively(sanitizedText);
+  const detectedDomains = urlReports.reports
+    .map((r) => r.domain || r.normalizedDomain)
+    .filter((d): d is string => Boolean(d));
 
   // 3. Impersonation detection
   const impersonation = detectImpersonation(sanitizedText, detectedDomains);
@@ -70,6 +72,20 @@ export async function runScamDetectionPipeline({
     urlReports: urlReports.reports,
     impersonationMatch: impersonation.match,
     aiAnalysis,
+    disclaimer:
+      "No automated system can detect 100% of scams or guarantee safety. Exercise independent judgment and independently verify via official direct channels.",
     metricsBreakdown: fused.metricsBreakdown,
   };
 }
+
+export const analyzeScamMessage = ({
+  text,
+  inputType = "text",
+  ocrQuality,
+  skipAi = false,
+}: {
+  text: string;
+  inputType?: "text" | "ocr_screenshot";
+  ocrQuality?: OcrQualityReport;
+  skipAi?: boolean;
+}) => runScamDetectionPipeline({ inputText: text, inputType, ocrQuality, skipAi });

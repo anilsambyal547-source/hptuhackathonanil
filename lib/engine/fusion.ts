@@ -218,7 +218,7 @@ export function fuseAnalysisResults({
       actionSteps.push({
         priority: "recommended",
         action: `Verify Directly with ${impersonation.match.claimedEntity}`,
-        explanation: `Use official verified channels: Official Portal (${impersonation.match.officialDomains.join(", ")})${
+        explanation: `Use official verified channels: Official Portal (${(impersonation.match.officialDomains || impersonation.match.verifiedDomains || []).join(", ")})${
           impersonation.match.officialHelpline ? ` or Helpline (${impersonation.match.officialHelpline})` : ""
         }.`,
       });

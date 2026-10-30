@@ -3,7 +3,7 @@
  */
 
 import assert from "node:assert";
-import { maskCredentials } from "../lib/security/credential-masker.ts";
+import { maskCredentials } from "../lib/security/credential-masker";
 
 function runTests() {
   console.log("Running Credential Masker Tests...\n");

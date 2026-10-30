@@ -4,7 +4,7 @@
  */
 
 import assert from "node:assert";
-import { validateImageIntegrity } from "../lib/ocr/image-quality.ts";
+import { validateImageIntegrity } from "../lib/ocr/image-quality";
 
 function runTests() {
   console.log("Running Corrupted & Malformed Image Integrity Tests...\n");

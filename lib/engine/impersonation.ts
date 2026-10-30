@@ -72,7 +72,9 @@ export function detectImpersonation(
 
   const match: ImpersonationMatch = {
     claimedEntity: matchedEntity.name,
+    category: matchedEntity.category,
     entityCategory: matchedEntity.category,
+    officialDomains: matchedEntity.officialDomains,
     verifiedDomains: matchedEntity.officialDomains,
     isImpersonated,
     mismatchReason,

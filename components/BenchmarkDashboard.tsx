@@ -7,10 +7,11 @@ import {
   RefreshCw,
   CheckCircle2,
   XCircle,
-  BarChart3,
   Clock,
   Layers,
   Award,
+  AlertTriangle,
+  Info,
 } from "lucide-react";
 import {
   BarChart,
@@ -29,6 +30,7 @@ export const BenchmarkDashboard: React.FC = () => {
     items: BenchmarkResultItem[];
     metrics: BenchmarkSummaryMetrics;
   } | null>(null);
+  const [filterSplit, setFilterSplit] = useState<"all" | "dev" | "holdout">("all");
   const [filterCategory, setFilterCategory] = useState<string>("all");
   const [filterStatus, setFilterStatus] = useState<"all" | "correct" | "incorrect">("all");
 
@@ -46,7 +48,6 @@ export const BenchmarkDashboard: React.FC = () => {
   };
 
   useEffect(() => {
-    // Automatically trigger benchmark on first view
     runBenchmark();
   }, []);
 
@@ -54,12 +55,13 @@ export const BenchmarkDashboard: React.FC = () => {
   const items = results?.items || [];
 
   const filteredItems = items.filter((item) => {
+    const matchesSplit = filterSplit === "all" || item.split === filterSplit;
     const matchesCategory = filterCategory === "all" || item.category === filterCategory;
     const matchesStatus =
       filterStatus === "all" ||
       (filterStatus === "correct" && item.isCorrect) ||
       (filterStatus === "incorrect" && !item.isCorrect);
-    return matchesCategory && matchesStatus;
+    return matchesSplit && matchesCategory && matchesStatus;
   });
 
   const categories = Array.from(new Set(items.map((i) => i.category)));
@@ -80,145 +82,280 @@ export const BenchmarkDashboard: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Header and Controls */}
-      <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-6 shadow-xl backdrop-blur-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-slate-900/60 border border-slate-800 rounded-2xl p-6 shadow-xl backdrop-blur-sm">
         <div>
-          <div className="flex items-center gap-2 mb-1">
+          <div className="flex items-center gap-2">
             <Activity className="w-5 h-5 text-cyan-400" />
-            <h2 className="text-lg font-bold text-white tracking-wide">
-              Dataset Benchmarking & Model Evaluation Lab
+            <h2 className="text-lg font-bold text-white tracking-tight">
+              Evaluation & Benchmark Suite
             </h2>
           </div>
-          <p className="text-xs text-slate-400 max-w-2xl">
-            Empirical validation against a curated ground-truth dataset of 40+ smishing, digital arrest, courier extortion, and legitimate transactional communications.
+          <p className="text-xs text-slate-400 mt-1">
+            Independent evaluation across curated smishing, extortion, phishing, and legitimate baselines.
           </p>
         </div>
 
         <button
           onClick={runBenchmark}
           disabled={isRunning}
-          className="px-5 py-2.5 rounded-xl font-medium text-xs sm:text-sm text-slate-950 bg-gradient-to-r from-cyan-400 to-blue-500 hover:from-cyan-300 hover:to-blue-400 disabled:opacity-50 shadow-lg shadow-cyan-500/20 transition-all flex items-center gap-2 shrink-0"
+          className="px-4 py-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-semibold text-xs transition-all flex items-center gap-2 disabled:opacity-50 shadow-md shadow-cyan-500/20"
         >
           {isRunning ? (
             <>
-              <RefreshCw className="w-4 h-4 animate-spin" />
+              <RefreshCw className="w-3.5 h-3.5 animate-spin" />
               <span>Evaluating Dataset...</span>
             </>
           ) : (
             <>
-              <Play className="w-4 h-4 fill-current" />
-              <span>Rerun Live Benchmark</span>
+              <Play className="w-3.5 h-3.5 fill-current" />
+              <span>Re-run Benchmark</span>
             </>
           )}
         </button>
       </div>
 
-      {/* KPI Cards Grid */}
+      {/* Sample Size Transparency Note */}
       {metrics && (
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
-          {/* Accuracy */}
-          <div className="bg-slate-900/60 border border-slate-800 rounded-xl p-4 shadow-md backdrop-blur-sm">
-            <div className="flex items-center justify-between text-xs text-slate-400 mb-1">
-              <span>Overall Accuracy</span>
-              <Award className="w-4 h-4 text-emerald-400" />
-            </div>
-            <div className="text-2xl font-bold font-mono text-emerald-400">
-              {metrics.accuracy}%
-            </div>
-            <span className="text-[11px] text-slate-500">
-              {metrics.correctPredictions} / {metrics.totalSamples} correct
-            </span>
-          </div>
-
-          {/* High Risk Recall */}
-          <div className="bg-slate-900/60 border border-slate-800 rounded-xl p-4 shadow-md backdrop-blur-sm">
-            <div className="flex items-center justify-between text-xs text-slate-400 mb-1">
-              <span>High-Risk Recall</span>
-              <CheckCircle2 className="w-4 h-4 text-cyan-400" />
-            </div>
-            <div className="text-2xl font-bold font-mono text-cyan-400">
-              {metrics.recall.high}%
-            </div>
-            <span className="text-[11px] text-slate-500">Scam catch rate</span>
-          </div>
-
-          {/* Macro Precision */}
-          <div className="bg-slate-900/60 border border-slate-800 rounded-xl p-4 shadow-md backdrop-blur-sm">
-            <div className="flex items-center justify-between text-xs text-slate-400 mb-1">
-              <span>Precision (Avg)</span>
-              <BarChart3 className="w-4 h-4 text-blue-400" />
-            </div>
-            <div className="text-2xl font-bold font-mono text-blue-400">
-              {metrics.precision.macroAvg}%
-            </div>
-            <span className="text-[11px] text-slate-500">False-positive control</span>
-          </div>
-
-          {/* Macro F1-Score */}
-          <div className="bg-slate-900/60 border border-slate-800 rounded-xl p-4 shadow-md backdrop-blur-sm">
-            <div className="flex items-center justify-between text-xs text-slate-400 mb-1">
-              <span>Macro F1-Score</span>
-              <Layers className="w-4 h-4 text-purple-400" />
-            </div>
-            <div className="text-2xl font-bold font-mono text-purple-400">
-              {metrics.f1Score.macroAvg}%
-            </div>
-            <span className="text-[11px] text-slate-500">Harmonic mean</span>
-          </div>
-
-          {/* Legitimate Recall */}
-          <div className="bg-slate-900/60 border border-slate-800 rounded-xl p-4 shadow-md backdrop-blur-sm">
-            <div className="flex items-center justify-between text-xs text-slate-400 mb-1">
-              <span>Ham/Legit Recall</span>
-              <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-            </div>
-            <div className="text-2xl font-bold font-mono text-emerald-400">
-              {metrics.recall.low}%
-            </div>
-            <span className="text-[11px] text-slate-500">Real message pass-through</span>
-          </div>
-
-          {/* Average Latency */}
-          <div className="bg-slate-900/60 border border-slate-800 rounded-xl p-4 shadow-md backdrop-blur-sm">
-            <div className="flex items-center justify-between text-xs text-slate-400 mb-1">
-              <span>Avg Latency</span>
-              <Clock className="w-4 h-4 text-amber-400" />
-            </div>
-            <div className="text-2xl font-bold font-mono text-amber-400">
-              {metrics.averageLatencyMs}ms
-            </div>
-            <span className="text-[11px] text-slate-500">Per sample inference</span>
+        <div className="flex items-start gap-2.5 p-3.5 bg-slate-950/80 border border-slate-800 rounded-xl text-xs text-slate-300">
+          <Info className="w-4 h-4 text-cyan-400 shrink-0 mt-0.5" />
+          <div>
+            <span className="font-semibold text-slate-200">Evaluation Scope Note: </span>
+            {metrics.sampleSizeNote}
           </div>
         </div>
       )}
 
-      {/* Visual Charts: Confusion Matrix & Category Breakdown */}
+      {/* Primary KPI Metrics */}
+      {metrics && (
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {/* Accuracy */}
+          <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-5 backdrop-blur-sm">
+            <div className="flex items-center justify-between text-slate-400 text-xs mb-2">
+              <span>Overall Accuracy</span>
+              <Award className="w-4 h-4 text-emerald-400" />
+            </div>
+            <div className="text-2xl sm:text-3xl font-extrabold text-white font-mono">
+              {metrics.accuracy}%
+            </div>
+            <div className="text-[11px] text-slate-500 mt-1">
+              {metrics.correctPredictions} / {metrics.totalSamples} correct predictions
+            </div>
+          </div>
+
+          {/* Scam Recall */}
+          <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-5 backdrop-blur-sm">
+            <div className="flex items-center justify-between text-slate-400 text-xs mb-2">
+              <span>Scam Recall (High)</span>
+              <CheckCircle2 className="w-4 h-4 text-cyan-400" />
+            </div>
+            <div className="text-2xl sm:text-3xl font-extrabold text-cyan-400 font-mono">
+              {metrics.recall.high}%
+            </div>
+            <div className="text-[11px] text-slate-500 mt-1">
+              F1: {metrics.f1Score.high}% • Prec: {metrics.precision.high}%
+            </div>
+          </div>
+
+          {/* Legit Precision */}
+          <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-5 backdrop-blur-sm">
+            <div className="flex items-center justify-between text-slate-400 text-xs mb-2">
+              <span>Legit Precision (Low)</span>
+              <Layers className="w-4 h-4 text-purple-400" />
+            </div>
+            <div className="text-2xl sm:text-3xl font-extrabold text-purple-400 font-mono">
+              {metrics.precision.low}%
+            </div>
+            <div className="text-[11px] text-slate-500 mt-1">
+              Low false alarm rate on authentic bank/courier alerts
+            </div>
+          </div>
+
+          {/* Execution Latency */}
+          <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-5 backdrop-blur-sm">
+            <div className="flex items-center justify-between text-slate-400 text-xs mb-2">
+              <span>Avg Engine Latency</span>
+              <Clock className="w-4 h-4 text-amber-400" />
+            </div>
+            <div className="text-2xl sm:text-3xl font-extrabold text-amber-400 font-mono">
+              {metrics.averageLatencyMs}ms
+            </div>
+            <div className="text-[11px] text-slate-500 mt-1">
+              High-throughput local deterministic execution
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Dev vs Holdout Split Performance */}
+      {metrics && metrics.devMetrics && metrics.holdoutMetrics && (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {/* Dev Set */}
+          <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-5 backdrop-blur-sm">
+            <div className="flex items-center justify-between border-b border-slate-800 pb-3 mb-3">
+              <div>
+                <span className="text-xs uppercase tracking-wider font-bold text-slate-300">
+                  Dev Set (Tuning Subset)
+                </span>
+                <p className="text-[11px] text-slate-500">
+                  {metrics.devMetrics.totalSamples} samples used during engine calibration
+                </p>
+              </div>
+              <span className="text-lg font-bold font-mono text-cyan-400">
+                {metrics.devMetrics.accuracy}% Acc
+              </span>
+            </div>
+            <div className="grid grid-cols-3 gap-2 text-center text-xs">
+              <div className="p-2 bg-slate-950 rounded-lg border border-slate-800/80">
+                <span className="text-[10px] text-slate-500 uppercase block">High Recall</span>
+                <strong className="text-slate-200 font-mono">{metrics.devMetrics.recall.high}%</strong>
+              </div>
+              <div className="p-2 bg-slate-950 rounded-lg border border-slate-800/80">
+                <span className="text-[10px] text-slate-500 uppercase block">Low Precision</span>
+                <strong className="text-slate-200 font-mono">{metrics.devMetrics.precision.low}%</strong>
+              </div>
+              <div className="p-2 bg-slate-950 rounded-lg border border-slate-800/80">
+                <span className="text-[10px] text-slate-500 uppercase block">Macro F1</span>
+                <strong className="text-slate-200 font-mono">{metrics.devMetrics.f1Score.macroAvg}%</strong>
+              </div>
+            </div>
+          </div>
+
+          {/* Holdout Set */}
+          <div className="bg-slate-900/60 border border-cyan-900/40 rounded-2xl p-5 backdrop-blur-sm">
+            <div className="flex items-center justify-between border-b border-slate-800 pb-3 mb-3">
+              <div>
+                <span className="text-xs uppercase tracking-wider font-bold text-cyan-300">
+                  Holdout Set (Untuned Test)
+                </span>
+                <p className="text-[11px] text-slate-500">
+                  {metrics.holdoutMetrics.totalSamples} samples strictly held out; zero rule tuning
+                </p>
+              </div>
+              <span className="text-lg font-bold font-mono text-emerald-400">
+                {metrics.holdoutMetrics.accuracy}% Acc
+              </span>
+            </div>
+            <div className="grid grid-cols-3 gap-2 text-center text-xs">
+              <div className="p-2 bg-slate-950 rounded-lg border border-slate-800/80">
+                <span className="text-[10px] text-slate-500 uppercase block">High Recall</span>
+                <strong className="text-slate-200 font-mono">{metrics.holdoutMetrics.recall.high}%</strong>
+              </div>
+              <div className="p-2 bg-slate-950 rounded-lg border border-slate-800/80">
+                <span className="text-[10px] text-slate-500 uppercase block">Low Precision</span>
+                <strong className="text-slate-200 font-mono">{metrics.holdoutMetrics.precision.low}%</strong>
+              </div>
+              <div className="p-2 bg-slate-950 rounded-lg border border-slate-800/80">
+                <span className="text-[10px] text-slate-500 uppercase block">Macro F1</span>
+                <strong className="text-slate-200 font-mono">{metrics.holdoutMetrics.f1Score.macroAvg}%</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Misclassified Samples Section */}
+      {metrics && metrics.misclassifiedSamples && metrics.misclassifiedSamples.length > 0 && (
+        <div className="bg-slate-900/60 border border-amber-900/40 rounded-2xl p-6 shadow-xl backdrop-blur-sm">
+          <div className="flex items-center justify-between border-b border-slate-800/80 pb-3 mb-4">
+            <div className="flex items-center gap-2">
+              <AlertTriangle className="w-4 h-4 text-amber-400" />
+              <h3 className="text-sm font-semibold text-white tracking-wide">
+                Misclassified Samples Audit ({metrics.misclassifiedSamples.length} instances)
+              </h3>
+            </div>
+            <span className="text-xs text-slate-400">
+              Examining borderline thresholds and rule gaps
+            </span>
+          </div>
+
+          <div className="space-y-3">
+            {metrics.misclassifiedSamples.map((sample) => (
+              <div
+                key={sample.id}
+                className="p-3.5 bg-slate-950/80 border border-slate-800/80 rounded-xl text-xs space-y-2"
+              >
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <div className="flex items-center gap-2">
+                    <span className="font-mono font-bold text-slate-200">{sample.id}</span>
+                    <span className="text-slate-400">({sample.title})</span>
+                    <span
+                      className={`text-[10px] uppercase font-mono px-1.5 py-0.5 rounded border ${
+                        sample.split === "holdout"
+                          ? "bg-purple-950/60 text-purple-300 border-purple-800/50"
+                          : "bg-slate-800 text-slate-300 border-slate-700"
+                      }`}
+                    >
+                      {sample.split}
+                    </span>
+                  </div>
+
+                  <div className="flex items-center gap-2 font-mono text-[11px]">
+                    <span className="text-slate-500">Actual:</span>
+                    <span
+                      className={`font-bold uppercase ${
+                        sample.groundTruth === "high"
+                          ? "text-rose-400"
+                          : sample.groundTruth === "suspicious"
+                          ? "text-amber-400"
+                          : "text-emerald-400"
+                      }`}
+                    >
+                      {sample.groundTruth}
+                    </span>
+                    <span className="text-slate-600">→</span>
+                    <span className="text-slate-500">Predicted:</span>
+                    <span
+                      className={`font-bold uppercase ${
+                        sample.predictedRisk === "high"
+                          ? "text-rose-400"
+                          : sample.predictedRisk === "suspicious"
+                          ? "text-amber-400"
+                          : "text-emerald-400"
+                      }`}
+                    >
+                      {sample.predictedRisk}
+                    </span>
+                    <span className="text-slate-400">(Score: {sample.riskScore})</span>
+                  </div>
+                </div>
+
+                <p className="text-slate-300 font-mono text-[11px] bg-slate-900/80 p-2 rounded border border-slate-800/60">
+                  &ldquo;{sample.text}&rdquo;
+                </p>
+
+                <div className="text-[11px] text-slate-400">
+                  <span className="text-slate-500">Rules Fired: </span>
+                  {sample.rulesFired.length > 0 ? sample.rulesFired.join("; ") : "None (Pass-through)"}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Confusion Matrix & Category Breakdown */}
       {metrics && (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Confusion Matrix Card */}
+          {/* 3x3 Confusion Matrix */}
           <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-6 shadow-xl backdrop-blur-sm">
-            <h3 className="text-sm font-semibold text-white tracking-wide mb-4">
-              3-Class Confusion Matrix (Ground Truth vs Predicted)
-            </h3>
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-sm font-semibold text-white tracking-wide">
+                3x3 Multi-Class Confusion Matrix
+              </h3>
+              <span className="text-xs text-slate-500">Rows: Actual • Cols: Predicted</span>
+            </div>
 
             <div className="overflow-x-auto">
-              <table className="w-full text-center text-xs font-mono">
+              <table className="w-full text-center text-xs border-collapse">
                 <thead>
-                  <tr>
-                    <th className="p-2 text-left text-slate-500 font-normal">
-                      Actual \ Pred
-                    </th>
-                    <th className="p-2 text-rose-400 font-semibold bg-slate-950/40 rounded-t">
-                      Pred: High
-                    </th>
-                    <th className="p-2 text-amber-400 font-semibold bg-slate-950/40 rounded-t">
-                      Pred: Suspicious
-                    </th>
-                    <th className="p-2 text-emerald-400 font-semibold bg-slate-950/40 rounded-t">
-                      Pred: Low
-                    </th>
+                  <tr className="border-b border-slate-800 text-slate-400">
+                    <th className="p-2 text-left font-medium">Actual \ Predicted</th>
+                    <th className="p-2 font-medium text-rose-400">Pred High</th>
+                    <th className="p-2 font-medium text-amber-400">Pred Suspicious</th>
+                    <th className="p-2 font-medium text-emerald-400">Pred Low</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-800/60">
+                <tbody className="divide-y divide-slate-800/50 font-mono text-xs">
                   <tr>
                     <td className="p-3 text-left font-semibold text-rose-300">
                       Actual: High
@@ -241,7 +378,7 @@ export const BenchmarkDashboard: React.FC = () => {
                       {metrics.confusionMatrix.actualSuspicious_predHigh}
                     </td>
                     <td className="p-3 bg-emerald-950/40 text-emerald-300 font-bold border border-emerald-800/40">
-                      {metrics.confusionMatrix.actualSuspicious_predSuspicious} (TP)
+                      {metrics.confusionMatrix.actualSuspicious_predSuspicious} (Match)
                     </td>
                     <td className="p-3 bg-slate-950 text-slate-300">
                       {metrics.confusionMatrix.actualSuspicious_predLow}
@@ -266,7 +403,7 @@ export const BenchmarkDashboard: React.FC = () => {
             </div>
 
             <p className="text-[11px] text-slate-500 mt-4 leading-relaxed">
-              Diagonal green cells represent correct matches. Off-diagonal cells indicate false positives or borderline boundary classifications.
+              Diagonal green cells represent correct matches. Off-diagonal cells indicate false alarms or boundary differences.
             </p>
           </div>
 
@@ -311,7 +448,7 @@ export const BenchmarkDashboard: React.FC = () => {
         </div>
       )}
 
-      {/* Interactive Sample Inspector */}
+      {/* Interactive Sample Explorer */}
       <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-6 shadow-xl backdrop-blur-sm">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-slate-800/80 pb-4 mb-4">
           <h3 className="text-sm font-semibold text-white tracking-wide">
@@ -319,6 +456,17 @@ export const BenchmarkDashboard: React.FC = () => {
           </h3>
 
           <div className="flex flex-wrap items-center gap-2">
+            {/* Split filter */}
+            <select
+              value={filterSplit}
+              onChange={(e) => setFilterSplit(e.target.value as "all" | "dev" | "holdout")}
+              className="bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1 text-xs text-slate-300 focus:outline-none focus:border-cyan-500"
+            >
+              <option value="all">All Splits</option>
+              <option value="dev">Dev Only (40)</option>
+              <option value="holdout">Holdout Only (35)</option>
+            </select>
+
             {/* Category filter */}
             <select
               value={filterCategory}
@@ -361,6 +509,15 @@ export const BenchmarkDashboard: React.FC = () => {
                   <span className="font-semibold text-slate-200">{item.title}</span>
                   <span className="text-[10px] uppercase font-mono px-1.5 py-0.2 bg-slate-800 text-slate-400 rounded">
                     {item.category.replace(/_/g, " ")}
+                  </span>
+                  <span
+                    className={`text-[9px] uppercase font-mono px-1 rounded ${
+                      item.split === "holdout"
+                        ? "bg-purple-950 text-purple-300 border border-purple-800/40"
+                        : "bg-slate-900 text-slate-400 border border-slate-800"
+                    }`}
+                  >
+                    {item.split}
                   </span>
                 </div>
                 <div className="text-slate-400 text-[11px] flex items-center gap-2">
@@ -424,4 +581,3 @@ export const BenchmarkDashboard: React.FC = () => {
     </div>
   );
 };
-

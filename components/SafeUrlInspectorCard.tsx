@@ -134,7 +134,7 @@ export const SafeUrlInspectorCard: React.FC<SafeUrlInspectorCardProps> = ({ urlR
                   </span>
                 )}
 
-                {report.subdomainCount >= 3 && (
+                {(report.subdomainCount ?? 0) >= 3 && (
                   <span className="text-[11px] px-2 py-0.5 rounded bg-amber-950/60 text-amber-300 border border-amber-700/50">
                     {report.subdomainCount} Subdomain Levels
                   </span>

@@ -1,11 +1,21 @@
 "use client";
 
 import React from "react";
-import { Shield, ShieldAlert, Activity, Cpu, Sparkles, BrainCircuit, Inbox, Share2 } from "lucide-react";
+import {
+  Shield,
+  ShieldAlert,
+  Activity,
+  Cpu,
+  Sparkles,
+  LifeBuoy,
+  BrainCircuit,
+  Inbox,
+  Share2,
+} from "lucide-react";
 
 interface NavbarProps {
-  activeTab: "scanner" | "inbox" | "benchmark" | "architecture" | "scam-iq";
-  setActiveTab: (tab: "scanner" | "inbox" | "benchmark" | "architecture" | "scam-iq") => void;
+  activeTab: "scanner" | "inbox" | "recovery" | "benchmark" | "architecture" | "scam-iq";
+  setActiveTab: (tab: "scanner" | "inbox" | "recovery" | "benchmark" | "architecture" | "scam-iq") => void;
   onOpenExtensionModal?: () => void;
 }
 
@@ -41,7 +51,7 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab, onOpenE
         <nav className="flex items-center gap-1 sm:gap-2">
           <button
             onClick={() => setActiveTab("scanner")}
-            className={`px-2.5 sm:px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-all flex items-center gap-1.5 ${
+            className={`px-2.5 sm:px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-all flex items-center gap-1.5 ${
               activeTab === "scanner"
                 ? "bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 shadow-sm shadow-cyan-500/10"
                 : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/50"
@@ -53,32 +63,50 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab, onOpenE
 
           <button
             onClick={() => setActiveTab("inbox")}
-            className={`px-2.5 sm:px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-all flex items-center gap-1.5 ${
+            className={`px-2.5 sm:px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-all flex items-center gap-1.5 ${
               activeTab === "inbox"
                 ? "bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 shadow-sm shadow-cyan-500/10 font-semibold"
                 : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/50"
             }`}
           >
             <Inbox className="w-4 h-4 text-cyan-400" />
-            <span>Inbox Guard</span>
+            <span className="hidden sm:inline">Inbox Guard</span>
+            <span className="sm:hidden">Inbox</span>
+          </button>
+
+          <button
+            onClick={() => setActiveTab("recovery")}
+            className={`px-2.5 sm:px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-all flex items-center gap-1.5 ${
+              activeTab === "recovery"
+                ? "bg-rose-500/20 text-rose-300 border border-rose-500/40 shadow-sm shadow-rose-500/20 font-semibold"
+                : "text-rose-400/90 hover:text-rose-300 hover:bg-rose-950/30"
+            }`}
+          >
+            <LifeBuoy className="w-4 h-4 text-rose-400" />
+            <span className="hidden sm:inline">Victim Help</span>
+            <span className="sm:hidden">Help</span>
+            <span className="flex h-1.5 w-1.5 relative">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-rose-500"></span>
+            </span>
           </button>
 
           <button
             onClick={() => setActiveTab("benchmark")}
-            className={`px-2.5 sm:px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-all flex items-center gap-1.5 ${
+            className={`px-2.5 sm:px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-all flex items-center gap-1.5 ${
               activeTab === "benchmark"
                 ? "bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 shadow-sm shadow-cyan-500/10"
                 : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/50"
             }`}
           >
             <Activity className="w-4 h-4" />
-            <span className="hidden md:inline">Benchmark Lab</span>
+            <span className="hidden md:inline">Benchmark</span>
             <span className="md:hidden">Lab</span>
           </button>
 
           <button
             onClick={() => setActiveTab("architecture")}
-            className={`px-2.5 sm:px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-all flex items-center gap-1.5 ${
+            className={`px-2.5 sm:px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-all flex items-center gap-1.5 ${
               activeTab === "architecture"
                 ? "bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 shadow-sm shadow-cyan-500/10"
                 : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/50"
@@ -91,14 +119,14 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab, onOpenE
 
           <button
             onClick={() => setActiveTab("scam-iq")}
-            className={`px-2.5 sm:px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-all flex items-center gap-1.5 ${
+            className={`px-2.5 sm:px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-all flex items-center gap-1.5 ${
               activeTab === "scam-iq"
                 ? "bg-purple-500/10 text-purple-400 border border-purple-500/30 shadow-sm shadow-purple-500/10 font-semibold"
                 : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/50"
             }`}
           >
             <BrainCircuit className="w-4 h-4 text-purple-400" />
-            <span className="hidden md:inline">Scam IQ Test</span>
+            <span className="hidden md:inline">Scam IQ</span>
             <span className="md:hidden">IQ</span>
           </button>
         </nav>
@@ -112,15 +140,14 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab, onOpenE
               title="Integrations: Chrome Extension, 1-Click Bookmarklet, Mobile PWA Share"
             >
               <Share2 className="w-3.5 h-3.5 text-cyan-400" />
-              <span className="hidden sm:inline">Extensions & Ingestion</span>
-              <span className="sm:hidden">Apps</span>
+              <span className="hidden lg:inline">Extensions</span>
             </button>
           )}
 
           {/* Security badge */}
           <div className="hidden xl:flex items-center gap-2 px-3 py-1 bg-slate-900/80 border border-slate-800 rounded-full text-xs text-slate-300">
             <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
-            <span>Zero-Fetch URL Sandbox Active</span>
+            <span>Zero-Fetch Active</span>
           </div>
         </div>
       </div>

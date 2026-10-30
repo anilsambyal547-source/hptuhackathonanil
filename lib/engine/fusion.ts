@@ -8,6 +8,8 @@ import {
   AiAnalysisResult,
   OcrQualityReport,
   EvidentiarySpan,
+  EmailHeaderForensics,
+  TacticsBreakdown,
 } from "../types";
 
 export function fuseAnalysisResults({
@@ -17,6 +19,7 @@ export function fuseAnalysisResults({
   aiAnalysis,
   ocrQuality,
   inputText,
+  emailForensics,
 }: {
   heuristics: { hits: HeuristicHit[]; spans: EvidentiarySpan[]; score: number };
   urlReports: { reports: UrlInspectionReport[]; spans: EvidentiarySpan[]; highestUrlRiskScore: number };
@@ -24,6 +27,7 @@ export function fuseAnalysisResults({
   aiAnalysis: AiAnalysisResult | null;
   ocrQuality?: OcrQualityReport;
   inputText: string;
+  emailForensics?: EmailHeaderForensics | null;
 }): {
   overallRisk: RiskLevel;
   riskScore: number;
@@ -31,6 +35,7 @@ export function fuseAnalysisResults({
   plainLanguageSummary: string;
   evidenceSpans: EvidentiarySpan[];
   actionSteps: SafeActionStep[];
+  tacticsBreakdown: TacticsBreakdown;
   metricsBreakdown: {
     heuristicScore: number;
     urlScore: number;
@@ -101,6 +106,14 @@ export function fuseAnalysisResults({
     hasCriticalHeuristic ||
     hasSeverePhishingUrl ||
     hasConfirmedImpersonationAttack ||
+    Boolean(
+      emailForensics &&
+        (emailForensics.isDisplayNameSpoofed ||
+          emailForensics.isReplyToDivergent ||
+          emailForensics.anchorTextMismatches.some((m: { isDeceptive: boolean }) => m.isDeceptive) ||
+          emailForensics.authResults.spf === "fail" ||
+          emailForensics.authResults.dkim === "fail")
+    ) ||
     (hasHighSevereHeuristic && (hScore >= 40 || iScore >= 40));
 
   if (isHardScamIndicator) {
@@ -295,11 +308,124 @@ export function fuseAnalysisResults({
     });
   }
 
+  // 5-Axis Psychological Manipulation Radar (ScamGuard / TrustScan)
+  const urgencyHits = heuristics.hits.filter((h) => h.category === "urgency");
+  const fearHits = heuristics.hits.filter(
+    (h) => h.category === "fear_coercion" || h.category === "fear_intimidation"
+  );
+  const authorityHits = heuristics.hits.filter(
+    (h) => h.category === "impersonation" || h.id.includes("trai")
+  );
+  const financialHits = heuristics.hits.filter(
+    (h) => h.category === "financial_solicitation"
+  );
+  const credentialHits = heuristics.hits.filter(
+    (h) => h.category === "credential_harvesting"
+  );
+
+  const calcAxis = (hits: HeuristicHit[], extraScore: number = 0) => {
+    const raw = hits.reduce((sum, h) => sum + (h.weight || 25), 0) + extraScore;
+    return Math.min(100, Math.round(raw));
+  };
+
+  const urgency = calcAxis(urgencyHits);
+  const fearCoercion = calcAxis(fearHits);
+  const authoritySpoofing = calcAxis(
+    authorityHits,
+    impersonation.impersonationRiskScore > 0 || emailForensics?.isDisplayNameSpoofed ? 45 : 0
+  );
+  const financialLure = calcAxis(financialHits);
+  const credentialHarvest = calcAxis(
+    credentialHits,
+    urlReports.highestUrlRiskScore >= 50 || (emailForensics?.anchorTextMismatches.length ?? 0) > 0 ? 35 : 0
+  );
+
+  const tacticsMap = [
+    { name: "Manufactured Time Pressure", val: urgency },
+    { name: "Law Enforcement & Fear Coercion", val: fearCoercion },
+    { name: "Brand & Authority Impersonation", val: authoritySpoofing },
+    { name: "Advance Fee & Financial Bait", val: financialLure },
+    { name: "Credential & Data Harvesting", val: credentialHarvest },
+  ].sort((a, b) => b.val - a.val);
+
+  const dominantTactic = tacticsMap[0].val > 0 ? tacticsMap[0].name : undefined;
+
+  const tacticsBreakdown: TacticsBreakdown = {
+    urgency,
+    fearCoercion,
+    authoritySpoofing,
+    financialLure,
+    credentialHarvest,
+    dominantTactic,
+  };
+
+  // Email Header Evidentiary Spans
+  const emailSpans: EvidentiarySpan[] = [];
+  if (emailForensics) {
+    if (emailForensics.isDisplayNameSpoofed && emailForensics.from) {
+      const idx = inputText.indexOf(emailForensics.from.raw);
+      emailSpans.push({
+        id: `span-email-spoof-${idx >= 0 ? idx : 0}`,
+        start: idx >= 0 ? idx : 0,
+        end: idx >= 0 ? idx + emailForensics.from.raw.length : 15,
+        text: emailForensics.from.raw,
+        category: "impersonation",
+        severity: "critical",
+        title: "Email Display Name Spoofing",
+        explanation: `Displays "${emailForensics.from.displayName}" but sends from unauthorized domain "${emailForensics.from.domain}".`,
+      });
+    }
+
+    if (emailForensics.isReplyToDivergent && emailForensics.replyTo) {
+      const idx = inputText.indexOf(emailForensics.replyTo.raw);
+      emailSpans.push({
+        id: `span-email-replyto-${idx >= 0 ? idx : 0}`,
+        start: idx >= 0 ? idx : 0,
+        end: idx >= 0 ? idx + emailForensics.replyTo.raw.length : 15,
+        text: emailForensics.replyTo.raw,
+        category: "suspicious_link",
+        severity: "high",
+        title: "Reply-To Address Divergence",
+        explanation: `Replies route to "${emailForensics.replyTo.address}" instead of sender domain.`,
+      });
+    }
+
+    if (emailForensics.authResults.spf === "fail" || emailForensics.authResults.dkim === "fail") {
+      emailSpans.push({
+        id: "span-email-auth-fail",
+        start: 0,
+        end: Math.min(30, inputText.length),
+        text: "Authentication-Results: FAIL",
+        category: "suspicious_url",
+        severity: "high",
+        title: "Email SPF/DKIM Authentication Failure",
+        explanation: "Cryptographic sender validation failed. The sending mail server is not authorized to deliver for the claimed domain.",
+      });
+    }
+
+    for (const m of emailForensics.anchorTextMismatches) {
+      if (m.isDeceptive) {
+        const idx = inputText.indexOf(m.visibleText);
+        emailSpans.push({
+          id: `span-anchor-mismatch-${idx >= 0 ? idx : 0}`,
+          start: idx >= 0 ? idx : 0,
+          end: idx >= 0 ? idx + m.visibleText.length : 20,
+          text: m.visibleText,
+          category: "typosquatting",
+          severity: "critical",
+          title: "Deceptive Anchor Text Mismatch",
+          explanation: `Visible text displays "${m.visibleText}", but actual link target routes to deceptive destination "${m.href}".`,
+        });
+      }
+    }
+  }
+
   // 6. Aggregate Evidentiary Spans
   const allSpans: EvidentiarySpan[] = [
     ...heuristics.spans,
     ...urlReports.spans,
     ...(impersonation.span ? [impersonation.span] : []),
+    ...emailSpans,
   ];
 
   // Deduplicate overlapping spans
@@ -315,6 +441,7 @@ export function fuseAnalysisResults({
     plainLanguageSummary,
     evidenceSpans: uniqueSpans,
     actionSteps,
+    tacticsBreakdown,
     metricsBreakdown: {
       heuristicScore: hScore,
       urlScore: uScore,

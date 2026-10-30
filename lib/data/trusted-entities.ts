@@ -65,6 +65,15 @@ export const TRUSTED_ENTITIES: TrustedEntity[] = [
     officialPortal: "https://www.kotak.com",
   },
   {
+    id: "rbi",
+    name: "Reserve Bank of India (RBI)",
+    category: "bank",
+    aliases: ["rbi", "reserve bank", "reserve bank of india"],
+    officialDomains: ["rbi.org.in"],
+    officialHelpline: "14440",
+    officialPortal: "https://www.rbi.org.in",
+  },
+  {
     id: "paypal",
     name: "PayPal",
     category: "bank",

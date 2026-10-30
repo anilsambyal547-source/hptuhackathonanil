@@ -1,14 +1,15 @@
 "use client";
 
 import React from "react";
-import { Shield, ShieldAlert, Activity, Cpu, Sparkles, BrainCircuit } from "lucide-react";
+import { Shield, ShieldAlert, Activity, Cpu, Sparkles, BrainCircuit, Inbox, Share2 } from "lucide-react";
 
 interface NavbarProps {
-  activeTab: "scanner" | "benchmark" | "architecture" | "scam-iq";
-  setActiveTab: (tab: "scanner" | "benchmark" | "architecture" | "scam-iq") => void;
+  activeTab: "scanner" | "inbox" | "benchmark" | "architecture" | "scam-iq";
+  setActiveTab: (tab: "scanner" | "inbox" | "benchmark" | "architecture" | "scam-iq") => void;
+  onOpenExtensionModal?: () => void;
 }
 
-export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab }) => {
+export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab, onOpenExtensionModal }) => {
   return (
     <header className="sticky top-0 z-50 border-b border-slate-800/80 bg-slate-950/80 backdrop-blur-md">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
@@ -40,56 +41,89 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab }) => {
         <nav className="flex items-center gap-1 sm:gap-2">
           <button
             onClick={() => setActiveTab("scanner")}
-            className={`px-3 sm:px-4 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-all flex items-center gap-1.5 ${activeTab === "scanner"
+            className={`px-2.5 sm:px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-all flex items-center gap-1.5 ${
+              activeTab === "scanner"
                 ? "bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 shadow-sm shadow-cyan-500/10"
                 : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/50"
-              }`}
+            }`}
           >
             <ShieldAlert className="w-4 h-4" />
             <span>Scanner</span>
           </button>
 
           <button
+            onClick={() => setActiveTab("inbox")}
+            className={`px-2.5 sm:px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-all flex items-center gap-1.5 ${
+              activeTab === "inbox"
+                ? "bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 shadow-sm shadow-cyan-500/10 font-semibold"
+                : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/50"
+            }`}
+          >
+            <Inbox className="w-4 h-4 text-cyan-400" />
+            <span>Inbox Guard</span>
+          </button>
+
+          <button
             onClick={() => setActiveTab("benchmark")}
-            className={`px-3 sm:px-4 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-all flex items-center gap-1.5 ${activeTab === "benchmark"
+            className={`px-2.5 sm:px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-all flex items-center gap-1.5 ${
+              activeTab === "benchmark"
                 ? "bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 shadow-sm shadow-cyan-500/10"
                 : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/50"
-              }`}
+            }`}
           >
             <Activity className="w-4 h-4" />
-            <span>Benchmark Lab</span>
+            <span className="hidden md:inline">Benchmark Lab</span>
+            <span className="md:hidden">Lab</span>
           </button>
 
           <button
             onClick={() => setActiveTab("architecture")}
-            className={`px-3 sm:px-4 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-all flex items-center gap-1.5 ${activeTab === "architecture"
+            className={`px-2.5 sm:px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-all flex items-center gap-1.5 ${
+              activeTab === "architecture"
                 ? "bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 shadow-sm shadow-cyan-500/10"
                 : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/50"
-              }`}
+            }`}
           >
             <Cpu className="w-4 h-4" />
-            <span>Architecture</span>
+            <span className="hidden md:inline">Architecture</span>
+            <span className="md:hidden">Arch</span>
           </button>
 
           <button
             onClick={() => setActiveTab("scam-iq")}
-            className={`px-3 sm:px-4 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-all flex items-center gap-1.5 ${activeTab === "scam-iq"
+            className={`px-2.5 sm:px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-all flex items-center gap-1.5 ${
+              activeTab === "scam-iq"
                 ? "bg-purple-500/10 text-purple-400 border border-purple-500/30 shadow-sm shadow-purple-500/10 font-semibold"
                 : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/50"
-              }`}
+            }`}
           >
             <BrainCircuit className="w-4 h-4 text-purple-400" />
-            <span>Scam IQ Test</span>
+            <span className="hidden md:inline">Scam IQ Test</span>
+            <span className="md:hidden">IQ</span>
           </button>
         </nav>
 
-        {/* Security badge */}
-        <div className="hidden lg:flex items-center gap-2 px-3 py-1 bg-slate-900/80 border border-slate-800 rounded-full text-xs text-slate-300">
-          <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
-          <span>Zero-Fetch URL Sandbox Active</span>
+        {/* Extensions & Integrations button */}
+        <div className="flex items-center gap-2">
+          {onOpenExtensionModal && (
+            <button
+              onClick={onOpenExtensionModal}
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-cyan-950/40 hover:bg-cyan-900/40 border border-cyan-700/40 text-cyan-300 rounded-lg text-xs font-medium transition-all shadow-sm"
+              title="Integrations: Chrome Extension, 1-Click Bookmarklet, Mobile PWA Share"
+            >
+              <Share2 className="w-3.5 h-3.5 text-cyan-400" />
+              <span className="hidden sm:inline">Extensions & Ingestion</span>
+              <span className="sm:hidden">Apps</span>
+            </button>
+          )}
+
+          {/* Security badge */}
+          <div className="hidden xl:flex items-center gap-2 px-3 py-1 bg-slate-900/80 border border-slate-800 rounded-full text-xs text-slate-300">
+            <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
+            <span>Zero-Fetch URL Sandbox Active</span>
+          </div>
         </div>
       </div>
     </header>
   );
 };
-

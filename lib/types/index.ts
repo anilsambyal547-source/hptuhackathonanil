@@ -40,6 +40,30 @@ export interface HeuristicHit {
   endIndex?: number;
 }
 
+export type DnstwistTechnique =
+  | "none"
+  | "typosquatting_omission"
+  | "typosquatting_insertion"
+  | "typosquatting_transposition"
+  | "keyboard_adjacency"
+  | "vowel_swap"
+  | "bitsquatting"
+  | "hyphenation_combosquatting"
+  | "tld_swap"
+  | "subdomain_brand_stuffing"
+  | "confusable_ascii";
+
+export interface LexicalMetrics {
+  shannonEntropy: number;
+  urlLength: number;
+  dotCount: number;
+  hyphenCount: number;
+  digitRatio: number;
+  hasHttpsInDomain: boolean;
+  fuzzerTechnique: DnstwistTechnique;
+  fuzzerTechniqueLabel: string;
+}
+
 export interface UrlInspectionReport {
   rawUrl?: string;
   originalUrl?: string;
@@ -77,6 +101,7 @@ export interface UrlInspectionReport {
   subdomainCount: number;
   subdomains?: string[];
   isSafe?: boolean;
+  lexicalMetrics?: LexicalMetrics;
 }
 
 export interface ImpersonationMatch {
@@ -130,11 +155,53 @@ export interface OcrQualityReport {
   warnings: string[];
 }
 
+export interface EmailAuthResult {
+  spf: "pass" | "fail" | "softfail" | "neutral" | "none";
+  dkim: "pass" | "fail" | "none";
+  dmarc: "pass" | "fail" | "none";
+  details: string[];
+}
+
+export interface EmailHeaderForensics {
+  isEmail: boolean;
+  from?: {
+    raw: string;
+    displayName: string;
+    address: string;
+    domain: string;
+  };
+  replyTo?: {
+    raw: string;
+    address: string;
+    domain: string;
+  };
+  returnPath?: string;
+  subject?: string;
+  authResults: EmailAuthResult;
+  isDisplayNameSpoofed: boolean;
+  isReplyToDivergent: boolean;
+  anchorTextMismatches: {
+    visibleText: string;
+    href: string;
+    isDeceptive: boolean;
+  }[];
+  riskFactors: string[];
+}
+
+export interface TacticsBreakdown {
+  urgency: number; // 0 - 100
+  fearCoercion: number; // 0 - 100
+  authoritySpoofing: number; // 0 - 100
+  financialLure: number; // 0 - 100
+  credentialHarvest: number; // 0 - 100
+  dominantTactic?: string;
+}
+
 export interface ScamAnalysisResult {
   id: string;
   timestamp: string;
   inputText: string;
-  inputType: "text" | "ocr_screenshot";
+  inputType: "text" | "ocr_screenshot" | "email_eml";
   ocrQuality?: OcrQualityReport;
   overallRisk: RiskLevel;
   riskScore: number; // 0 - 100
@@ -146,6 +213,8 @@ export interface ScamAnalysisResult {
   urlReports: UrlInspectionReport[];
   impersonationMatch: ImpersonationMatch | null;
   aiAnalysis: AiAnalysisResult | null;
+  emailForensics?: EmailHeaderForensics | null;
+  tacticsBreakdown?: TacticsBreakdown;
   disclaimer: string;
   metricsBreakdown: {
     heuristicScore: number;

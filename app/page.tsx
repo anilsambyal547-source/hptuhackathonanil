@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Navbar } from "@/components/Navbar";
 import { ScannerInput } from "@/components/ScannerInput";
 import { RiskMeter } from "@/components/RiskMeter";
@@ -11,17 +11,22 @@ import { ActionStepsCard } from "@/components/ActionStepsCard";
 import { BenchmarkDashboard } from "@/components/BenchmarkDashboard";
 import { ArchitectureDiagram } from "@/components/ArchitectureDiagram";
 import { ScamIqSuite } from "@/components/scam-iq/ScamIqSuite";
+import { LiveInboxSimulator } from "@/components/LiveInboxSimulator";
+import { EmailForensicsCard } from "@/components/EmailForensicsCard";
+import { TacticsRadarCard } from "@/components/TacticsRadarCard";
+import { ExtensionGuideModal } from "@/components/ExtensionGuideModal";
 import { ScamAnalysisResult, OcrQualityReport } from "@/lib/types";
 import { Shield, Lock, PhoneCall, Sparkles } from "lucide-react";
 
 export default function Home() {
-  const [activeTab, setActiveTab] = useState<"scanner" | "benchmark" | "architecture" | "scam-iq">("scanner");
+  const [activeTab, setActiveTab] = useState<"scanner" | "inbox" | "benchmark" | "architecture" | "scam-iq">("scanner");
   const [isLoading, setIsLoading] = useState(false);
   const [analysisResult, setAnalysisResult] = useState<ScamAnalysisResult | null>(null);
+  const [showExtensionModal, setShowExtensionModal] = useState(false);
 
   const handleAnalyze = async (
     text: string,
-    inputType: "text" | "ocr_screenshot" = "text",
+    inputType: "text" | "ocr_screenshot" | "email_eml" = "text",
     ocrQuality?: OcrQualityReport
   ) => {
     setIsLoading(true);
@@ -49,9 +54,24 @@ export default function Home() {
     }
   };
 
+  // Listen for query params from PWA Web Share Target, Chrome Extension, or 1-Click Bookmarklet (?text=... or ?url=...)
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      const incomingText = params.get("text") || params.get("url") || params.get("title");
+      if (incomingText) {
+        handleAnalyze(incomingText);
+      }
+    }
+  }, []);
+
   return (
     <div className="min-h-screen flex flex-col text-slate-100 bg-slate-950">
-      <Navbar activeTab={activeTab} setActiveTab={setActiveTab} />
+      <Navbar
+        activeTab={activeTab}
+        setActiveTab={setActiveTab}
+        onOpenExtensionModal={() => setShowExtensionModal(true)}
+      />
 
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
         {activeTab === "scanner" && (
@@ -86,6 +106,16 @@ export default function Home() {
                 {/* Calibrated Uncertainty Banner */}
                 <UncertaintyBanner uncertainty={analysisResult.uncertainty} />
 
+                {/* Email Header & Authentication Forensics (when applicable) */}
+                {analysisResult.emailForensics && (
+                  <EmailForensicsCard emailForensics={analysisResult.emailForensics} />
+                )}
+
+                {/* 5-Axis Psychological Manipulation Radar */}
+                {analysisResult.tacticsBreakdown && (
+                  <TacticsRadarCard tactics={analysisResult.tacticsBreakdown} />
+                )}
+
                 {/* Evidentiary Highlighting Spans */}
                 <EvidenceHighlighter
                   text={analysisResult.inputText}
@@ -95,10 +125,11 @@ export default function Home() {
                 {/* Safe Passive URL Sandbox Findings */}
                 <SafeUrlInspectorCard urlReports={analysisResult.urlReports} />
 
-                {/* Plain-Language Assessment & Action Steps */}
+                {/* Plain-Language Assessment & Action Steps + Forensic Export */}
                 <ActionStepsCard
                   actionSteps={analysisResult.actionSteps}
                   plainLanguageSummary={analysisResult.plainLanguageSummary}
+                  fullResult={analysisResult}
                 />
 
                 {/* Safety & Compliance Disclaimer */}
@@ -114,12 +145,20 @@ export default function Home() {
           </div>
         )}
 
+        {activeTab === "inbox" && <LiveInboxSimulator />}
+
         {activeTab === "benchmark" && <BenchmarkDashboard />}
 
         {activeTab === "architecture" && <ArchitectureDiagram />}
 
         {activeTab === "scam-iq" && <ScamIqSuite />}
       </main>
+
+      {/* Extension & Integrations Guide Modal */}
+      <ExtensionGuideModal
+        isOpen={showExtensionModal}
+        onClose={() => setShowExtensionModal(false)}
+      />
 
       {/* Footer */}
       <footer className="border-t border-slate-900 bg-slate-950 py-8 text-xs text-slate-500">

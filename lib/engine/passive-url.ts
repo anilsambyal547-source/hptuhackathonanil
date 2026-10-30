@@ -1,8 +1,8 @@
-import { UrlInspectionReport, EvidentiarySpan } from "../types";
+import { UrlInspectionReport, EvidentiarySpan, LexicalMetrics, DnstwistTechnique } from "../types";
 import { SUSPICIOUS_TLDS, HIGH_RISK_KEYWORDS_IN_DOMAIN, URL_SHORTENERS, ABUSED_FREE_HOSTS } from "../data/suspicious-tlds";
 import { TRUSTED_ENTITIES } from "../data/trusted-entities";
 
-// Common Cyrillic / Greek homoglyphs mapped to their visual Latin equivalents
+// Common Cyrillic / Greek homoglyphs mapped to visual Latin equivalents
 const HOMOGLYPH_MAP: Record<string, string> = {
   "\u0430": "a", // Cyrillic Small Letter A
   "\u0441": "c", // Cyrillic Small Letter Es
@@ -20,7 +20,65 @@ const HOMOGLYPH_MAP: Record<string, string> = {
   "1": "l",      // Digit 1 as letter l
 };
 
-// Damerau-Levenshtein distance calculation (handles transpositions, insertions, deletions, substitutions)
+// ASCII multi-character confusable substitutions (e.g. 'rn' -> 'm', 'vv' -> 'w', 'cl' -> 'd')
+const ASCII_CONFUSABLE_MAP: [RegExp, string][] = [
+  [/rn/g, "m"],
+  [/vv/g, "w"],
+  [/cl/g, "d"],
+  [/1/g, "l"],
+  [/0/g, "o"],
+];
+
+// QWERTY keyboard adjacency map for typosquatting classifier
+const QWERTY_ADJACENCY: Record<string, string[]> = {
+  a: ["q", "w", "s", "z"],
+  b: ["v", "g", "h", "n"],
+  c: ["x", "d", "f", "v"],
+  d: ["s", "e", "r", "f", "c", "x"],
+  e: ["w", "s", "d", "r"],
+  f: ["d", "r", "t", "g", "v", "c"],
+  g: ["f", "t", "y", "h", "b", "v"],
+  h: ["g", "y", "u", "j", "n", "b"],
+  i: ["u", "j", "k", "o"],
+  j: ["h", "u", "i", "k", "m", "n"],
+  k: ["j", "i", "o", "l", "m"],
+  l: ["k", "o", "p"],
+  m: ["n", "j", "k"],
+  n: ["b", "h", "j", "m"],
+  o: ["i", "k", "l", "p"],
+  p: ["o", "l"],
+  q: ["w", "a"],
+  r: ["e", "d", "f", "t"],
+  s: ["a", "w", "e", "d", "x", "z"],
+  t: ["r", "f", "g", "y"],
+  u: ["y", "h", "j", "i"],
+  v: ["c", "f", "g", "b"],
+  w: ["q", "a", "s", "e"],
+  x: ["z", "s", "d", "c"],
+  y: ["t", "g", "h", "u"],
+  z: ["a", "s", "x"],
+};
+
+const VOWELS = new Set(["a", "e", "i", "o", "u"]);
+
+// Shannon Entropy Calculation (hostname bits per character)
+export function calculateShannonEntropy(str: string): number {
+  if (!str) return 0;
+  const len = str.length;
+  const freqs: Record<string, number> = {};
+  for (let i = 0; i < len; i++) {
+    const ch = str[i];
+    freqs[ch] = (freqs[ch] || 0) + 1;
+  }
+  let entropy = 0;
+  for (const ch in freqs) {
+    const p = freqs[ch] / len;
+    entropy -= p * Math.log2(p);
+  }
+  return Math.round(entropy * 100) / 100;
+}
+
+// Damerau-Levenshtein distance calculation
 export function damerauLevenshtein(a: string, b: string): number {
   const al = a.length;
   const bl = b.length;
@@ -52,6 +110,139 @@ export function damerauLevenshtein(a: string, b: string): number {
   }
 
   return matrix[al][bl];
+}
+
+/**
+ * Classifies exact dnstwist fuzzer permutation technique against target brand
+ */
+export function classifyDnstwistTechnique(
+  candidate: string,
+  target: string,
+  hostname: string
+): { technique: DnstwistTechnique; label: string } {
+  const cand = candidate.toLowerCase();
+  const targ = target.toLowerCase();
+
+  // 1. Subdomain Brand Stuffing
+  if (hostname.includes(`.${targ}.`) || hostname.startsWith(`${targ}.`) || (hostname.includes(targ) && !cand.includes(targ))) {
+    return {
+      technique: "subdomain_brand_stuffing",
+      label: "Subdomain Brand-Stuffing (Legitimate Brand Embedded in Subdomain)",
+    };
+  }
+
+  // 2. Hyphenation / Combo-squatting
+  if (cand.includes(`${targ}-`) || cand.includes(`-${targ}`)) {
+    return {
+      technique: "hyphenation_combosquatting",
+      label: "Hyphenation / Combo-squatting (Brand + Action Keyword)",
+    };
+  }
+
+  // 3. ASCII Confusables ('rn' -> 'm', 'vv' -> 'w')
+  let normalizedAscii = cand;
+  for (const [pattern, replacement] of ASCII_CONFUSABLE_MAP) {
+    normalizedAscii = normalizedAscii.replace(pattern, replacement);
+  }
+  if (normalizedAscii === targ && cand !== targ) {
+    return {
+      technique: "confusable_ascii",
+      label: "ASCII Confusable Substitution (Multi-character Visual Mimicry, e.g. 'rn' for 'm')",
+    };
+  }
+
+  // 4. Exact brand on an untrusted TLD
+  if (cand === targ) {
+    return {
+      technique: "tld_swap",
+      label: "TLD Swap Attack (Official Brand Name on Deceptive/High-Risk TLD)",
+    };
+  }
+
+  // Length difference 0 (Substitution / Transposition / Adjacency / Bitsquatting)
+  if (cand.length === targ.length) {
+    // Check transposition (adjacent swap)
+    for (let i = 0; i < cand.length - 1; i++) {
+      const swapped = cand.substring(0, i) + cand[i + 1] + cand[i] + cand.substring(i + 2);
+      if (swapped === targ) {
+        return {
+          technique: "typosquatting_transposition",
+          label: "Character Transposition (Adjacent Typing Error)",
+        };
+      }
+    }
+
+    // Check single character substitution
+    let diffCount = 0;
+    let candDiffChar = "";
+    let targDiffChar = "";
+    for (let i = 0; i < cand.length; i++) {
+      if (cand[i] !== targ[i]) {
+        diffCount++;
+        candDiffChar = cand[i];
+        targDiffChar = targ[i];
+      }
+    }
+
+    if (diffCount === 1) {
+      // Vowel swap?
+      if (VOWELS.has(candDiffChar) && VOWELS.has(targDiffChar)) {
+        return {
+          technique: "vowel_swap",
+          label: "Vowel Swap Permutation (e.g. 'amazin' for 'amazon')",
+        };
+      }
+
+      // Keyboard adjacency?
+      const adjacentKeys = QWERTY_ADJACENCY[targDiffChar] || [];
+      if (adjacentKeys.includes(candDiffChar)) {
+        return {
+          technique: "keyboard_adjacency",
+          label: `Keyboard Adjacency Replacement (QWERTY Neighbor '${candDiffChar}' for '${targDiffChar}')`,
+        };
+      }
+
+      // Bitsquatting (1-bit ASCII flip)?
+      const xorVal = candDiffChar.charCodeAt(0) ^ targDiffChar.charCodeAt(0);
+      if (xorVal > 0 && (xorVal & (xorVal - 1)) === 0) {
+        return {
+          technique: "bitsquatting",
+          label: "Bitsquatting (Single-bit Hardware/Memory Flip)",
+        };
+      }
+    }
+  }
+
+  // Omission (cand missing 1 character from target)
+  if (cand.length === targ.length - 1) {
+    for (let i = 0; i < targ.length; i++) {
+      const omitted = targ.substring(0, i) + targ.substring(i + 1);
+      if (omitted === cand) {
+        return {
+          technique: "typosquatting_omission",
+          label: `Character Omission Typo (Missing '${targ[i]}')`,
+        };
+      }
+    }
+  }
+
+  // Insertion (cand added 1 character to target)
+  if (cand.length === targ.length + 1) {
+    for (let i = 0; i < cand.length; i++) {
+      const removed = cand.substring(0, i) + cand.substring(i + 1);
+      if (removed === targ) {
+        return {
+          technique: "typosquatting_insertion",
+          label: `Character Insertion Typo (Added '${cand[i]}')`,
+        };
+      }
+    }
+  }
+
+  return {
+    technique: "none",
+    label: "Standard Domain Heuristic",
+  };
 }
 
 // Regex to extract all URLs safely from raw text without navigating
@@ -102,6 +293,30 @@ export function inspectUrlsPassively(text: string): {
     const protocol = parsedUrl.protocol;
     const reasons: string[] = [];
     let riskScore = 0;
+
+    // --- SIH_URL_Phishing Lexical URL Telemetry Matrix ---
+    const shannonEntropy = calculateShannonEntropy(hostname);
+    const urlLength = rawUrl.length;
+    const dotCount = (rawUrl.match(/\./g) || []).length;
+    const hyphenCount = (hostname.match(/-/g) || []).length;
+    const digitsInHost = (hostname.match(/\d/g) || []).length;
+    const digitRatio = hostname.length > 0 ? Math.round((digitsInHost / hostname.length) * 100) / 100 : 0;
+    const hasHttpsInDomain = /https|ssl/i.test(hostname);
+
+    if (shannonEntropy > 3.8) {
+      riskScore += 25;
+      reasons.push(`High hostname Shannon entropy (${shannonEntropy} bits/char) indicates algorithmic randomness or DGA hostname.`);
+    }
+
+    if (urlLength > 75) {
+      riskScore += 15;
+      reasons.push(`Abnormally long URL string (${urlLength} chars) commonly used to push deceptive targets out of mobile view.`);
+    }
+
+    if (hasHttpsInDomain && !hostname.endsWith("https.com")) {
+      riskScore += 30;
+      reasons.push("Deceptive protocol tokens ('https' or 'ssl') embedded in domain name to simulate legitimate encryption.");
+    }
 
     // 1. IP Address check
     const isIpAddress = IP_HOST_REGEX.test(rawUrl) || /^(?:\d{1,3}\.){3}\d{1,3}$/.test(hostname);
@@ -203,9 +418,11 @@ export function inspectUrlsPassively(text: string): {
       reasons.push("URL contains an open redirect parameter pointing to an external destination.");
     }
 
-    // 11. Subdomain Brand-Stuffing & Typosquatting / Lookalike check
+    // 11. dnstwist Fuzzer Attack Classification & Typosquatting / Lookalike check
     let typosquattingTarget: string | undefined;
     let closestDistance = 999;
+    let detectedFuzzerTechnique: DnstwistTechnique = "none";
+    let detectedFuzzerLabel = "Standard Domain Structure";
     const brandPortion = parts.length >= 2 ? parts[parts.length - 2] : parts[0];
 
     if (!isLegitOfficialDomain && !isShortener) {
@@ -217,6 +434,9 @@ export function inspectUrlsPassively(text: string): {
             if (hostname.includes(cleanAlias) || parsedUrl.pathname.toLowerCase().includes(cleanAlias)) {
               typosquattingTarget = `${entity.name} (brand name embedded in deceptive domain/path)`;
               closestDistance = 1;
+              const fuzzer = classifyDnstwistTechnique(brandPortion, cleanAlias, hostname);
+              detectedFuzzerTechnique = fuzzer.technique !== "none" ? fuzzer.technique : "subdomain_brand_stuffing";
+              detectedFuzzerLabel = fuzzer.label;
               break;
             }
           }
@@ -233,6 +453,9 @@ export function inspectUrlsPassively(text: string): {
           if (dist > 0 && dist <= 2 && dist < closestDistance) {
             closestDistance = dist;
             typosquattingTarget = entity.name;
+            const fuzzer = classifyDnstwistTechnique(brandPortion, officialBrand, hostname);
+            detectedFuzzerTechnique = fuzzer.technique;
+            detectedFuzzerLabel = fuzzer.label;
           }
         }
       }
@@ -240,7 +463,7 @@ export function inspectUrlsPassively(text: string): {
 
     if (typosquattingTarget && closestDistance <= 2) {
       riskScore += 50;
-      reasons.push(`Suspected typosquatting / brand spoofing attack: URL structure strongly resembles legitimate entity '${typosquattingTarget}'.`);
+      reasons.push(`Suspected typosquatting / brand spoofing attack: URL structure strongly resembles legitimate entity '${typosquattingTarget}' [${detectedFuzzerLabel}].`);
     }
 
     // If completely legitimate official domain with no red flags
@@ -264,6 +487,17 @@ export function inspectUrlsPassively(text: string): {
 
     const isSafe = isLegitOfficialDomain && finalUrlRisk === 0;
 
+    const lexicalMetrics: LexicalMetrics = {
+      shannonEntropy,
+      urlLength,
+      dotCount,
+      hyphenCount,
+      digitRatio,
+      hasHttpsInDomain,
+      fuzzerTechnique: detectedFuzzerTechnique,
+      fuzzerTechniqueLabel: detectedFuzzerLabel,
+    };
+
     reports.push({
       originalUrl: rawUrl,
       normalizedDomain: hostname,
@@ -283,6 +517,7 @@ export function inspectUrlsPassively(text: string): {
       riskScore: finalUrlRisk,
       reasons,
       isSafe,
+      lexicalMetrics,
     });
 
     if (finalUrlRisk >= 30) {

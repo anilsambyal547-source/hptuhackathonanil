@@ -139,6 +139,39 @@ export const SafeUrlInspectorCard: React.FC<SafeUrlInspectorCardProps> = ({ urlR
                     {report.subdomainCount} Subdomain Levels
                   </span>
                 )}
+
+                {/* SIH_URL_Phishing & dnstwist Lexical Matrix */}
+                {report.lexicalMetrics && (
+                  <>
+                    <span
+                      className={`text-[11px] px-2 py-0.5 rounded font-mono ${
+                        report.lexicalMetrics.shannonEntropy > 3.8
+                          ? "bg-rose-950/60 text-rose-300 border border-rose-700/50 font-bold"
+                          : "bg-slate-900 text-slate-300 border border-slate-800"
+                      }`}
+                    >
+                      Entropy: {report.lexicalMetrics.shannonEntropy} bits/char
+                    </span>
+
+                    {report.lexicalMetrics.urlLength > 75 && (
+                      <span className="text-[11px] px-2 py-0.5 rounded bg-amber-950/60 text-amber-300 border border-amber-700/50 font-mono">
+                        Length: {report.lexicalMetrics.urlLength} chars (Excessive)
+                      </span>
+                    )}
+
+                    {report.lexicalMetrics.hasHttpsInDomain && (
+                      <span className="text-[11px] px-2 py-0.5 rounded bg-rose-950/60 text-rose-300 border border-rose-700/50 font-semibold font-mono">
+                        Deceptive &apos;https&apos; in Domain
+                      </span>
+                    )}
+
+                    {report.lexicalMetrics.fuzzerTechnique !== "none" && (
+                      <span className="text-[11px] px-2 py-0.5 rounded bg-purple-950/60 text-purple-300 border border-purple-700/50 font-semibold">
+                        dnstwist: {report.lexicalMetrics.fuzzerTechniqueLabel}
+                      </span>
+                    )}
+                  </>
+                )}
               </div>
 
               {/* Passive Inspection Evidentiary Findings */}
@@ -164,4 +197,3 @@ export const SafeUrlInspectorCard: React.FC<SafeUrlInspectorCardProps> = ({ urlR
     </div>
   );
 };
-

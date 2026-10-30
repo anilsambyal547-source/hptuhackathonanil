@@ -1,0 +1,33 @@
+{
+  "manifest_version": 3,
+  "name": "SafeGuard AI - Anti-Phishing & Scam Shield",
+  "version": "1.0.0",
+  "description": "Deterministic scam, smishing, and phishing detection extension with zero tracking and safe passive URL inspection.",
+  "permissions": [
+    "contextMenus",
+    "activeTab"
+  ],
+  "host_permissions": [
+    "http://localhost:3000/*",
+    "https://mail.google.com/*",
+    "https://web.whatsapp.com/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://mail.google.com/*",
+        "https://web.whatsapp.com/*"
+      ],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "SafeGuard AI Scanner"
+  }
+}
+

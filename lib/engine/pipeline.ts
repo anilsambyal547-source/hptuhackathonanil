@@ -4,6 +4,7 @@ import { inspectUrlsPassively } from "./passive-url";
 import { detectImpersonation } from "./impersonation";
 import { analyzeWithGemini } from "./ai-analyzer";
 import { fuseAnalysisResults } from "./fusion";
+import { isRawEmail, parseEmailForensics } from "./email-parser";
 
 export async function runScamDetectionPipeline({
   inputText,
@@ -12,13 +13,18 @@ export async function runScamDetectionPipeline({
   skipAi = false,
 }: {
   inputText: string;
-  inputType?: "text" | "ocr_screenshot";
+  inputType?: "text" | "ocr_screenshot" | "email_eml";
   ocrQuality?: OcrQualityReport;
   skipAi?: boolean;
 }): Promise<ScamAnalysisResult> {
   const sanitizedText = inputText.trim();
   const id = `scan-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`;
   const timestamp = new Date().toISOString();
+
+  // Check for RFC-822 email format or explicit email inputType
+  const isEmail = inputType === "email_eml" || isRawEmail(sanitizedText);
+  const emailForensics = isEmail ? parseEmailForensics(sanitizedText) : null;
+  const effectiveInputType: "text" | "ocr_screenshot" | "email_eml" = isEmail ? "email_eml" : inputType;
 
   // 1. Rule-based heuristic pattern matching
   const heuristics = runHeuristics(sanitizedText);
@@ -42,11 +48,13 @@ export async function runScamDetectionPipeline({
 - Highest URL risk: ${urlReports.highestUrlRiskScore}
 - Claimed Entity: ${impersonation.match?.claimedEntity ?? "None"}
 - Suspected Impersonation: ${impersonation.match?.isImpersonated ? "YES" : "NO"}
+- Is Email: ${isEmail ? "YES" : "NO"}
+- Email Display Name Spoofed: ${emailForensics?.isDisplayNameSpoofed ? "YES" : "NO"}
 `.trim();
     aiAnalysis = await analyzeWithGemini(sanitizedText, heuristicSummary);
   }
 
-  // 5. Multi-method fusion and uncertainty estimation (heuristic confidence estimate with hand-set weights)
+  // 5. Multi-method fusion and uncertainty estimation
   const fused = fuseAnalysisResults({
     heuristics,
     urlReports,
@@ -54,13 +62,14 @@ export async function runScamDetectionPipeline({
     aiAnalysis,
     ocrQuality,
     inputText: sanitizedText,
+    emailForensics,
   });
 
   return {
     id,
     timestamp,
     inputText: sanitizedText,
-    inputType,
+    inputType: effectiveInputType,
     ocrQuality,
     overallRisk: fused.overallRisk,
     riskScore: fused.riskScore,
@@ -72,6 +81,8 @@ export async function runScamDetectionPipeline({
     urlReports: urlReports.reports,
     impersonationMatch: impersonation.match,
     aiAnalysis,
+    emailForensics,
+    tacticsBreakdown: fused.tacticsBreakdown,
     disclaimer:
       "No automated system can detect 100% of scams or guarantee safety. Exercise independent judgment and independently verify via official direct channels.",
     metricsBreakdown: fused.metricsBreakdown,
@@ -85,7 +96,7 @@ export const analyzeScamMessage = ({
   skipAi = false,
 }: {
   text: string;
-  inputType?: "text" | "ocr_screenshot";
+  inputType?: "text" | "ocr_screenshot" | "email_eml";
   ocrQuality?: OcrQualityReport;
   skipAi?: boolean;
 }) => runScamDetectionPipeline({ inputText: text, inputType, ocrQuality, skipAi });

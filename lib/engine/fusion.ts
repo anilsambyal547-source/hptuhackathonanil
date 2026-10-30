@@ -44,29 +44,31 @@ export function fuseAnalysisResults({
   const aiScore = aiAnalysis ? aiAnalysis.riskScore : hScore;
 
   // Weighted composite risk calculation
-  // Strong weight given to deterministic red flags
   let compositeScore = 0;
 
   const hasCriticalHeuristic = heuristics.hits.some((h) => h.severity === "critical");
   const hasMaliciousUrl = uScore >= 65;
   const hasSevereImpersonation = impersonation.match?.isImpersonated === true;
   const hasUrgentThreat = heuristics.hits.some(
-    (h) => h.severity === "high" && (h.id.includes("urg-") || h.id.includes("fear-") || h.id.includes("courier-") || h.id.includes("cred-"))
+    (h) => h.severity === "high" && (h.id.includes("urg-") || h.id.includes("fear-") || h.id.includes("courier-") || h.id.includes("cred-") || h.id.includes("hinglish-"))
   );
 
-  if (
+  // Hard Confidence Floor Mechanism (Inspired by ScamIntelli)
+  const isHardScamIndicator =
     hasCriticalHeuristic ||
     hasMaliciousUrl ||
-    (hasSevereImpersonation && (uScore >= 25 || hScore >= 20)) ||
-    (hasUrgentThreat && (uScore >= 20 || hScore >= 40))
-  ) {
-    // Critical safety override: severe indicators guarantee high risk rating
-    compositeScore = Math.max(78, Math.round(0.35 * hScore + 0.35 * uScore + 0.15 * iScore + 0.15 * aiScore));
+    (hasSevereImpersonation && (uScore >= 20 || hScore >= 20)) ||
+    (hasUrgentThreat && (uScore >= 20 || hScore >= 35));
+
+  if (isHardScamIndicator) {
+    // Guaranteed hard floor of 82% risk for severe vectors
+    compositeScore = Math.max(82, Math.round(0.35 * hScore + 0.35 * uScore + 0.15 * iScore + 0.15 * aiScore));
   } else if (heuristics.hits.length > 0 || uScore >= 20 || hasSevereImpersonation) {
     // Suspicious / moderate risk range
     compositeScore = Math.max(40, Math.round(0.35 * hScore + 0.35 * uScore + 0.15 * iScore + 0.15 * aiScore));
   } else {
-    compositeScore = Math.round(0.35 * hScore + 0.35 * uScore + 0.15 * iScore + 0.15 * aiScore);
+    // Low risk: clean pass-through
+    compositeScore = Math.round(0.30 * hScore + 0.30 * uScore + 0.20 * iScore + 0.20 * aiScore);
   }
 
   compositeScore = Math.min(100, Math.max(0, compositeScore));
@@ -217,4 +219,3 @@ export function fuseAnalysisResults({
     },
   };
 }
-

@@ -31,6 +31,21 @@ const PRESET_SAMPLES = [
     text: "Dear consumer, your electricity power will be disconnected tonight at 9:30 PM because previous month bill was not updated. Immediately contact electricity officer at 9876543210 to avoid power cut.",
   },
   {
+    label: "Hinglish Bijli Cut",
+    category: "Hinglish",
+    text: "Priye upbhokta, aaj raat bijli cut ho jayegi kyunki pichle mahine ka bill update nahi hua. Turant bijli officer se sampark karein 9876543210 par.",
+  },
+  {
+    label: "QR Code Refund Trap",
+    category: "Payment Bait",
+    text: "PayTM Cash Refund: Your cashback of Rs 2,500 is ready. Scan this QR code to receive money in your bank account immediately.",
+  },
+  {
+    label: "LinkedIn Job Bait",
+    category: "Job Scam",
+    text: "LinkedIn Recruiter: You have 1 unread executive offer from Microsoft India. Submit your resume and PAN details at https://linkedin-recruitment-portal.site/apply",
+  },
+  {
     label: "Legit Bank Alert",
     category: "Legitimate",
     text: "Your A/C XX4921 has been debited by Rs 350.00 on 30-Oct-26 via UPI to Starbucks. Avl Bal: Rs 24,150.25. If not you, SMS BLOCK to 5676712 - HDFC Bank",
@@ -326,4 +341,3 @@ export const ScannerInput: React.FC<ScannerInputProps> = ({ onAnalyze, isLoading
     </div>
   );
 };
-

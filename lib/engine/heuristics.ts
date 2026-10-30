@@ -182,6 +182,55 @@ const HEURISTIC_RULES: RuleDefinition[] = [
     explanation: "Claims an India Post or FedEx delivery failed due to missing street number or demands a Rs 5 - 25 redelivery fee to harvest card details.",
     regex: /\b(package\s+cannot\s+be\s+delivered|missing\s+house\s+number|address\s+incomplete|update\s+delivery\s+address|parcel\s+held\s+at\s+terminal|reschedule\s+delivery\s+link)\b/i,
   },
+
+  // --- HINGLISH / REGIONAL SMISHING PATTERNS (ScamIntelli & I4C India Vectors) ---
+  {
+    id: "hinglish-power-cut",
+    category: "urgency",
+    severity: "high",
+    weight: 35,
+    title: "Hinglish Electricity Disconnection Threat",
+    explanation: "Hindi/Hinglish power cut extortion: 'aaj raat bijli cut ho jayegi / officer se sampark karein'. Preys on panic in regional language.",
+    regex: /\b(aaj\s+raat\s+bijli\s+cut|bijli\s+kat\s+(jayegi|di\s+jayegi)|bill\s+update\s+nahi\s+hua|officer\s+se\s+(turant\s+)?sampark\s+karein|light\s+kat\s+jayegi)\b/i,
+  },
+  {
+    id: "hinglish-kyc-suspend",
+    category: "credential_harvesting",
+    severity: "critical",
+    weight: 40,
+    title: "Hinglish Bank Account / KYC Suspension",
+    explanation: "Hindi/Hinglish banking threat: 'apka khata band ho jayega / turant kyc update karein'. Direct credential theft vector.",
+    regex: /\b(apka\s+khata\s+(band|block)\s+(ho\s+gaya|kar\s+diya)|turant\s+(kyc|pan|aadhaar)\s+update\s+karein|warna\s+(account|khata)\s+band\s+hoga|paisa\s+ruk\s+jayega)\b/i,
+  },
+  {
+    id: "hinglish-digital-arrest",
+    category: "fear_coercion",
+    severity: "critical",
+    weight: 45,
+    title: "Hinglish Digital Arrest / Police Intimidation",
+    explanation: "Hindi/Hinglish police extortion: 'police station aana hoga / arrest warrant jaari / video call par hazir hon'. Pure fraud extortion.",
+    regex: /\b(police\s+station\s+aana\s+hoga|arrest\s+warrant\s+jaari|giraftari\s+hogi|skype\s+par\s+hazir\s+hon|crime\s+branch\s+ki\s+notice)\b/i,
+  },
+  {
+    id: "hinglish-job-scam",
+    category: "financial_solicitation",
+    severity: "high",
+    weight: 30,
+    title: "Hinglish Work-From-Home / Task Scam",
+    explanation: "Hindi/Hinglish fake job bait: 'ghar baithe kamayein roz 3000 rupaye / video like karke kamayein'. Advance fee pyramid trap.",
+    regex: /\b(ghar\s+baithe\s+(paise\s+)?kamayein|roz\s+\d+\s+se\s+\d+\s+(kamayein|inr|rs)|video\s+like\s+karke\s+kamayein|daily\s+income\s+kamayein)\b/i,
+  },
+
+  // --- DECEPTIVE QR CODE PAYMENT BAIT ---
+  {
+    id: "fin-qr-code-refund-bait",
+    category: "financial_solicitation",
+    severity: "critical",
+    weight: 40,
+    title: "Deceptive QR Code / PIN to Receive Money",
+    explanation: "Claims scanning a QR code or entering a UPI PIN will credit money or refund. In reality, scanning a QR code or entering a UPI PIN can ONLY DEBIT money.",
+    regex: /\b(scan\s+(this\s+)?qr\s+code\s+to\s+(receive|get|claim)\s+(money|refund|cashback|prize)|enter\s+pin\s+to\s+(receive|credit))\b/i,
+  },
 ];
 
 // Negative lookbehind or negative phrase filter to avoid false positives on security advice
@@ -241,6 +290,39 @@ export function runHeuristics(text: string): {
     }
   }
 
+  // Linguistic Pressure Analysis (Inspired by ScamIntelli)
+  // 1. ALL-CAPS screaming detection
+  const words = text.split(/\s+/).filter((w) => w.length >= 3);
+  const upperWords = words.filter((w) => /^[A-Z]{3,}$/.test(w) && !/^(SMS|OTP|SBI|HDFC|ICICI|PNB|UPI|INR|PIN|CVV|URL|APK)$/.test(w));
+  if (words.length >= 4 && upperWords.length / words.length >= 0.35) {
+    hits.push({
+      id: "ling-caps-screaming",
+      category: "urgency",
+      matchedText: upperWords.join(" "),
+      severity: "medium",
+      weight: 15,
+      title: "Linguistic Pressure: ALL-CAPS Screaming",
+      explanation: "Uses excessive uppercase phrasing to induce panic and force compliance through artificial visual volume.",
+    });
+    cumulativeWeight += 15;
+  }
+
+  // 2. Punctuation panic (e.g. '!!!!', '???')
+  const punctMatch = /([!?]{2,})/.exec(text);
+  if (punctMatch) {
+    spans.push({
+      id: `span-punct-${punctMatch.index}`,
+      start: punctMatch.index,
+      end: punctMatch.index + punctMatch[0].length,
+      text: punctMatch[0],
+      category: "urgency",
+      severity: "low",
+      title: "Punctuation Pressure Tactics",
+      explanation: "Repeated exclamation or question marks used to manufacture panic.",
+    });
+    cumulativeWeight += 10;
+  }
+
   // Normalized score bounded between 0 and 100
   // Scaling: 40 weight points represents high risk
   const normalizedScore = Math.min(100, Math.round((cumulativeWeight / 50) * 100));
@@ -251,4 +333,3 @@ export function runHeuristics(text: string): {
     score: normalizedScore,
   };
 }
-

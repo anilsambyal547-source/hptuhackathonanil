@@ -132,6 +132,7 @@ export interface BenchmarkSample {
     | "courier_scam"
     | "digital_arrest"
     | "fear_coercion"
+    | "financial_solicitation"
     | "job_scam"
     | "lottery_fraud"
     | "electricity_cut"
@@ -194,4 +195,3 @@ export interface BenchmarkSummaryMetrics {
   };
   averageLatencyMs: number;
 }
-

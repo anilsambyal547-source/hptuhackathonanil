@@ -246,5 +246,31 @@ export const TRUSTED_ENTITIES: TrustedEntity[] = [
     officialDomains: ["google.com", "google.co.in", "pay.google.com"],
     officialPortal: "https://myaccount.google.com",
   },
-];
 
+  // Job Portals & Employers
+  {
+    id: "linkedin",
+    name: "LinkedIn",
+    category: "tech",
+    aliases: ["linkedin", "linkedin recruiter", "linkedin jobs"],
+    officialDomains: ["linkedin.com"],
+    officialPortal: "https://www.linkedin.com",
+  },
+  {
+    id: "naukri",
+    name: "Naukri.com (InfoEdge)",
+    category: "tech",
+    aliases: ["naukri", "naukri.com", "naukri recruiter"],
+    officialDomains: ["naukri.com"],
+    officialPortal: "https://www.naukri.com",
+  },
+  {
+    id: "irctc",
+    name: "Indian Railway Catering and Tourism Corp (IRCTC)",
+    category: "government",
+    aliases: ["irctc", "railway ticket", "indian railways"],
+    officialDomains: ["irctc.co.in", "indianrail.gov.in"],
+    officialHelpline: "139 (Railway Helpline)",
+    officialPortal: "https://www.irctc.co.in",
+  },
+];

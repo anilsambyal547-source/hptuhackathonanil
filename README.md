@@ -2,7 +2,7 @@
 ### Multimodal Scam Detection, Safe Passive URL Inspection & Transparent Risk Assessment
 
 > **Hackathon Submission — Question 02: Cybersecurity | AI | Web Development**  
-> *Combines deterministic rule heuristics, safe passive URL decomposition, official entity brand registry, and contextual semantic AI to deliver explainable scam verdicts with calibrated uncertainty.*
+> *Combines deterministic rule heuristics, safe passive URL decomposition, official entity brand registry, and contextual semantic AI to deliver explainable scam verdicts with transparent uncertainty reporting.*
 
 ---
 
@@ -15,7 +15,7 @@
 | **Safe Passive URL Analysis** | Strict architectural constraint: **Zero outbound network requests**. Links are never visited. Analyzes Damerau-Levenshtein typosquatting, Cyrillic/Greek homoglyphs (\u0430 lookalikes), IP hosts, URL shorteners, and high-risk TLDs. Links in the UI are inert text blocks. |
 | **Risk Level & Plain Evidence** | Classifies risk into **Low**, **Suspicious**, or **High**. Features an interactive **Evidentiary Span Highlighter** where suspicious tokens/phrases are color-coded with click-to-explain rule cards. |
 | **Uncertainty Transparency** | Explicitly quantifies confidence using cross-engine variance ($\sigma = \text{StdDev}(S_h, S_u, S_i, S_{ai})$), input brevity, and OCR quality. Displays a dedicated Uncertainty Banner when evidence is inconclusive. |
-| **Dataset Benchmarking** | Built-in `/benchmark` evaluation lab with 40+ curated ground-truth test cases across banking smishing, digital arrest coercion, courier fraud, and legitimate transactions. Computes live Accuracy, Precision, Recall, F1-Score, and a 3x3 Confusion Matrix. |
+| **Dataset Benchmarking** | Built-in `/benchmark` evaluation lab with 75 curated ground-truth test cases across banking smishing, digital arrest coercion, courier fraud, and legitimate transactions with dev/holdout split and misclassified case audit. Computes live Accuracy, Precision, Recall, F1-Score, and a 3x3 Confusion Matrix. |
 
 ---
 
@@ -87,11 +87,11 @@ Visit `http://localhost:3000` in your browser.
 
 ---
 
-## 🛡️ Security & Privacy Guarantees
+## 🛡️ Security & Privacy Architecture Constraints
 
 1. **Zero-Fetch URL Sandbox**: Under no circumstances does the server or client issue HTTP `GET`, `HEAD`, or `POST` requests to inspected links.
 2. **Zero Credential Ingestion**: No passwords, OTPs, or PII are logged or stored. Processing is entirely in-memory and ephemeral.
-3. **No Overconfident Guarantees**: SafeGuard transparently reports its confidence and encourages verification through official portals and helplines (National Cybercrime Portal **1930**).
+3. **No Overconfident Assertions**: SafeGuard transparently reports its confidence and encourages verification through official portals and helplines (National Cybercrime Portal **1930**).
 
 ---
 

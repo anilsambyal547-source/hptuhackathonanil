@@ -107,7 +107,7 @@ export const TRUSTED_ENTITIES: TrustedEntity[] = [
     name: "DHL Express",
     category: "courier",
     aliases: ["dhl", "dhl express"],
-    officialDomains: ["dhl.com", "dhl.de"],
+    officialDomains: ["dhl.com"],
     officialHelpline: "1800 11 1345",
     officialPortal: "https://www.dhl.com",
   },
@@ -235,7 +235,6 @@ export const TRUSTED_ENTITIES: TrustedEntity[] = [
     category: "tech",
     aliases: ["netflix", "netflix membership"],
     officialDomains: ["netflix.com"],
-    officialHelpline: "Help Center Online",
     officialPortal: "https://www.netflix.com",
   },
   {

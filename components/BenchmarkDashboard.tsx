@@ -197,7 +197,7 @@ export const BenchmarkDashboard: React.FC = () => {
                   Dev Set (Tuning Subset)
                 </span>
                 <p className="text-[11px] text-slate-500">
-                  {metrics.devMetrics.totalSamples} samples used during engine calibration
+                  {metrics.devMetrics.totalSamples} samples used during initial rule tuning
                 </p>
               </div>
               <span className="text-lg font-bold font-mono text-cyan-400">

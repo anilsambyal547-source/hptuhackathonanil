@@ -82,14 +82,14 @@ export const ArchitectureDiagram: React.FC = () => {
       <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-6 shadow-xl backdrop-blur-sm">
         <h3 className="text-sm font-semibold text-white tracking-wide mb-3 flex items-center gap-2">
           <Sliders className="w-4 h-4 text-cyan-400" />
-          <span>Calibrated Uncertainty Formulation & Compliance Guarantees</span>
+          <span>Uncertainty Formulation & Architectural Constraints</span>
         </h3>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs text-slate-300">
           <div className="bg-slate-950 p-4 rounded-xl border border-slate-800/80 space-y-2">
-            <div className="font-semibold text-cyan-300">Uncertainty Calibration (Formula)</div>
+            <div className="font-semibold text-cyan-300">Uncertainty Scoring (Formula)</div>
             <p className="leading-relaxed text-slate-400">
-              Confidence is mathematically calibrated against cross-signal variance <code className="text-slate-200">σ = StdDev(Sh, Su, Si, Sai)</code>, message length brevity, and OCR image quality degradation. If signals diverge or context is insufficient, confidence drops and the system transparently advises caution rather than making overconfident assertions.
+              Confidence is calculated from cross-signal variance <code className="text-slate-200">σ = StdDev(Sh, Su, Si, Sai)</code>, message length brevity, and OCR image quality degradation. If signals diverge or context is insufficient, confidence drops and the system transparently advises caution rather than making overconfident assertions.
             </p>
           </div>
 

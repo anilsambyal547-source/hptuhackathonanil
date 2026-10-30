@@ -1,10 +1,11 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
-import { Upload, FileText, Image as ImageIcon, Sparkles, RefreshCw, AlertCircle, CheckCircle2, ShieldCheck, Globe } from "lucide-react";
+import { Upload, FileText, Image as ImageIcon, Sparkles, RefreshCw, AlertCircle, CheckCircle2, ShieldCheck, Globe, KeyRound } from "lucide-react";
 import { OcrQualityReport } from "@/lib/types";
 import { runLocalOcr } from "@/lib/ocr/local-ocr";
 import { analyzeImageCanvas } from "@/lib/ocr/canvas-ocr";
+import { maskCredentials, MaskedEntity } from "@/lib/security/credential-masker";
 
 interface ScannerInputProps {
   onAnalyze: (text: string, inputType: "text" | "ocr_screenshot", ocrQuality?: OcrQualityReport) => void;
@@ -63,6 +64,7 @@ export const ScannerInput: React.FC<ScannerInputProps> = ({ onAnalyze, isLoading
   const [ocrQuality, setOcrQuality] = useState<OcrQualityReport | null>(null);
   const [dragOver, setDragOver] = useState(false);
   const [useCloudOcr, setUseCloudOcr] = useState(false);
+  const [maskedEntities, setMaskedEntities] = useState<MaskedEntity[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Clipboard paste listener for images (Ctrl+V)
@@ -87,6 +89,20 @@ export const ScannerInput: React.FC<ScannerInputProps> = ({ onAnalyze, isLoading
     return () => window.removeEventListener("paste", handlePaste);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [useCloudOcr]);
+
+  const handleTextPaste = (e: React.ClipboardEvent<HTMLTextAreaElement>) => {
+    const rawPasted = e.clipboardData.getData("text");
+    const maskRes = maskCredentials(rawPasted);
+    if (maskRes.hasMaskedItems) {
+      e.preventDefault();
+      const target = e.currentTarget;
+      const start = target.selectionStart;
+      const end = target.selectionEnd;
+      const newText = inputText.slice(0, start) + maskRes.maskedText + inputText.slice(end);
+      setInputText(newText);
+      setMaskedEntities((prev) => [...prev, ...maskRes.maskedEntities]);
+    }
+  };
 
   const handleImageFile = (file: File) => {
     const reader = new FileReader();
@@ -132,7 +148,11 @@ export const ScannerInput: React.FC<ScannerInputProps> = ({ onAnalyze, isLoading
             });
             const data = await res.json();
             if (data.extractedText) {
-              setInputText(data.extractedText);
+              const maskRes = maskCredentials(data.extractedText);
+              setInputText(maskRes.maskedText);
+              if (maskRes.hasMaskedItems) {
+                setMaskedEntities(maskRes.maskedEntities);
+              }
             }
             if (data.ocrReport) {
               setOcrQuality({
@@ -159,7 +179,11 @@ export const ScannerInput: React.FC<ScannerInputProps> = ({ onAnalyze, isLoading
             });
 
             if (result.text) {
-              setInputText(result.text);
+              const maskRes = maskCredentials(result.text);
+              setInputText(maskRes.maskedText);
+              if (maskRes.hasMaskedItems) {
+                setMaskedEntities(maskRes.maskedEntities);
+              }
             }
 
             const isReadable = result.text.length > 5 && result.confidence >= 30;
@@ -199,7 +223,15 @@ export const ScannerInput: React.FC<ScannerInputProps> = ({ onAnalyze, isLoading
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!inputText.trim()) return;
-    onAnalyze(inputText, activeMode === "image" ? "ocr_screenshot" : "text", ocrQuality || undefined);
+
+    // Run final credential redaction check before analysis
+    const maskRes = maskCredentials(inputText);
+    if (maskRes.hasMaskedItems) {
+      setMaskedEntities((prev) => [...prev, ...maskRes.maskedEntities]);
+      setInputText(maskRes.maskedText);
+    }
+
+    onAnalyze(maskRes.maskedText, activeMode === "image" ? "ocr_screenshot" : "text", ocrQuality || undefined);
   };
 
   return (
@@ -254,9 +286,11 @@ export const ScannerInput: React.FC<ScannerInputProps> = ({ onAnalyze, isLoading
               key={idx}
               type="button"
               onClick={() => {
-                setInputText(preset.text);
+                const maskRes = maskCredentials(preset.text);
+                setInputText(maskRes.maskedText);
                 setSelectedImage(null);
                 setOcrQuality(null);
+                setMaskedEntities(maskRes.maskedEntities);
                 setActiveMode("text");
               }}
               className="text-xs px-2.5 py-1 rounded-md bg-slate-800/70 hover:bg-slate-700/80 text-slate-300 border border-slate-700/50 transition-colors flex items-center gap-1.5"
@@ -386,6 +420,39 @@ export const ScannerInput: React.FC<ScannerInputProps> = ({ onAnalyze, isLoading
           </div>
         )}
 
+        {/* Security Notice: Never paste real credentials */}
+        <div className="flex items-center justify-between text-[11px] text-slate-400 bg-slate-950/40 px-3 py-1.5 rounded-lg border border-slate-800/80">
+          <div className="flex items-center gap-1.5">
+            <KeyRound className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
+            <span>
+              <strong>Privacy Notice:</strong> Never enter real active OTPs, ATM PINs, passwords, or full card numbers.
+            </span>
+          </div>
+          <span className="text-slate-500 hidden sm:inline">Auto-redacted in browser</span>
+        </div>
+
+        {/* Masked Credentials Banner */}
+        {maskedEntities.length > 0 && (
+          <div className="p-3 bg-cyan-950/30 border border-cyan-800/50 rounded-xl text-xs text-cyan-200 flex items-start gap-2.5">
+            <ShieldCheck className="w-4 h-4 text-cyan-400 shrink-0 mt-0.5" />
+            <div className="space-y-1">
+              <span className="font-semibold text-cyan-300">
+                Client-Side Redaction Active: {maskedEntities.length} sensitive credential{maskedEntities.length > 1 ? "s" : ""} masked
+              </span>
+              <div className="flex flex-wrap gap-1.5 pt-0.5">
+                {maskedEntities.map((ent, idx) => (
+                  <span
+                    key={idx}
+                    className="px-2 py-0.5 rounded bg-cyan-900/50 text-cyan-200 border border-cyan-700/40 font-mono text-[11px]"
+                  >
+                    {ent.label}: {ent.originalRedacted}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* OCR Quality Notice / Warnings */}
         {ocrQuality && ocrQuality.warnings.length > 0 && (
           <div className="p-3 bg-amber-950/30 border border-amber-800/50 rounded-xl text-xs text-amber-200 flex items-start gap-2.5">
@@ -402,6 +469,7 @@ export const ScannerInput: React.FC<ScannerInputProps> = ({ onAnalyze, isLoading
           <textarea
             value={inputText}
             onChange={(e) => setInputText(e.target.value)}
+            onPaste={handleTextPaste}
             placeholder="Paste suspicious SMS, WhatsApp message, email excerpt, or URL here..."
             rows={5}
             className="w-full bg-slate-950/80 border border-slate-800 rounded-xl p-4 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500 transition-all font-mono resize-y"
@@ -419,6 +487,7 @@ export const ScannerInput: React.FC<ScannerInputProps> = ({ onAnalyze, isLoading
               setInputText("");
               setSelectedImage(null);
               setOcrQuality(null);
+              setMaskedEntities([]);
             }}
             className="text-xs text-slate-400 hover:text-slate-200"
           >

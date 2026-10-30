@@ -9,13 +9,13 @@
 
 import assert from "node:assert";
 import { runScamDetectionPipeline } from "../lib/engine/pipeline";
-import { OverallRisk } from "../lib/types";
+import { RiskLevel } from "../lib/types";
 
 interface GeneralizationSample {
   id: string;
   name: string;
   text: string;
-  expectedRisk: OverallRisk;
+  expectedRisk: RiskLevel;
 }
 
 const GENERALIZATION_DATASET: GeneralizationSample[] = [

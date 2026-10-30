@@ -1,4 +1,5 @@
 export type RiskLevel = "low" | "suspicious" | "high";
+export type OverallRisk = RiskLevel;
 
 export type EvidenceCategory =
   | "urgency"

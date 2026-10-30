@@ -1,0 +1,250 @@
+export interface TrustedEntity {
+  id: string;
+  name: string;
+  category: "bank" | "courier" | "government" | "telecom" | "utility" | "police_legal" | "tech";
+  aliases: string[];
+  officialDomains: string[];
+  officialHelpline?: string;
+  officialPortal: string;
+}
+
+export const TRUSTED_ENTITIES: TrustedEntity[] = [
+  // Banks
+  {
+    id: "sbi",
+    name: "State Bank of India (SBI)",
+    category: "bank",
+    aliases: ["sbi", "state bank", "yono", "onlinesbi"],
+    officialDomains: ["sbi.co.in", "onlinesbi.sbi", "onlinesbi.com", "yono.sbi"],
+    officialHelpline: "1800 1234 / 1800 2100",
+    officialPortal: "https://www.onlinesbi.sbi",
+  },
+  {
+    id: "hdfc",
+    name: "HDFC Bank",
+    category: "bank",
+    aliases: ["hdfc", "hdfcbank", "hdfc bank"],
+    officialDomains: ["hdfcbank.com", "hdfc.com"],
+    officialHelpline: "1800 202 6161",
+    officialPortal: "https://www.hdfcbank.com",
+  },
+  {
+    id: "icici",
+    name: "ICICI Bank",
+    category: "bank",
+    aliases: ["icici", "icicibank", "icici bank", "imobile"],
+    officialDomains: ["icicibank.com"],
+    officialHelpline: "1800 1080",
+    officialPortal: "https://www.icicibank.com",
+  },
+  {
+    id: "axis",
+    name: "Axis Bank",
+    category: "bank",
+    aliases: ["axis", "axisbank", "axis bank"],
+    officialDomains: ["axisbank.com"],
+    officialHelpline: "1860 419 5555",
+    officialPortal: "https://www.axisbank.com",
+  },
+  {
+    id: "pnb",
+    name: "Punjab National Bank (PNB)",
+    category: "bank",
+    aliases: ["pnb", "punjab national bank", "pnbone"],
+    officialDomains: ["pnbindia.in", "pnbnet.net.in"],
+    officialHelpline: "1800 1800",
+    officialPortal: "https://www.pnbindia.in",
+  },
+  {
+    id: "kotak",
+    name: "Kotak Mahindra Bank",
+    category: "bank",
+    aliases: ["kotak", "kotak 811", "kotak mahindra"],
+    officialDomains: ["kotak.com"],
+    officialHelpline: "1860 266 2666",
+    officialPortal: "https://www.kotak.com",
+  },
+  {
+    id: "paypal",
+    name: "PayPal",
+    category: "bank",
+    aliases: ["paypal", "pay pal"],
+    officialDomains: ["paypal.com", "paypal.me"],
+    officialHelpline: "1800 419 9833",
+    officialPortal: "https://www.paypal.com",
+  },
+
+  // Couriers
+  {
+    id: "indiapost",
+    name: "India Post",
+    category: "courier",
+    aliases: ["india post", "indiapost", "post office", "speed post", "dak vibhag"],
+    officialDomains: ["indiapost.gov.in", "ippbonline.com"],
+    officialHelpline: "1800 266 6868",
+    officialPortal: "https://www.indiapost.gov.in",
+  },
+  {
+    id: "bluedart",
+    name: "Blue Dart Express",
+    category: "courier",
+    aliases: ["blue dart", "bluedart"],
+    officialDomains: ["bluedart.com"],
+    officialHelpline: "1860 233 1234",
+    officialPortal: "https://www.bluedart.com",
+  },
+  {
+    id: "fedex",
+    name: "FedEx Express",
+    category: "courier",
+    aliases: ["fedex", "fed ex"],
+    officialDomains: ["fedex.com"],
+    officialHelpline: "1800 419 4339",
+    officialPortal: "https://www.fedex.com",
+  },
+  {
+    id: "dhl",
+    name: "DHL Express",
+    category: "courier",
+    aliases: ["dhl", "dhl express"],
+    officialDomains: ["dhl.com", "dhl.de"],
+    officialHelpline: "1800 11 1345",
+    officialPortal: "https://www.dhl.com",
+  },
+  {
+    id: "delhivery",
+    name: "Delhivery",
+    category: "courier",
+    aliases: ["delhivery"],
+    officialDomains: ["delhivery.com"],
+    officialHelpline: "0124 6719500",
+    officialPortal: "https://www.delhivery.com",
+  },
+
+  // Government & Regulatory
+  {
+    id: "incometax",
+    name: "Income Tax Department",
+    category: "government",
+    aliases: ["income tax", "incometax", "it refund", "itr", "tax refund", "pan update"],
+    officialDomains: ["incometax.gov.in", "incometaxindia.gov.in", "tin-nsdl.com", "protean-tin.com"],
+    officialHelpline: "1800 103 0025",
+    officialPortal: "https://www.incometax.gov.in",
+  },
+  {
+    id: "epfo",
+    name: "Employees' Provident Fund (EPFO)",
+    category: "government",
+    aliases: ["epfo", "epf", "uan", "pf claim"],
+    officialDomains: ["epfindia.gov.in"],
+    officialHelpline: "1800 118 005",
+    officialPortal: "https://www.epfindia.gov.in",
+  },
+  {
+    id: "uidai",
+    name: "Unique Identification Authority of India (UIDAI / Aadhaar)",
+    category: "government",
+    aliases: ["uidai", "aadhaar", "aadhar"],
+    officialDomains: ["uidai.gov.in", "myaadhaar.uidai.gov.in"],
+    officialHelpline: "1947",
+    officialPortal: "https://myaadhaar.uidai.gov.in",
+  },
+  {
+    id: "trai",
+    name: "Telecom Regulatory Authority of India (TRAI)",
+    category: "government",
+    aliases: ["trai", "telecom department", "dot"],
+    officialDomains: ["trai.gov.in", "dot.gov.in", "sancharsaathi.gov.in"],
+    officialHelpline: "1800 11 0420",
+    officialPortal: "https://sancharsaathi.gov.in",
+  },
+  {
+    id: "parivahan",
+    name: "Ministry of Road Transport & Highways (Parivahan / e-Challan)",
+    category: "government",
+    aliases: ["echallan", "e-challan", "parivahan", "traffic police fine", "challan payment"],
+    officialDomains: ["echallan.parivahan.gov.in", "parivahan.gov.in"],
+    officialHelpline: "0120 4925505",
+    officialPortal: "https://echallan.parivahan.gov.in",
+  },
+
+  // Law Enforcement / Coercion Targets
+  {
+    id: "cybercell",
+    name: "National Cyber Crime Reporting Portal (I4C)",
+    category: "police_legal",
+    aliases: ["cyber crime", "cybercell", "cyber cell", "i4c", "digital arrest", "cbi", "mumbai police", "delhi police", "ed arrest"],
+    officialDomains: ["cybercrime.gov.in"],
+    officialHelpline: "1930 (National Cyber Crime Helpline)",
+    officialPortal: "https://cybercrime.gov.in",
+  },
+
+  // Telecom
+  {
+    id: "jio",
+    name: "Reliance Jio",
+    category: "telecom",
+    aliases: ["jio", "reliance jio", "myjio"],
+    officialDomains: ["jio.com"],
+    officialHelpline: "198 / 199",
+    officialPortal: "https://www.jio.com",
+  },
+  {
+    id: "airtel",
+    name: "Bharti Airtel",
+    category: "telecom",
+    aliases: ["airtel", "bharti airtel", "airtel thanks"],
+    officialDomains: ["airtel.in", "airtel.com"],
+    officialHelpline: "121 / 198",
+    officialPortal: "https://www.airtel.in",
+  },
+  {
+    id: "vi",
+    name: "Vodafone Idea (Vi)",
+    category: "telecom",
+    aliases: ["vodafone", "idea", "vi app"],
+    officialDomains: ["myvi.in"],
+    officialHelpline: "199",
+    officialPortal: "https://www.myvi.in",
+  },
+
+  // Utilities
+  {
+    id: "electricity",
+    name: "State Electricity Board / Power Discom",
+    category: "utility",
+    aliases: ["electricity bill", "power bill", "discom", "power disconnected", "bill overdue power cut"],
+    officialDomains: ["npcl.com", "bsesdelhi.com", "tangedco.gov.in", "mahadiscom.in"],
+    officialHelpline: "1912 (National Power Helpline)",
+    officialPortal: "https://powermin.gov.in",
+  },
+
+  // Tech / Global Platforms
+  {
+    id: "amazon",
+    name: "Amazon",
+    category: "tech",
+    aliases: ["amazon", "amazon pay", "prime membership"],
+    officialDomains: ["amazon.in", "amazon.com"],
+    officialHelpline: "1800 3000 9009",
+    officialPortal: "https://www.amazon.in",
+  },
+  {
+    id: "netflix",
+    name: "Netflix",
+    category: "tech",
+    aliases: ["netflix", "netflix membership"],
+    officialDomains: ["netflix.com"],
+    officialHelpline: "Help Center Online",
+    officialPortal: "https://www.netflix.com",
+  },
+  {
+    id: "google",
+    name: "Google",
+    category: "tech",
+    aliases: ["google", "gmail", "google play", "gpay"],
+    officialDomains: ["google.com", "google.co.in", "pay.google.com"],
+    officialPortal: "https://myaccount.google.com",
+  },
+];
+

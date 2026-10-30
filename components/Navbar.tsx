@@ -1,11 +1,11 @@
 "use client";
 
 import React from "react";
-import { Shield, ShieldAlert, Activity, Cpu, Sparkles } from "lucide-react";
+import { Shield, ShieldAlert, Activity, Cpu, Sparkles, LifeBuoy } from "lucide-react";
 
 interface NavbarProps {
-  activeTab: "scanner" | "benchmark" | "architecture";
-  setActiveTab: (tab: "scanner" | "benchmark" | "architecture") => void;
+  activeTab: "scanner" | "recovery" | "benchmark" | "architecture";
+  setActiveTab: (tab: "scanner" | "recovery" | "benchmark" | "architecture") => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab }) => {
@@ -48,6 +48,22 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab }) => {
           >
             <ShieldAlert className="w-4 h-4" />
             <span>Scanner</span>
+          </button>
+
+          <button
+            onClick={() => setActiveTab("recovery")}
+            className={`px-3 sm:px-4 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-all flex items-center gap-1.5 ${
+              activeTab === "recovery"
+                ? "bg-rose-500/20 text-rose-300 border border-rose-500/40 shadow-sm shadow-rose-500/20"
+                : "text-rose-400/90 hover:text-rose-300 hover:bg-rose-950/30"
+            }`}
+          >
+            <LifeBuoy className="w-4 h-4 text-rose-400" />
+            <span className="font-semibold">Victim Assistance</span>
+            <span className="flex h-2 w-2 relative">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-rose-500"></span>
+            </span>
           </button>
 
           <button

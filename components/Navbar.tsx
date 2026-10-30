@@ -1,11 +1,11 @@
 "use client";
 
 import React from "react";
-import { Shield, ShieldAlert, Activity, Cpu, Sparkles } from "lucide-react";
+import { Shield, ShieldAlert, Activity, Cpu, Sparkles, BrainCircuit } from "lucide-react";
 
 interface NavbarProps {
-  activeTab: "scanner" | "benchmark" | "architecture";
-  setActiveTab: (tab: "scanner" | "benchmark" | "architecture") => void;
+  activeTab: "scanner" | "benchmark" | "architecture" | "scam-iq";
+  setActiveTab: (tab: "scanner" | "benchmark" | "architecture" | "scam-iq") => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab }) => {
@@ -40,11 +40,10 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab }) => {
         <nav className="flex items-center gap-1 sm:gap-2">
           <button
             onClick={() => setActiveTab("scanner")}
-            className={`px-3 sm:px-4 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-all flex items-center gap-1.5 ${
-              activeTab === "scanner"
+            className={`px-3 sm:px-4 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-all flex items-center gap-1.5 ${activeTab === "scanner"
                 ? "bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 shadow-sm shadow-cyan-500/10"
                 : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/50"
-            }`}
+              }`}
           >
             <ShieldAlert className="w-4 h-4" />
             <span>Scanner</span>
@@ -52,11 +51,10 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab }) => {
 
           <button
             onClick={() => setActiveTab("benchmark")}
-            className={`px-3 sm:px-4 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-all flex items-center gap-1.5 ${
-              activeTab === "benchmark"
+            className={`px-3 sm:px-4 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-all flex items-center gap-1.5 ${activeTab === "benchmark"
                 ? "bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 shadow-sm shadow-cyan-500/10"
                 : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/50"
-            }`}
+              }`}
           >
             <Activity className="w-4 h-4" />
             <span>Benchmark Lab</span>
@@ -64,14 +62,24 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab }) => {
 
           <button
             onClick={() => setActiveTab("architecture")}
-            className={`px-3 sm:px-4 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-all flex items-center gap-1.5 ${
-              activeTab === "architecture"
+            className={`px-3 sm:px-4 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-all flex items-center gap-1.5 ${activeTab === "architecture"
                 ? "bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 shadow-sm shadow-cyan-500/10"
                 : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/50"
-            }`}
+              }`}
           >
             <Cpu className="w-4 h-4" />
             <span>Architecture</span>
+          </button>
+
+          <button
+            onClick={() => setActiveTab("scam-iq")}
+            className={`px-3 sm:px-4 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-all flex items-center gap-1.5 ${activeTab === "scam-iq"
+                ? "bg-purple-500/10 text-purple-400 border border-purple-500/30 shadow-sm shadow-purple-500/10 font-semibold"
+                : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/50"
+              }`}
+          >
+            <BrainCircuit className="w-4 h-4 text-purple-400" />
+            <span>Scam IQ Test</span>
           </button>
         </nav>
 

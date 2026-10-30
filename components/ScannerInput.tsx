@@ -1,8 +1,10 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
-import { Upload, FileText, Image as ImageIcon, Sparkles, RefreshCw, AlertCircle, CheckCircle2 } from "lucide-react";
+import { Upload, FileText, Image as ImageIcon, Sparkles, RefreshCw, AlertCircle, CheckCircle2, ShieldCheck, Globe } from "lucide-react";
 import { OcrQualityReport } from "@/lib/types";
+import { runLocalOcr } from "@/lib/ocr/local-ocr";
+import { analyzeImageCanvas } from "@/lib/ocr/canvas-ocr";
 
 interface ScannerInputProps {
   onAnalyze: (text: string, inputType: "text" | "ocr_screenshot", ocrQuality?: OcrQualityReport) => void;
@@ -57,8 +59,10 @@ export const ScannerInput: React.FC<ScannerInputProps> = ({ onAnalyze, isLoading
   const [inputText, setInputText] = useState("");
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [isProcessingOcr, setIsProcessingOcr] = useState(false);
+  const [ocrStatusText, setOcrStatusText] = useState("Extracting text with OCR...");
   const [ocrQuality, setOcrQuality] = useState<OcrQualityReport | null>(null);
   const [dragOver, setDragOver] = useState(false);
+  const [useCloudOcr, setUseCloudOcr] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Clipboard paste listener for images (Ctrl+V)
@@ -81,7 +85,8 @@ export const ScannerInput: React.FC<ScannerInputProps> = ({ onAnalyze, isLoading
 
     window.addEventListener("paste", handlePaste);
     return () => window.removeEventListener("paste", handlePaste);
-  }, []);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [useCloudOcr]);
 
   const handleImageFile = (file: File) => {
     const reader = new FileReader();
@@ -89,33 +94,101 @@ export const ScannerInput: React.FC<ScannerInputProps> = ({ onAnalyze, isLoading
       const base64 = e.target?.result as string;
       setSelectedImage(base64);
       setIsProcessingOcr(true);
+      setOcrStatusText("Preparing screenshot...");
 
-      // Inspect image dimensions via HTMLImageElement
       const img = new Image();
       img.onload = async () => {
+        // Measure canvas quality client-side
+        let canvasWarnings: string[] = [];
         try {
-          const res = await fetch("/api/ocr", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              imageBase64: base64,
-              mimeType: file.type || "image/png",
-              width: img.naturalWidth,
-              height: img.naturalHeight,
-              fileSizeBytes: file.size,
-            }),
-          });
-          const data = await res.json();
-          if (data.extractedText) {
-            setInputText(data.extractedText);
+          const canvas = document.createElement("canvas");
+          canvas.width = Math.min(img.naturalWidth, 1200);
+          canvas.height = Math.min(img.naturalHeight, 800);
+          const ctx = canvas.getContext("2d");
+          if (ctx) {
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+            const metrics = analyzeImageCanvas(ctx, canvas.width, canvas.height);
+            canvasWarnings = metrics.recommendations;
           }
-          if (data.ocrReport) {
-            setOcrQuality(data.ocrReport);
+        } catch (canvasErr) {
+          console.warn("Canvas analysis error:", canvasErr);
+        }
+
+        if (useCloudOcr) {
+          // Explicit Cloud Gemini Vision OCR path
+          setOcrStatusText("Contacting Gemini Vision Cloud OCR...");
+          try {
+            const res = await fetch("/api/ocr", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                imageBase64: base64,
+                mimeType: file.type || "image/png",
+                width: img.naturalWidth,
+                height: img.naturalHeight,
+                fileSizeBytes: file.size,
+                explicitCloudConsent: true,
+              }),
+            });
+            const data = await res.json();
+            if (data.extractedText) {
+              setInputText(data.extractedText);
+            }
+            if (data.ocrReport) {
+              setOcrQuality({
+                ...data.ocrReport,
+                warnings: Array.from(new Set([...data.ocrReport.warnings, ...canvasWarnings])),
+              });
+            }
+          } catch (err) {
+            console.error("Cloud OCR API failed:", err);
+            setOcrQuality({
+              isReadable: false,
+              confidence: 0,
+              charCount: 0,
+              warnings: ["Cloud OCR request failed. Check server logs or toggle offline Local OCR."],
+            });
+          } finally {
+            setIsProcessingOcr(false);
           }
-        } catch (err) {
-          console.error("OCR API failed:", err);
-        } finally {
-          setIsProcessingOcr(false);
+        } else {
+          // Local In-Browser OCR path (Tesseract.js English + Hindi)
+          try {
+            const result = await runLocalOcr(file, (p) => {
+              setOcrStatusText(p.status);
+            });
+
+            if (result.text) {
+              setInputText(result.text);
+            }
+
+            const isReadable = result.text.length > 5 && result.confidence >= 30;
+            const warnings = [...canvasWarnings];
+            if (result.confidence < 45) {
+              warnings.push(`Low local OCR character confidence (${result.confidence}%). Verify extracted words.`);
+            }
+            if (!result.text.trim()) {
+              warnings.push("No readable text detected in screenshot. Image might be blank or text resolution too low.");
+            }
+
+            setOcrQuality({
+              isReadable,
+              confidence: result.confidence,
+              charCount: result.text.length,
+              warnings,
+            });
+          } catch (err: unknown) {
+            console.error("Local OCR failed:", err);
+            const msg = err instanceof Error ? err.message : String(err);
+            setOcrQuality({
+              isReadable: false,
+              confidence: 0,
+              charCount: 0,
+              warnings: [`Local OCR engine failed: ${msg}. Try pasting text manually.`],
+            });
+          } finally {
+            setIsProcessingOcr(false);
+          }
         }
       };
       img.src = base64;
@@ -201,82 +274,115 @@ export const ScannerInput: React.FC<ScannerInputProps> = ({ onAnalyze, isLoading
 
       <form onSubmit={handleSubmit} className="space-y-4">
         {activeMode === "image" && (
-          <div
-            onDragOver={(e) => {
-              e.preventDefault();
-              setDragOver(true);
-            }}
-            onDragLeave={() => setDragOver(false)}
-            onDrop={(e) => {
-              e.preventDefault();
-              setDragOver(false);
-              const files = e.dataTransfer.files;
-              if (files && files[0]) {
-                handleImageFile(files[0]);
-              }
-            }}
-            onClick={() => fileInputRef.current?.click()}
-            className={`border-2 border-dashed rounded-xl p-6 text-center cursor-pointer transition-all ${
-              dragOver
-                ? "border-cyan-400 bg-cyan-950/20"
-                : "border-slate-700 hover:border-slate-600 bg-slate-950/40"
-            }`}
-          >
-            <input
-              type="file"
-              ref={fileInputRef}
-              accept="image/*"
-              className="hidden"
-              onChange={(e) => {
-                if (e.target.files && e.target.files[0]) {
-                  handleImageFile(e.target.files[0]);
-                }
-              }}
-            />
-
-            {selectedImage ? (
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={selectedImage}
-                  alt="Uploaded screenshot"
-                  className="max-h-36 rounded-lg border border-slate-700 object-contain shadow-md"
-                />
-                <div className="text-left text-xs text-slate-300 space-y-1">
-                  <div className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                    <span className="font-semibold text-slate-200">Screenshot Loaded</span>
-                  </div>
-                  {isProcessingOcr ? (
-                    <div className="flex items-center gap-2 text-cyan-400">
-                      <RefreshCw className="w-3.5 h-3.5 animate-spin" />
-                      <span>Extracting text with OCR...</span>
-                    </div>
-                  ) : (
-                    <p className="text-slate-400">Click or drop a different image to replace</p>
-                  )}
-                  {ocrQuality && (
-                    <div className="mt-2 pt-2 border-t border-slate-800">
-                      <span className="text-[11px] text-slate-400">
-                        OCR Confidence:{" "}
-                        <strong className="text-cyan-400">{ocrQuality.confidence}%</strong>
-                      </span>
-                    </div>
-                  )}
+          <div className="space-y-3">
+            {/* OCR Privacy Mode Toggle */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 p-3 bg-slate-950/70 border border-slate-800 rounded-xl text-xs">
+              <div className="flex items-center gap-2">
+                {useCloudOcr ? (
+                  <Globe className="w-4 h-4 text-amber-400 shrink-0" />
+                ) : (
+                  <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0" />
+                )}
+                <div>
+                  <span className="font-medium text-slate-200">
+                    {useCloudOcr ? "Cloud Gemini Vision OCR" : "Offline Local OCR (English + Hindi)"}
+                  </span>
+                  <p className="text-[11px] text-slate-400">
+                    {useCloudOcr
+                      ? "⚠️ Notice: Sends screenshot image to Google Gemini API. Disable for strict offline privacy."
+                      : "🔒 Processed entirely inside your browser via Web Worker. No screenshot leaves your device."}
+                  </p>
                 </div>
               </div>
-            ) : (
-              <div className="space-y-2">
-                <Upload className="w-8 h-8 text-cyan-400 mx-auto" />
-                <p className="text-sm font-medium text-slate-300">
-                  Drop a suspicious SMS / WhatsApp screenshot here, or{" "}
-                  <span className="text-cyan-400 underline">browse</span>
-                </p>
-                <p className="text-xs text-slate-500">
-                  Or press <kbd className="px-1.5 py-0.5 bg-slate-800 rounded text-slate-400">Ctrl+V</kbd> anywhere to paste screenshot from clipboard
-                </p>
-              </div>
-            )}
+
+              <label className="flex items-center gap-2 cursor-pointer self-start sm:self-center shrink-0">
+                <input
+                  type="checkbox"
+                  checked={useCloudOcr}
+                  onChange={(e) => setUseCloudOcr(e.target.checked)}
+                  className="rounded border-slate-700 bg-slate-800 text-cyan-500 focus:ring-0 focus:ring-offset-0"
+                />
+                <span className="text-[11px] text-slate-300">Enable Cloud OCR</span>
+              </label>
+            </div>
+
+            <div
+              onDragOver={(e) => {
+                e.preventDefault();
+                setDragOver(true);
+              }}
+              onDragLeave={() => setDragOver(false)}
+              onDrop={(e) => {
+                e.preventDefault();
+                setDragOver(false);
+                const files = e.dataTransfer.files;
+                if (files && files[0]) {
+                  handleImageFile(files[0]);
+                }
+              }}
+              onClick={() => fileInputRef.current?.click()}
+              className={`border-2 border-dashed rounded-xl p-6 text-center cursor-pointer transition-all ${
+                dragOver
+                  ? "border-cyan-400 bg-cyan-950/20"
+                  : "border-slate-700 hover:border-slate-600 bg-slate-950/40"
+              }`}
+            >
+              <input
+                type="file"
+                ref={fileInputRef}
+                accept="image/*"
+                className="hidden"
+                onChange={(e) => {
+                  if (e.target.files && e.target.files[0]) {
+                    handleImageFile(e.target.files[0]);
+                  }
+                }}
+              />
+
+              {selectedImage ? (
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={selectedImage}
+                    alt="Uploaded screenshot"
+                    className="max-h-36 rounded-lg border border-slate-700 object-contain shadow-md"
+                  />
+                  <div className="text-left text-xs text-slate-300 space-y-1">
+                    <div className="flex items-center gap-2">
+                      <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                      <span className="font-semibold text-slate-200">Screenshot Loaded</span>
+                    </div>
+                    {isProcessingOcr ? (
+                      <div className="flex items-center gap-2 text-cyan-400">
+                        <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                        <span>{ocrStatusText}</span>
+                      </div>
+                    ) : (
+                      <p className="text-slate-400">Click or drop a different image to replace</p>
+                    )}
+                    {ocrQuality && (
+                      <div className="mt-2 pt-2 border-t border-slate-800">
+                        <span className="text-[11px] text-slate-400">
+                          OCR Confidence:{" "}
+                          <strong className="text-cyan-400">{ocrQuality.confidence}%</strong>
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ) : (
+                <div className="space-y-2">
+                  <Upload className="w-8 h-8 text-cyan-400 mx-auto" />
+                  <p className="text-sm font-medium text-slate-300">
+                    Drop a suspicious SMS / WhatsApp screenshot here, or{" "}
+                    <span className="text-cyan-400 underline">browse</span>
+                  </p>
+                  <p className="text-xs text-slate-500">
+                    Or press <kbd className="px-1.5 py-0.5 bg-slate-800 rounded text-slate-400">Ctrl+V</kbd> anywhere to paste screenshot from clipboard
+                  </p>
+                </div>
+              )}
+            </div>
           </div>
         )}
 

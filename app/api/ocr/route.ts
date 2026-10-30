@@ -7,12 +7,22 @@ export const dynamic = "force-dynamic";
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { imageBase64, mimeType = "image/png", width, height, fileSizeBytes } = body;
+    const { imageBase64, mimeType = "image/png", width, height, fileSizeBytes, explicitCloudConsent } = body;
 
     if (!imageBase64) {
       return NextResponse.json(
         { error: "Image base64 payload is required." },
         { status: 400 }
+      );
+    }
+
+    if (!explicitCloudConsent) {
+      return NextResponse.json(
+        {
+          error: "Cloud OCR requires explicit user consent.",
+          notice: "By default, use local in-browser OCR for privacy. Enable Cloud OCR toggle only if you explicitly choose to send screenshots to Google Gemini API.",
+        },
+        { status: 403 }
       );
     }
 
@@ -31,26 +41,52 @@ export async function POST(req: NextRequest) {
     let extractedText = "";
     const apiKey = process.env.GEMINI_API_KEY;
 
-    if (apiKey) {
-      try {
-        const ai = new GoogleGenAI({ apiKey });
-        const response = await ai.models.generateContent({
-          model: "gemini-2.5-flash",
-          contents: [
-            {
-              inlineData: {
-                data: cleanBase64,
-                mimeType,
-              },
-            },
-            "Extract all readable text, SMS body, sender headers, and URLs from this screenshot exactly as they appear. Do not summarize or add markdown formatting. If the image is blurry, corrupted, or unreadable, explain what is wrong.",
-          ],
-        });
+    if (!apiKey) {
+      return NextResponse.json(
+        {
+          error: "GEMINI_API_KEY is not configured on the server. Please use local in-browser OCR which works offline.",
+          extractedText: "",
+          ocrReport: formatOcrQualityReport({
+            extractedText: "",
+            qualityScore: quality.qualityScore,
+            rawWarnings: [...quality.warnings, "Cloud OCR unavailable: GEMINI_API_KEY unset. Local browser OCR should be used."],
+          }),
+        },
+        { status: 200 }
+      );
+    }
 
-        extractedText = response.text?.trim() || "";
-      } catch (err: unknown) {
-        console.warn("Gemini OCR error:", err);
-      }
+    try {
+      const ai = new GoogleGenAI({ apiKey });
+      const response = await ai.models.generateContent({
+        model: "gemini-2.5-flash",
+        contents: [
+          {
+            inlineData: {
+              data: cleanBase64,
+              mimeType,
+            },
+          },
+          "Extract all readable text, SMS body, sender headers, and URLs from this screenshot exactly as they appear. Do not summarize or add markdown formatting. If the image is blurry, corrupted, or unreadable, explain what is wrong.",
+        ],
+      });
+
+      extractedText = response.text?.trim() || "";
+    } catch (err: unknown) {
+      console.warn("Gemini OCR error:", err);
+      const errMsg = err instanceof Error ? err.message : String(err);
+      return NextResponse.json(
+        {
+          error: `Gemini Vision OCR failed: ${errMsg}`,
+          extractedText: "",
+          ocrReport: formatOcrQualityReport({
+            extractedText: "",
+            qualityScore: quality.qualityScore,
+            rawWarnings: [...quality.warnings, `Cloud OCR error: ${errMsg}`],
+          }),
+        },
+        { status: 200 }
+      );
     }
 
     const ocrReport = formatOcrQualityReport({
@@ -72,4 +108,3 @@ export async function POST(req: NextRequest) {
     );
   }
 }
-

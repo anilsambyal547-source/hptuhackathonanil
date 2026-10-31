@@ -61,58 +61,103 @@ export const EvidenceHighlighter: React.FC<EvidenceHighlighterProps> = ({ text, 
     }
   };
 
-  // Sort and deduplicate overlapping spans
-  const sortedSpans = [...spans].sort((a, b) => a.start - b.start);
+  // Helper to check if an index cuts into the middle of a continuous word
+  const isMidWord = (str: string, index: number) => {
+    if (index <= 0 || index >= str.length) return false;
+    return /[\w\d]/.test(str[index - 1]) && /[\w\d]/.test(str[index]);
+  };
+
+  // Consolidate and resolve spans strictly on token boundaries without word-slicing
+  const resolvedSpans = React.useMemo(() => {
+    if (!spans || spans.length === 0) return [];
+
+    // Sort primarily by start ascending, then by length descending
+    const sorted = [...spans].sort((a, b) => {
+      if (a.start !== b.start) return a.start - b.start;
+      return (b.end - b.start) - (a.end - a.start);
+    });
+
+    const result: EvidentiarySpan[] = [];
+    let occupiedUntil = 0;
+
+    for (const span of sorted) {
+      let start = Math.max(occupiedUntil, span.start);
+      let end = Math.min(text.length, span.end);
+
+      // If start lands mid-word, advance to the next token boundary
+      if (isMidWord(text, start)) {
+        while (start < end && /[\w\d]/.test(text[start])) {
+          start++;
+        }
+        while (start < end && /\s/.test(text[start])) {
+          start++;
+        }
+      }
+
+      // If end lands mid-word, expand to the end of the word token
+      if (isMidWord(text, end)) {
+        while (end < text.length && /[\w\d]/.test(text[end])) {
+          end++;
+        }
+      }
+
+      if (end - start >= 2) {
+        result.push({
+          ...span,
+          start,
+          end,
+          text: text.substring(start, end),
+        });
+        occupiedUntil = end;
+      }
+    }
+
+    return result;
+  }, [spans, text]);
 
   // Render text segments
   const renderHighlightedText = () => {
-    if (sortedSpans.length === 0) {
+    if (resolvedSpans.length === 0) {
       return <span>{text}</span>;
     }
 
     const elements: React.ReactNode[] = [];
     let currentIndex = 0;
 
-    for (let i = 0; i < sortedSpans.length; i++) {
-      const span = sortedSpans[i];
-      const start = Math.max(currentIndex, span.start);
-      const end = Math.min(text.length, span.end);
-
-      if (start > currentIndex) {
+    for (const span of resolvedSpans) {
+      if (span.start > currentIndex) {
         elements.push(
           <span key={`plain-${currentIndex}`}>
-            {text.substring(currentIndex, start)}
+            {text.substring(currentIndex, span.start)}
           </span>
         );
       }
 
-      if (end > start) {
-        const styles = getCategoryStyles(span.category);
-        const isSelected = selectedSpan?.id === span.id;
+      const styles = getCategoryStyles(span.category);
+      const isSelected = selectedSpan?.id === span.id;
 
-        elements.push(
-          <mark
-            key={span.id}
-            tabIndex={0}
-            role="button"
-            aria-label={`${styles.label}: ${text.substring(start, end)}. Press Enter to view evidence breakdown.`}
-            onClick={() => setSelectedSpan(span)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" || e.key === " ") {
-                e.preventDefault();
-                setSelectedSpan(span);
-              }
-            }}
-            className={`cursor-pointer px-1.5 py-0.5 rounded transition-all font-semibold outline-none focus:ring-2 focus:ring-cyan-400 ${
-              styles.bg
-            } ${isSelected ? "ring-2 ring-white/70 underline underline-offset-4 decoration-2" : ""}`}
-            title={`${span.title || span.category.replace(/_/g, " ")}: Click or press Enter to view evidence breakdown`}
-          >
-            {text.substring(start, end)}
-          </mark>
-        );
-        currentIndex = end;
-      }
+      elements.push(
+        <mark
+          key={span.id}
+          tabIndex={0}
+          role="button"
+          aria-label={`${styles.label}: ${text.substring(span.start, span.end)}. Press Enter to view evidence breakdown.`}
+          onClick={() => setSelectedSpan(span)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              setSelectedSpan(span);
+            }
+          }}
+          className={`cursor-pointer px-1.5 py-0.5 rounded transition-all font-semibold outline-none focus:ring-2 focus:ring-cyan-400 ${
+            styles.bg
+          } ${isSelected ? "ring-2 ring-white/70 underline underline-offset-4 decoration-2" : ""}`}
+          title={`${span.title || span.category.replace(/_/g, " ")}: Click or press Enter to view evidence breakdown`}
+        >
+          {text.substring(span.start, span.end)}
+        </mark>
+      );
+      currentIndex = span.end;
     }
 
     if (currentIndex < text.length) {

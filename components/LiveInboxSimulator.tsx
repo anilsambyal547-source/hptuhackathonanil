@@ -115,13 +115,58 @@ HDFC Bank Security Team`,
   },
 ];
 
+const WEBHOOK_PRESETS = [
+  {
+    label: "📧 Fake Job Offer Email",
+    category: "job",
+    payload: `From: "Microsoft Talent Acquisition" <careers@recruitment-microsoft-portal.site>
+Reply-To: hr.onboarding.desk@gmail.com
+Subject: Offer Letter: Remote Cloud Operations Associate ($4,200/month)
+Authentication-Results: spf=fail; dkim=fail; dmarc=fail
+
+Dear Candidate,
+Congratulations! Following your profile review, you have been selected for the Remote Cloud Operations Associate role with Microsoft India.
+
+To secure your equipment dispatch and activate your payroll credentials, submit your Aadhaar and bank details immediately:
+<a href="https://microsoft-career-verify.site/portal">https://careers.microsoft.com/onboarding</a>
+
+Please complete verification within 24 hours to secure your joining bonus.
+
+Regards,
+Microsoft Global Talent Operations`,
+  },
+  {
+    label: "📦 DHL Customs Scam Email",
+    category: "courier",
+    payload: `From: "DHL Express India" <tracking-support@dhl-clearance-desk.top>
+Reply-To: dhl.customs.pay@gmail.com
+Subject: Urgent: Consignment #DHL-98124 held at Customs Air Cargo Terminal
+Authentication-Results: spf=fail; dkim=fail; dmarc=fail
+
+Dear Customer,
+Your inbound international package (Tracking: DHL-9812401) is currently detained by customs border security due to unpaid clearance tariffs.
+
+An unpaid customs duty of Rs 1,490 must be cleared immediately within 12 hours:
+<a href="http://dhl-express-clearance.top/pay">https://www.dhl.com/in-en/home/tracking</a>
+
+Failure to pay will result in parcel confiscation and return to sender.
+
+DHL Express Customs Division`,
+  },
+  {
+    label: "📱 Fake UPI Refund SMS",
+    category: "upi",
+    payload: `PayTM Refund Alert: Your pending cashback refund of Rs 4,999 is approved. Enter your UPI PIN on the link to receive funds into your bank account immediately: https://paytm-cashback-claim.xyz/receive or refund will expire in 15 mins.`,
+  },
+];
+
 export const LiveInboxSimulator: React.FC = () => {
   const [activeItem, setActiveItem] = useState<SimulatedItem>(SIMULATED_ITEMS[0]);
   const [filterType, setFilterType] = useState<"all" | "email" | "sms">("all");
   const [analysisResult, setAnalysisResult] = useState<ScamAnalysisResult | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [customComposerOpen, setCustomComposerOpen] = useState(false);
-  const [customPayload, setCustomPayload] = useState("");
+  const [customPayload, setCustomPayload] = useState(WEBHOOK_PRESETS[0].payload);
 
   const analyzeSelected = async (payload: string) => {
     setIsAnalyzing(true);
@@ -187,9 +232,9 @@ export const LiveInboxSimulator: React.FC = () => {
               RFC-822 + TRAI DLT
             </span>
           </div>
-          <h2 className="text-2xl sm:text-3xl font-serif font-bold text-[#181a15]">Interactive Mail & SMS Live Guard</h2>
+          <h2 className="text-2xl sm:text-3xl font-serif font-bold text-[#181a15]">Auto-Scan Inbox & Inbound Guard</h2>
           <p className="text-xs sm:text-sm text-[#5c6454]">
-            Experience automatic in-mail protection without logging in. Click any message to trigger real-time passive forensic analysis.
+            Zero-Copy-Paste Protection: Click any incoming Email or SMS on the left to see SafeGuard AI automatically inspect headers, hidden links, and scam patterns in real-time.
           </p>
         </div>
 
@@ -293,6 +338,21 @@ export const LiveInboxSimulator: React.FC = () => {
 
         {/* Right Pane: Active Reader + Inline Security Banner & Diagnostics (7 cols) */}
         <div className="lg:col-span-7 space-y-5">
+          {/* Scanning In Progress Banner */}
+          {isAnalyzing && !analysisResult && (
+            <div className="p-4 rounded-2xl border border-[#cbe0b8] bg-[#eef5e6] text-[#2c401c] flex items-center gap-3 shadow-xs animate-pulse">
+              <Loader2 className="w-5 h-5 animate-spin text-[#3d5926] shrink-0" />
+              <div>
+                <span className="font-mono text-xs font-bold uppercase tracking-wider text-[#181a15]">
+                  SafeGuard AI Live Guard: Auto-Scanning Message...
+                </span>
+                <p className="text-[11px] text-[#5c6454]">
+                  Inspecting RFC-822 headers, From/Reply-To divergence, and embedded URLs in real-time...
+                </p>
+              </div>
+            </div>
+          )}
+
           {/* Inline Security Banner */}
           {analysisResult && (
             <div
@@ -351,7 +411,7 @@ export const LiveInboxSimulator: React.FC = () => {
                 spans={analysisResult.evidenceSpans}
               />
             ) : (
-              <div className="p-4 bg-slate-950 rounded-2xl border border-slate-800 font-mono text-xs text-slate-200 whitespace-pre-wrap">
+              <div className="p-4 bg-[#f7f9f5] rounded-2xl border border-[#e2e6dc] font-mono text-xs text-[#181a15] whitespace-pre-wrap">
                 {activeItem.rawPayload}
               </div>
             )}
@@ -385,44 +445,63 @@ export const LiveInboxSimulator: React.FC = () => {
 
       {/* Inbound Webhook Simulator Composer Modal */}
       {customComposerOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md animate-in fade-in">
-          <div className="w-full max-w-2xl bg-slate-900 border border-slate-800 rounded-3xl p-6 space-y-4 shadow-2xl">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#181a15]/60 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="w-full max-w-2xl bg-white border border-[#e2e6dc] rounded-3xl p-6 space-y-4 shadow-2xl text-[#181a15]">
+            <div className="flex items-center justify-between pb-3 border-b border-[#edf1e8]">
               <div className="flex items-center gap-2">
-                <Send className="w-5 h-5 text-cyan-400" />
-                <h3 className="text-base font-bold text-white">Simulate Inbound Forwarded Webhook</h3>
+                <Send className="w-5 h-5 text-[#3d5926]" />
+                <h3 className="font-serif text-base font-bold text-[#181a15]">Simulate Inbound Forwarded Webhook</h3>
               </div>
               <button
                 onClick={() => setCustomComposerOpen(false)}
-                className="text-xs font-semibold text-slate-400 hover:text-white"
+                className="text-xs font-semibold text-[#636c5c] hover:text-[#181a15]"
               >
                 Cancel
               </button>
             </div>
 
             <form onSubmit={handleCustomSubmit} className="space-y-4">
-              <p className="text-xs text-slate-400">
-                Paste RFC-822 email headers, HTML buttons, or raw SMS payload to simulate an external webhook forward into `/api/inbound-mail`:
-              </p>
+              <div className="space-y-2">
+                <div className="flex items-center justify-between text-xs">
+                  <span className="text-[#636c5c] font-medium">Quick-Fill Live Attack Scenarios:</span>
+                  <span className="text-[10px] text-[#3d5926] font-mono font-semibold">1-Click Test</span>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {WEBHOOK_PRESETS.map((preset, idx) => (
+                    <button
+                      key={idx}
+                      type="button"
+                      onClick={() => setCustomPayload(preset.payload)}
+                      className={`text-xs px-3 py-1.5 rounded-xl border transition-all flex items-center gap-1.5 shadow-2xs ${
+                        customPayload === preset.payload
+                          ? "bg-[#eef5e6] text-[#3d5926] border-[#8ec251] font-semibold ring-1 ring-[#8ec251]/30"
+                          : "bg-[#f7f9f5] text-[#181a15] border-[#e2e6dc] hover:border-[#8ec251]"
+                      }`}
+                    >
+                      <span>{preset.label}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
               <textarea
                 value={customPayload}
                 onChange={(e) => setCustomPayload(e.target.value)}
                 rows={8}
                 placeholder={`From: "Custom Brand" <spoofed@evil.top>\nReply-To: phisher@gmail.com\nSubject: Account Verification\n\nPlease update your password at https://bank-verify.top`}
-                className="w-full bg-slate-950 border border-slate-800 rounded-2xl p-4 text-xs font-mono text-slate-100 placeholder-slate-600 focus:outline-none focus:border-cyan-500"
+                className="w-full bg-[#fcfdfa] border border-[#e2e6dc] rounded-2xl p-4 text-xs font-mono text-[#181a15] placeholder-[#9ca394] focus:outline-none focus:border-[#8ec251]"
               />
               <div className="flex justify-end gap-2">
                 <button
                   type="button"
                   onClick={() => setCustomComposerOpen(false)}
-                  className="px-4 py-2 rounded-xl text-xs font-semibold text-slate-400 hover:bg-slate-800"
+                  className="px-4 py-2 rounded-xl text-xs font-semibold text-[#636c5c] hover:bg-[#f7f9f5] hover:text-[#181a15]"
                 >
                   Close
                 </button>
                 <button
                   type="submit"
                   disabled={!customPayload.trim()}
-                  className="px-5 py-2 rounded-xl text-xs font-bold text-slate-950 bg-cyan-400 hover:bg-cyan-300"
+                  className="px-5 py-2 rounded-2xl text-xs font-bold text-[#162704] bg-[#bef264] hover:bg-[#aee750] border border-[#a8df4a]/70 shadow-xs"
                 >
                   Forward to Live Guard
                 </button>

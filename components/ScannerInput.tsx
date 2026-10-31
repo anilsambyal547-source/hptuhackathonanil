@@ -17,6 +17,7 @@ import {
   Package,
   EyeOff,
   FolderOpen,
+  ShieldAlert,
 } from "lucide-react";
 import { OcrQualityReport } from "@/lib/types";
 import { runLocalOcr } from "@/lib/ocr/local-ocr";
@@ -543,6 +544,48 @@ export const ScannerInput: React.FC<ScannerInputProps> = ({ onAnalyze, isLoading
     }
   };
 
+  // 1-Click Built-in Email Scenario Generator
+  const handleLoadBuiltinEmail = (type: "spoofed" | "legit") => {
+    const text =
+      type === "spoofed"
+        ? `From: "State Bank of India Support" <no-reply@sbi-fraud-alert.top>
+Reply-To: sbi.kyc.desk.claim@gmail.com
+Subject: URGENT: Complete NetBanking KYC to prevent debit block
+Authentication-Results: spf=fail; dkim=fail; dmarc=fail
+
+Dear SBI Customer,
+Your State Bank of India NetBanking privilege has been temporarily restricted due to missing PAN linking.
+
+Please verify your credentials immediately to avoid account termination:
+<a href="http://sbi-login-portal.top/verify">https://www.onlinesbi.sbi/update</a>
+
+Regards,
+SBI Security Division`
+        : `From: "Amazon.in Order Updates" <auto-confirm@amazon.in>
+Reply-To: no-reply@amazon.in
+Subject: Ordered: Your Amazon.in order #402-9981240-192841
+Authentication-Results: spf=pass; dkim=pass; dmarc=pass
+
+Hello Customer,
+Thank you for your order with Amazon.in. We will notify you once your package is dispatched.
+
+Order details:
+1 of boAt Bassheads 242 in Ear Wired Earphones with Mic (Neon Green)
+Total Amount: Rs 499.00 (Cash on Delivery)
+
+Track your order anytime at:
+<a href="https://www.amazon.in/your-orders">https://www.amazon.in/your-orders</a>
+
+Never share your OTP or Amazon account password with anyone.
+Amazon Customer Service`;
+
+    setSelectedImage(null);
+    setOcrQuality(null);
+    setInputText(text);
+    setActiveMode("email");
+    onAnalyze(text, "email_eml");
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!inputText.trim()) return;
@@ -703,7 +746,7 @@ export const ScannerInput: React.FC<ScannerInputProps> = ({ onAnalyze, isLoading
                 >
                   <Smartphone className="w-4 h-4 text-[#3d5926] shrink-0 mt-0.5 group-hover:scale-110 transition-transform" />
                   <div>
-                    <div className="text-xs font-semibold text-[#181a15]">📱 Bank KYC Scam</div>
+                    <div className="text-xs font-semibold text-[#181a15]">📱 Test Bank Scam Screenshot</div>
                     <div className="text-[10px] text-[#636c5c]">SBI Alert SMS • Clear OCR (96% Conf)</div>
                   </div>
                 </button>
@@ -716,7 +759,7 @@ export const ScannerInput: React.FC<ScannerInputProps> = ({ onAnalyze, isLoading
                 >
                   <Package className="w-4 h-4 text-rose-600 shrink-0 mt-0.5 group-hover:scale-110 transition-transform" />
                   <div>
-                    <div className="text-xs font-semibold text-[#181a15]">📦 Courier Parcel Trap</div>
+                    <div className="text-xs font-semibold text-[#181a15]">📦 Test Courier Scam Screenshot</div>
                     <div className="text-[10px] text-[#636c5c]">India Post SMS • Customs Fee Link</div>
                   </div>
                 </button>
@@ -729,7 +772,7 @@ export const ScannerInput: React.FC<ScannerInputProps> = ({ onAnalyze, isLoading
                 >
                   <EyeOff className="w-4 h-4 text-amber-600 shrink-0 mt-0.5 group-hover:scale-110 transition-transform" />
                   <div>
-                    <div className="text-xs font-semibold text-[#181a15]">🌫️ Blurry / Degraded Image</div>
+                    <div className="text-xs font-semibold text-[#181a15]">🌫️ Test Blurry Screenshot (Graceful Failure)</div>
                     <div className="text-[10px] text-[#636c5c]">Graceful Failure & High Uncertainty</div>
                   </div>
                 </button>
@@ -840,6 +883,45 @@ export const ScannerInput: React.FC<ScannerInputProps> = ({ onAnalyze, isLoading
         {/* Drop .EML / Email Mode */}
         {activeMode === "email" && (
           <div className="space-y-3">
+            {/* 1-Click Built-in Email Presets */}
+            <div className="p-3.5 bg-[#f7f9f5] border border-[#dce3d5] rounded-2xl space-y-2">
+              <div className="flex items-center justify-between text-xs">
+                <span className="font-semibold text-[#2c401c] flex items-center gap-1.5">
+                  <Sparkles className="w-3.5 h-3.5 text-[#557e33]" />
+                  <span>1-Click Test Email Scenarios (Zero File Upload Required):</span>
+                </span>
+                <span className="text-[10px] text-[#636c5c] font-mono">RFC-822 & Auth Forensics</span>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                <button
+                  type="button"
+                  disabled={isLoading}
+                  onClick={() => handleLoadBuiltinEmail("spoofed")}
+                  className="px-3 py-2.5 rounded-xl bg-white hover:bg-rose-50/50 border border-[#dce3d5] hover:border-rose-300 text-left transition-all group flex items-start gap-2 shadow-2xs"
+                >
+                  <ShieldAlert className="w-4 h-4 text-rose-600 shrink-0 mt-0.5 group-hover:scale-110 transition-transform" />
+                  <div>
+                    <div className="text-xs font-semibold text-[#181a15]">🚨 Test Spoofed SBI Email</div>
+                    <div className="text-[10px] text-[#636c5c]">SPF/DKIM Fail • Reply-To Divergence • Link Mismatch</div>
+                  </div>
+                </button>
+
+                <button
+                  type="button"
+                  disabled={isLoading}
+                  onClick={() => handleLoadBuiltinEmail("legit")}
+                  className="px-3 py-2.5 rounded-xl bg-white hover:bg-[#edf2e7] border border-[#dce3d5] hover:border-[#9ec964] text-left transition-all group flex items-start gap-2 shadow-2xs"
+                >
+                  <ShieldCheck className="w-4 h-4 text-[#3d5926] shrink-0 mt-0.5 group-hover:scale-110 transition-transform" />
+                  <div>
+                    <div className="text-xs font-semibold text-[#181a15]">✅ Test Legit Amazon Email</div>
+                    <div className="text-[10px] text-[#636c5c]">SPF/DKIM Pass • Authentic amazon.in Domain</div>
+                  </div>
+                </button>
+              </div>
+            </div>
+
             <div
               onDragOver={(e) => {
                 e.preventDefault();

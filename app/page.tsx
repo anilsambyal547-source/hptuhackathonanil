@@ -9,14 +9,12 @@ import { UncertaintyBanner } from "@/components/UncertaintyBanner";
 import { EvidenceHighlighter } from "@/components/EvidenceHighlighter";
 import { SafeUrlInspectorCard } from "@/components/SafeUrlInspectorCard";
 import { ActionStepsCard } from "@/components/ActionStepsCard";
-import { BenchmarkDashboard } from "@/components/BenchmarkDashboard";
-import { ArchitectureDiagram } from "@/components/ArchitectureDiagram";
+import { JudgeAuditConsole } from "@/components/JudgeAuditConsole";
 import { VictimRecoveryDashboard } from "@/components/VictimAssistance/VictimRecoveryDashboard";
 import { ScamIqSuite } from "@/components/scam-iq/ScamIqSuite";
 import { LiveInboxSimulator } from "@/components/LiveInboxSimulator";
 import { EmailForensicsCard } from "@/components/EmailForensicsCard";
 import { TacticsRadarCard } from "@/components/TacticsRadarCard";
-import { ExtensionGuideModal } from "@/components/ExtensionGuideModal";
 import { mapAnalysisResultToCategory } from "@/lib/data/scam-routing";
 import { ScamCategoryType } from "@/lib/types/recovery";
 import { ScamAnalysisResult, OcrQualityReport } from "@/lib/types";
@@ -24,11 +22,25 @@ import { Shield, Lock, PhoneCall, Sparkles } from "lucide-react";
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState<
-    "scanner" | "inbox" | "recovery" | "benchmark" | "architecture" | "scam-iq"
+    "scanner" | "inbox" | "recovery" | "scam-iq" | "audit"
   >("scanner");
   const [isLoading, setIsLoading] = useState(false);
   const [analysisResult, setAnalysisResult] = useState<ScamAnalysisResult | null>(null);
-  const [showExtensionModal, setShowExtensionModal] = useState(false);
+
+  // Keyboard shortcut listener: Ctrl+Shift+J or Alt+J toggles the Judge Audit Console
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (
+        (e.ctrlKey && e.shiftKey && (e.key === "J" || e.key === "j")) ||
+        (e.altKey && (e.key === "J" || e.key === "j"))
+      ) {
+        e.preventDefault();
+        setActiveTab((prev) => (prev === "audit" ? "scanner" : "audit"));
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
 
   // Victim assistance prefilled context
   const [importedCategory, setImportedCategory] = useState<ScamCategoryType>("banking_upi");
@@ -93,7 +105,7 @@ export default function Home() {
       <Navbar
         activeTab={activeTab}
         setActiveTab={setActiveTab}
-        onOpenExtensionModal={() => setShowExtensionModal(true)}
+        onOpenAuditConsole={() => setActiveTab("audit")}
       />
 
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
@@ -191,30 +203,30 @@ export default function Home() {
           />
         )}
 
-        {activeTab === "benchmark" && <BenchmarkDashboard />}
-
-        {activeTab === "architecture" && <ArchitectureDiagram />}
-
         {activeTab === "scam-iq" && <ScamIqSuite />}
-      </main>
 
-      {/* Extension & Integrations Guide Modal */}
-      <ExtensionGuideModal
-        isOpen={showExtensionModal}
-        onClose={() => setShowExtensionModal(false)}
-        onSimulateScan={(text, type) => {
-          setShowExtensionModal(false);
-          setActiveTab("scanner");
-          handleAnalyze(text, type);
-        }}
-      />
+        {activeTab === "audit" && (
+          <JudgeAuditConsole onBackToApp={() => setActiveTab("scanner")} />
+        )}
+      </main>
 
       {/* Footer */}
       <footer className="border-t border-slate-900 bg-slate-950 py-8 text-xs text-slate-500">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-2">
-            <Lock className="w-4 h-4 text-cyan-400" />
-            <span>SafeGuard AI • Built for Cybersecurity Scam Detection Hackathon</span>
+          <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+            <div className="flex items-center gap-2">
+              <Lock className="w-4 h-4 text-cyan-400" />
+              <span>SafeGuard AI • Built for Cybersecurity Scam Detection Hackathon</span>
+            </div>
+            <span className="hidden sm:inline text-slate-700">•</span>
+            <button
+              type="button"
+              onClick={() => setActiveTab("audit")}
+              className="text-[11px] text-slate-600 hover:text-cyan-400 font-mono transition-colors flex items-center gap-1.5"
+              title="Open Judge & Benchmark Audit Console (Ctrl+Shift+J)"
+            >
+              <span>🔒 Judge / Benchmark Audit Console (Ctrl+Shift+J)</span>
+            </button>
           </div>
 
           <div className="flex items-center gap-4">

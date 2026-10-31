@@ -1,30 +1,63 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import {
   Shield,
   ShieldAlert,
-  Activity,
-  Cpu,
   Sparkles,
   LifeBuoy,
   BrainCircuit,
   Inbox,
-  Share2,
+  Lock,
 } from "lucide-react";
 
+export type PublicNavTab = "scanner" | "inbox" | "recovery" | "scam-iq" | "audit";
+
 interface NavbarProps {
-  activeTab: "scanner" | "inbox" | "recovery" | "benchmark" | "architecture" | "scam-iq";
-  setActiveTab: (tab: "scanner" | "inbox" | "recovery" | "benchmark" | "architecture" | "scam-iq") => void;
-  onOpenExtensionModal?: () => void;
+  activeTab: PublicNavTab;
+  setActiveTab: (tab: PublicNavTab) => void;
+  onOpenAuditConsole?: () => void;
 }
 
-export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab, onOpenExtensionModal }) => {
+export const Navbar: React.FC<NavbarProps> = ({
+  activeTab,
+  setActiveTab,
+  onOpenAuditConsole,
+}) => {
+  const [logoClicks, setLogoClicks] = useState(0);
+
+  const handleLogoClick = () => {
+    const nextCount = logoClicks + 1;
+    setLogoClicks(nextCount);
+    if (nextCount >= 3) {
+      setLogoClicks(0);
+      if (onOpenAuditConsole) {
+        onOpenAuditConsole();
+      } else {
+        setActiveTab("audit");
+      }
+    } else {
+      setActiveTab("scanner");
+    }
+  };
+
+  const handleAuditTrigger = () => {
+    if (onOpenAuditConsole) {
+      onOpenAuditConsole();
+    } else {
+      setActiveTab("audit");
+    }
+  };
+
   return (
     <header className="sticky top-0 z-50 border-b border-slate-800/80 bg-slate-950/80 backdrop-blur-md">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-        {/* Brand */}
-        <div className="flex items-center gap-3 cursor-pointer" onClick={() => setActiveTab("scanner")}>
+        {/* Brand with Triple-Click Secret Trigger */}
+        <div
+          className="flex items-center gap-3 cursor-pointer select-none"
+          onClick={handleLogoClick}
+          title="SafeGuard AI (Triple-click for Judge & Security Audit Console)"
+        >
           <div className="relative flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 shadow-lg shadow-cyan-500/20 text-slate-950">
             <Shield className="w-5 h-5 text-white" />
             <span className="absolute -bottom-0.5 -right-0.5 flex h-3 w-3">
@@ -47,36 +80,39 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab, onOpenE
           </div>
         </div>
 
-        {/* Navigation Tabs */}
+        {/* 4 Public Consumer Tabs */}
         <nav className="flex items-center gap-1 sm:gap-2">
+          {/* 1. Scanner */}
           <button
             onClick={() => setActiveTab("scanner")}
-            className={`px-2.5 sm:px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-all flex items-center gap-1.5 ${
+            className={`px-3 py-1.5 rounded-xl text-xs sm:text-sm font-medium transition-all flex items-center gap-1.5 ${
               activeTab === "scanner"
-                ? "bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 shadow-sm shadow-cyan-500/10"
+                ? "bg-cyan-500/10 text-cyan-300 border border-cyan-500/30 shadow-sm shadow-cyan-500/10 font-semibold"
                 : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/50"
             }`}
           >
-            <ShieldAlert className="w-4 h-4" />
+            <ShieldAlert className="w-4 h-4 text-cyan-400" />
             <span>Scanner</span>
           </button>
 
+          {/* 2. Auto-Scan Inbox (Renamed from Inbox Guard) */}
           <button
             onClick={() => setActiveTab("inbox")}
-            className={`px-2.5 sm:px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-all flex items-center gap-1.5 ${
+            className={`px-3 py-1.5 rounded-xl text-xs sm:text-sm font-medium transition-all flex items-center gap-1.5 ${
               activeTab === "inbox"
-                ? "bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 shadow-sm shadow-cyan-500/10 font-semibold"
+                ? "bg-cyan-500/10 text-cyan-300 border border-cyan-500/30 shadow-sm shadow-cyan-500/10 font-semibold"
                 : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/50"
             }`}
           >
             <Inbox className="w-4 h-4 text-cyan-400" />
-            <span className="hidden sm:inline">Inbox Guard</span>
+            <span className="hidden sm:inline">Auto-Scan Inbox</span>
             <span className="sm:hidden">Inbox</span>
           </button>
 
+          {/* 3. Victim Help */}
           <button
             onClick={() => setActiveTab("recovery")}
-            className={`px-2.5 sm:px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-all flex items-center gap-1.5 ${
+            className={`px-3 py-1.5 rounded-xl text-xs sm:text-sm font-medium transition-all flex items-center gap-1.5 ${
               activeTab === "recovery"
                 ? "bg-rose-500/20 text-rose-300 border border-rose-500/40 shadow-sm shadow-rose-500/20 font-semibold"
                 : "text-rose-400/90 hover:text-rose-300 hover:bg-rose-950/30"
@@ -91,64 +127,40 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab, onOpenE
             </span>
           </button>
 
-          <button
-            onClick={() => setActiveTab("benchmark")}
-            className={`px-2.5 sm:px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-all flex items-center gap-1.5 ${
-              activeTab === "benchmark"
-                ? "bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 shadow-sm shadow-cyan-500/10"
-                : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/50"
-            }`}
-          >
-            <Activity className="w-4 h-4" />
-            <span className="hidden md:inline">Benchmark</span>
-            <span className="md:hidden">Lab</span>
-          </button>
-
-          <button
-            onClick={() => setActiveTab("architecture")}
-            className={`px-2.5 sm:px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-all flex items-center gap-1.5 ${
-              activeTab === "architecture"
-                ? "bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 shadow-sm shadow-cyan-500/10"
-                : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/50"
-            }`}
-          >
-            <Cpu className="w-4 h-4" />
-            <span className="hidden md:inline">Architecture</span>
-            <span className="md:hidden">Arch</span>
-          </button>
-
+          {/* 4. Scam IQ */}
           <button
             onClick={() => setActiveTab("scam-iq")}
-            className={`px-2.5 sm:px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-all flex items-center gap-1.5 ${
+            className={`px-3 py-1.5 rounded-xl text-xs sm:text-sm font-medium transition-all flex items-center gap-1.5 ${
               activeTab === "scam-iq"
-                ? "bg-purple-500/10 text-purple-400 border border-purple-500/30 shadow-sm shadow-purple-500/10 font-semibold"
+                ? "bg-purple-500/10 text-purple-300 border border-purple-500/30 shadow-sm shadow-purple-500/10 font-semibold"
                 : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/50"
             }`}
           >
             <BrainCircuit className="w-4 h-4 text-purple-400" />
-            <span className="hidden md:inline">Scam IQ</span>
-            <span className="md:hidden">IQ</span>
+            <span className="hidden sm:inline">Scam IQ</span>
+            <span className="sm:hidden">IQ</span>
           </button>
+
+          {/* Active Audit Console Indicator (Only shown if currently in Audit view) */}
+          {activeTab === "audit" && (
+            <span className="px-2.5 py-1 rounded-xl text-xs font-mono font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/30 flex items-center gap-1 animate-pulse">
+              <Lock className="w-3.5 h-3.5" />
+              <span className="hidden md:inline">Judge Audit</span>
+            </span>
+          )}
         </nav>
 
-        {/* Extensions & Integrations button */}
+        {/* Secret Badge Trigger */}
         <div className="flex items-center gap-2">
-          {onOpenExtensionModal && (
-            <button
-              onClick={onOpenExtensionModal}
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-cyan-950/40 hover:bg-cyan-900/40 border border-cyan-700/40 text-cyan-300 rounded-lg text-xs font-medium transition-all shadow-sm"
-              title="Integrations: Chrome Extension, 1-Click Bookmarklet, Mobile PWA Share"
-            >
-              <Share2 className="w-3.5 h-3.5 text-cyan-400" />
-              <span className="hidden lg:inline">Extensions</span>
-            </button>
-          )}
-
-          {/* Security badge */}
-          <div className="hidden xl:flex items-center gap-2 px-3 py-1 bg-slate-900/80 border border-slate-800 rounded-full text-xs text-slate-300">
-            <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
-            <span>Zero-Fetch Active</span>
-          </div>
+          <button
+            type="button"
+            onClick={handleAuditTrigger}
+            className="flex items-center gap-2 px-3 py-1.5 bg-slate-900 hover:bg-slate-800/90 border border-slate-800 hover:border-cyan-500/50 rounded-full text-xs text-slate-300 transition-all cursor-pointer shadow-sm group"
+            title="🔒 Click to open Judge & Security Audit Console (Shortcut: Ctrl+Shift+J)"
+          >
+            <Sparkles className="w-3.5 h-3.5 text-cyan-400 group-hover:rotate-45 transition-transform" />
+            <span className="group-hover:text-cyan-300 transition-colors">Zero-Fetch Active</span>
+          </button>
         </div>
       </div>
     </header>

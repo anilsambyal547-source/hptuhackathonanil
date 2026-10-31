@@ -187,9 +187,9 @@ export const LiveInboxSimulator: React.FC = () => {
               RFC-822 + TRAI DLT
             </span>
           </div>
-          <h2 className="text-2xl font-black text-white">Interactive Mail & SMS Live Guard</h2>
+          <h2 className="text-2xl font-black text-white">Auto-Scan Inbox & Inbound Guard</h2>
           <p className="text-xs sm:text-sm text-slate-400">
-            Experience automatic in-mail protection without logging in. Click any message to trigger real-time passive forensic analysis.
+            Zero-Copy-Paste Protection: Click any incoming Email or SMS on the left to see SafeGuard AI automatically inspect headers, hidden links, and scam patterns.
           </p>
         </div>
 
@@ -293,6 +293,21 @@ export const LiveInboxSimulator: React.FC = () => {
 
         {/* Right Pane: Active Reader + Inline Security Banner & Diagnostics (7 cols) */}
         <div className="lg:col-span-7 space-y-5">
+          {/* Scanning In Progress Banner */}
+          {isAnalyzing && !analysisResult && (
+            <div className="p-4 rounded-2xl border border-cyan-500/40 bg-cyan-950/20 text-cyan-200 flex items-center gap-3 shadow-lg animate-pulse">
+              <Loader2 className="w-5 h-5 animate-spin text-cyan-400 shrink-0" />
+              <div>
+                <span className="font-mono text-xs font-bold uppercase tracking-wider">
+                  SafeGuard AI Live Guard: Auto-Scanning Message...
+                </span>
+                <p className="text-[11px] text-slate-400">
+                  Inspecting RFC-822 headers, From/Reply-To divergence, and embedded URLs in real-time...
+                </p>
+              </div>
+            </div>
+          )}
+
           {/* Inline Security Banner */}
           {analysisResult && (
             <div

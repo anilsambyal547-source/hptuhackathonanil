@@ -363,59 +363,98 @@ export function fuseAnalysisResults({
   const emailSpans: EvidentiarySpan[] = [];
   if (emailForensics) {
     if (emailForensics.isDisplayNameSpoofed && emailForensics.from) {
-      const idx = inputText.indexOf(emailForensics.from.raw);
-      emailSpans.push({
-        id: `span-email-spoof-${idx >= 0 ? idx : 0}`,
-        start: idx >= 0 ? idx : 0,
-        end: idx >= 0 ? idx + emailForensics.from.raw.length : 15,
-        text: emailForensics.from.raw,
-        category: "impersonation",
-        severity: "critical",
-        title: "Email Display Name Spoofing",
-        explanation: `Displays "${emailForensics.from.displayName}" but sends from unauthorized domain "${emailForensics.from.domain}".`,
-      });
+      const dispName = emailForensics.from.displayName;
+      const addr = emailForensics.from.address;
+
+      // Token 1: Claimed Display Name (Exact Word Boundary)
+      if (dispName) {
+        const dispIdx = inputText.indexOf(dispName);
+        if (dispIdx >= 0) {
+          emailSpans.push({
+            id: `span-email-disp-${dispIdx}`,
+            start: dispIdx,
+            end: dispIdx + dispName.length,
+            text: dispName,
+            category: "impersonation",
+            severity: "critical",
+            title: "Email Display Name Spoofing",
+            explanation: `Displays "${dispName}" (associated with trusted brand) but sends from unauthorized domain "${emailForensics.from.domain}".`,
+          });
+        }
+      }
+
+      // Token 2: Unauthorized Sender Address
+      if (addr) {
+        const addrIdx = inputText.indexOf(addr);
+        if (addrIdx >= 0) {
+          emailSpans.push({
+            id: `span-email-sender-addr-${addrIdx}`,
+            start: addrIdx,
+            end: addrIdx + addr.length,
+            text: addr,
+            category: "suspicious_link",
+            severity: "high",
+            title: "Unauthorized Sender Domain",
+            explanation: `Sender address "${addr}" (${emailForensics.from.domain}) is not an authorized domain.`,
+          });
+        }
+      }
     }
 
     if (emailForensics.isReplyToDivergent && emailForensics.replyTo) {
-      const idx = inputText.indexOf(emailForensics.replyTo.raw);
-      emailSpans.push({
-        id: `span-email-replyto-${idx >= 0 ? idx : 0}`,
-        start: idx >= 0 ? idx : 0,
-        end: idx >= 0 ? idx + emailForensics.replyTo.raw.length : 15,
-        text: emailForensics.replyTo.raw,
-        category: "suspicious_link",
-        severity: "high",
-        title: "Reply-To Address Divergence",
-        explanation: `Replies route to "${emailForensics.replyTo.address}" instead of sender domain.`,
-      });
+      const replyAddr = emailForensics.replyTo.address || emailForensics.replyTo.raw;
+      const idx = inputText.indexOf(replyAddr);
+      if (idx >= 0) {
+        emailSpans.push({
+          id: `span-email-replyto-${idx}`,
+          start: idx,
+          end: idx + replyAddr.length,
+          text: replyAddr,
+          category: "suspicious_link",
+          severity: "high",
+          title: "Reply-To Address Divergence",
+          explanation: `Replies route to "${emailForensics.replyTo.address}" instead of sender domain.`,
+        });
+      }
     }
 
-    if (emailForensics.authResults.spf === "fail" || emailForensics.authResults.dkim === "fail") {
-      emailSpans.push({
-        id: "span-email-auth-fail",
-        start: 0,
-        end: Math.min(30, inputText.length),
-        text: "Authentication-Results: FAIL",
-        category: "suspicious_url",
-        severity: "high",
-        title: "Email SPF/DKIM Authentication Failure",
-        explanation: "Cryptographic sender validation failed. The sending mail server is not authorized to deliver for the claimed domain.",
-      });
+    if (
+      emailForensics.authResults.spf === "fail" ||
+      emailForensics.authResults.dkim === "fail" ||
+      emailForensics.authResults.dmarc === "fail"
+    ) {
+      // Find exact position of Authentication-Results or Received-SPF line
+      const authRegex = /^(?:Authentication-Results|Received-SPF):\s*[^\r\n]+/im;
+      const authMatch = inputText.match(authRegex);
+      if (authMatch && authMatch.index !== undefined) {
+        emailSpans.push({
+          id: `span-email-auth-fail-${authMatch.index}`,
+          start: authMatch.index,
+          end: authMatch.index + authMatch[0].length,
+          text: authMatch[0],
+          category: "suspicious_url",
+          severity: "high",
+          title: "Email SPF/DKIM Authentication Failure",
+          explanation: "Cryptographic sender validation failed. The sending mail server is not authorized to deliver for the claimed domain.",
+        });
+      }
     }
 
     for (const m of emailForensics.anchorTextMismatches) {
       if (m.isDeceptive) {
         const idx = inputText.indexOf(m.visibleText);
-        emailSpans.push({
-          id: `span-anchor-mismatch-${idx >= 0 ? idx : 0}`,
-          start: idx >= 0 ? idx : 0,
-          end: idx >= 0 ? idx + m.visibleText.length : 20,
-          text: m.visibleText,
-          category: "typosquatting",
-          severity: "critical",
-          title: "Deceptive Anchor Text Mismatch",
-          explanation: `Visible text displays "${m.visibleText}", but actual link target routes to deceptive destination "${m.href}".`,
-        });
+        if (idx >= 0) {
+          emailSpans.push({
+            id: `span-anchor-mismatch-${idx}`,
+            start: idx,
+            end: idx + m.visibleText.length,
+            text: m.visibleText,
+            category: "typosquatting",
+            severity: "critical",
+            title: "Deceptive Anchor Text Mismatch",
+            explanation: `Visible text displays "${m.visibleText}", but actual link target routes to deceptive destination "${m.href}".`,
+          });
+        }
       }
     }
   }
@@ -428,11 +467,31 @@ export function fuseAnalysisResults({
     ...emailSpans,
   ];
 
-  // Deduplicate overlapping spans
-  const uniqueSpans = allSpans.filter(
-    (span, index, self) =>
-      index === self.findIndex((s) => s.start === span.start && s.end === span.end)
-  );
+  // Deduplicate overlapping spans: prioritize higher severity and longer spans for exact token boundaries
+  const severityWeight: Record<string, number> = { critical: 4, high: 3, medium: 2, low: 1 };
+  const sortedSpans = [...allSpans].sort((a, b) => {
+    if (a.start !== b.start) return a.start - b.start;
+    const wA = severityWeight[a.severity] || 1;
+    const wB = severityWeight[b.severity] || 1;
+    if (wA !== wB) return wB - wA;
+    return (b.end - b.start) - (a.end - a.start);
+  });
+
+  const uniqueSpans: EvidentiarySpan[] = [];
+  for (const span of sortedSpans) {
+    if (uniqueSpans.length === 0) {
+      uniqueSpans.push(span);
+      continue;
+    }
+    const prev = uniqueSpans[uniqueSpans.length - 1];
+    if (span.start >= prev.start && span.end <= prev.end) {
+      continue;
+    }
+    if (span.start === prev.start) {
+      continue;
+    }
+    uniqueSpans.push(span);
+  }
 
   return {
     overallRisk,

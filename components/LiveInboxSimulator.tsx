@@ -115,13 +115,58 @@ HDFC Bank Security Team`,
   },
 ];
 
+const WEBHOOK_PRESETS = [
+  {
+    label: "📧 Fake Job Offer Email",
+    category: "job",
+    payload: `From: "Microsoft Talent Acquisition" <careers@recruitment-microsoft-portal.site>
+Reply-To: hr.onboarding.desk@gmail.com
+Subject: Offer Letter: Remote Cloud Operations Associate ($4,200/month)
+Authentication-Results: spf=fail; dkim=fail; dmarc=fail
+
+Dear Candidate,
+Congratulations! Following your profile review, you have been selected for the Remote Cloud Operations Associate role with Microsoft India.
+
+To secure your equipment dispatch and activate your payroll credentials, submit your Aadhaar and bank details immediately:
+<a href="https://microsoft-career-verify.site/portal">https://careers.microsoft.com/onboarding</a>
+
+Please complete verification within 24 hours to secure your joining bonus.
+
+Regards,
+Microsoft Global Talent Operations`,
+  },
+  {
+    label: "📦 DHL Customs Scam Email",
+    category: "courier",
+    payload: `From: "DHL Express India" <tracking-support@dhl-clearance-desk.top>
+Reply-To: dhl.customs.pay@gmail.com
+Subject: Urgent: Consignment #DHL-98124 held at Customs Air Cargo Terminal
+Authentication-Results: spf=fail; dkim=fail; dmarc=fail
+
+Dear Customer,
+Your inbound international package (Tracking: DHL-9812401) is currently detained by customs border security due to unpaid clearance tariffs.
+
+An unpaid customs duty of Rs 1,490 must be cleared immediately within 12 hours:
+<a href="http://dhl-express-clearance.top/pay">https://www.dhl.com/in-en/home/tracking</a>
+
+Failure to pay will result in parcel confiscation and return to sender.
+
+DHL Express Customs Division`,
+  },
+  {
+    label: "📱 Fake UPI Refund SMS",
+    category: "upi",
+    payload: `PayTM Refund Alert: Your pending cashback refund of Rs 4,999 is approved. Enter your UPI PIN on the link to receive funds into your bank account immediately: https://paytm-cashback-claim.xyz/receive or refund will expire in 15 mins.`,
+  },
+];
+
 export const LiveInboxSimulator: React.FC = () => {
   const [activeItem, setActiveItem] = useState<SimulatedItem>(SIMULATED_ITEMS[0]);
   const [filterType, setFilterType] = useState<"all" | "email" | "sms">("all");
   const [analysisResult, setAnalysisResult] = useState<ScamAnalysisResult | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [customComposerOpen, setCustomComposerOpen] = useState(false);
-  const [customPayload, setCustomPayload] = useState("");
+  const [customPayload, setCustomPayload] = useState(WEBHOOK_PRESETS[0].payload);
 
   const analyzeSelected = async (payload: string) => {
     setIsAnalyzing(true);
@@ -416,9 +461,28 @@ export const LiveInboxSimulator: React.FC = () => {
             </div>
 
             <form onSubmit={handleCustomSubmit} className="space-y-4">
-              <p className="text-xs text-slate-400">
-                Paste RFC-822 email headers, HTML buttons, or raw SMS payload to simulate an external webhook forward into `/api/inbound-mail`:
-              </p>
+              <div className="space-y-2">
+                <div className="flex items-center justify-between text-xs">
+                  <span className="text-slate-400 font-medium">Quick-Fill Live Attack Scenarios:</span>
+                  <span className="text-[10px] text-cyan-400 font-mono">1-Click Test</span>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {WEBHOOK_PRESETS.map((preset, idx) => (
+                    <button
+                      key={idx}
+                      type="button"
+                      onClick={() => setCustomPayload(preset.payload)}
+                      className={`text-xs px-2.5 py-1 rounded-xl border transition-all flex items-center gap-1.5 ${
+                        customPayload === preset.payload
+                          ? "bg-cyan-500/10 text-cyan-300 border-cyan-500/40 font-semibold"
+                          : "bg-slate-950 text-slate-300 border-slate-800 hover:border-slate-700"
+                      }`}
+                    >
+                      <span>{preset.label}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
               <textarea
                 value={customPayload}
                 onChange={(e) => setCustomPayload(e.target.value)}

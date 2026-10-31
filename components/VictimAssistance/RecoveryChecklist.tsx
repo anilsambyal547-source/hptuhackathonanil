@@ -35,33 +35,33 @@ export const RecoveryChecklist: React.FC<RecoveryChecklistProps> = ({
   const progressPercent = Math.round((completedCount / steps.length) * 100);
 
   return (
-    <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-5 sm:p-6 space-y-5">
+    <div className="bg-white border border-[#e2e6dc] rounded-3xl p-6 sm:p-7 shadow-[0_4px_24px_-4px_rgba(0,0,0,0.04)] space-y-5">
       {/* Header and Progress Bar */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-slate-800 pb-4">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-[#edf1e8] pb-4">
         <div>
           <div className="flex items-center gap-2">
-            <CheckSquare className="w-4 h-4 text-cyan-400" />
-            <h3 className="text-base font-bold text-white">
+            <CheckSquare className="w-4 h-4 text-[#3d5926]" />
+            <h3 className="text-base sm:text-lg font-serif font-bold text-[#181a15]">
               {isHi ? "2. चरणबद्ध रिकवरी कार्ययोजना" : "2. Step-by-Step Personalized Action Plan"}
             </h3>
           </div>
-          <p className="text-xs text-slate-400 mt-1">
+          <p className="text-xs text-[#636c5c] mt-1">
             {isHi
               ? "इन कदमों को वरीयता क्रम में पूरा करें। महत्वपूर्ण (Critical) कार्यों को पहले करें।"
               : "Execute these recovery actions in strict priority order. Mark each as you finish."}
           </p>
         </div>
 
-        <div className="w-full sm:w-48 bg-slate-950 p-2.5 rounded-xl border border-slate-800">
+        <div className="w-full sm:w-48 bg-[#f8faf6] p-3 rounded-2xl border border-[#dce3d5]">
           <div className="flex items-center justify-between text-xs font-semibold mb-1.5">
-            <span className="text-slate-400">{isHi ? "प्रगति" : "Progress"}</span>
-            <span className="text-cyan-400 font-mono">
+            <span className="text-[#636c5c]">{isHi ? "प्रगति" : "Progress"}</span>
+            <span className="text-[#2c401c] font-mono">
               {completedCount} / {steps.length} ({progressPercent}%)
             </span>
           </div>
-          <div className="w-full h-2 rounded-full bg-slate-800 overflow-hidden">
+          <div className="w-full h-2 rounded-full bg-[#e6ebdf] overflow-hidden">
             <div
-              className="h-full bg-gradient-to-r from-cyan-500 to-emerald-500 transition-all duration-300"
+              className="h-full bg-[#7db432] rounded-full transition-all duration-300"
               style={{ width: `${progressPercent}%` }}
             />
           </div>
@@ -70,10 +70,10 @@ export const RecoveryChecklist: React.FC<RecoveryChecklistProps> = ({
 
       {/* Critical financial loss warning if toggled */}
       {hasLostMoney && (
-        <div className="p-3.5 rounded-xl bg-rose-950/40 border border-rose-800/60 flex items-start gap-3 text-xs text-rose-200">
-          <AlertCircle className="w-4 h-4 text-rose-400 shrink-0 mt-0.5" />
+        <div className="p-4 rounded-2xl bg-rose-50 border border-rose-200 flex items-start gap-3 text-xs text-rose-800 shadow-2xs">
+          <AlertCircle className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" />
           <div>
-            <span className="font-bold text-rose-300">
+            <span className="font-bold text-rose-900">
               {isHi ? "वित्तीय आपातकाल सक्रिय: " : "Financial Loss Triage Active: "}
             </span>
             {isHi
@@ -91,23 +91,23 @@ export const RecoveryChecklist: React.FC<RecoveryChecklistProps> = ({
             <div
               key={step.id}
               onClick={() => toggleStep(step.id)}
-              className={`cursor-pointer p-4 rounded-xl border transition-all flex items-start gap-3.5 ${
+              className={`cursor-pointer p-4 rounded-2xl border transition-all flex items-start gap-3.5 shadow-2xs ${
                 isDone
-                  ? "bg-slate-950/60 border-slate-800/60 opacity-75"
+                  ? "bg-[#f4f7f1] border-[#dce3d5] opacity-75"
                   : step.critical
-                  ? "bg-slate-950/90 border-rose-500/30 hover:border-rose-500/50"
-                  : "bg-slate-950/80 border-slate-800 hover:border-slate-700"
+                  ? "bg-rose-50/70 border-rose-200 hover:border-rose-300"
+                  : "bg-[#f8faf6] border-[#e2e7dc] hover:border-[#b0c897]"
               }`}
             >
               <button
                 type="button"
                 aria-label="Toggle step"
-                className="mt-0.5 shrink-0 text-slate-400 hover:text-white"
+                className="mt-0.5 shrink-0 text-[#636c5c] hover:text-[#181a15]"
               >
                 {isDone ? (
-                  <CheckCircle2 className="w-5 h-5 text-emerald-400" />
+                  <CheckCircle2 className="w-5 h-5 text-emerald-600" />
                 ) : (
-                  <Circle className="w-5 h-5 text-slate-600" />
+                  <Circle className="w-5 h-5 text-[#ccd4c4]" />
                 )}
               </button>
 
@@ -115,16 +115,16 @@ export const RecoveryChecklist: React.FC<RecoveryChecklistProps> = ({
                 <div className="flex items-center justify-between gap-2">
                   <h4
                     className={`text-sm font-semibold ${
-                      isDone ? "text-slate-400 line-through" : "text-white"
+                      isDone ? "text-[#717a69] line-through" : "text-[#181a15]"
                     }`}
                   >
-                    <span className="text-cyan-400 font-mono mr-2">{index + 1}.</span>
+                    <span className="text-[#3d5926] font-mono mr-2">{index + 1}.</span>
                     {isHi ? step.titleHi : step.title}
                   </h4>
 
                   {step.critical && !isDone && (
-                    <span className="shrink-0 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-rose-500/20 text-rose-400 border border-rose-500/30 flex items-center gap-1">
-                      <Clock className="w-3 h-3" />
+                    <span className="shrink-0 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-rose-100 text-rose-800 border border-rose-200 flex items-center gap-1">
+                      <Clock className="w-3 h-3 text-rose-600" />
                       {isHi ? "अति आवश्यक" : "Immediate Priority"}
                     </span>
                   )}
@@ -132,7 +132,7 @@ export const RecoveryChecklist: React.FC<RecoveryChecklistProps> = ({
 
                 <p
                   className={`text-xs leading-relaxed ${
-                    isDone ? "text-slate-500" : "text-slate-300"
+                    isDone ? "text-[#717a69]" : "text-[#525a4c]"
                   }`}
                 >
                   {isHi ? step.detailHi : step.detail}

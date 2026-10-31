@@ -177,25 +177,25 @@ export const LiveInboxSimulator: React.FC = () => {
   return (
     <div className="space-y-6 animate-in fade-in duration-300">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-6 bg-slate-900/80 border border-slate-800 rounded-3xl shadow-xl backdrop-blur-md">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-6 bg-white border border-[#e2e6dc] rounded-3xl shadow-[0_4px_24px_-4px_rgba(0,0,0,0.04)]">
         <div className="space-y-1">
           <div className="flex items-center gap-2">
-            <span className="px-3 py-1 rounded-full bg-cyan-950/80 border border-cyan-800/40 text-cyan-300 text-xs font-mono font-semibold">
+            <span className="px-3 py-1 rounded-full bg-[#eef4e8] border border-[#d5e0cb] text-[#3d5926] text-xs font-mono font-semibold">
               Live Mail Guard & Inbound Webhook Simulator
             </span>
-            <span className="px-2 py-0.5 rounded text-[10px] bg-purple-950 text-purple-300 border border-purple-800/40 font-mono">
+            <span className="px-2.5 py-0.5 rounded-full text-[10px] bg-[#f4f7f1] text-[#556149] border border-[#dde4d4] font-mono">
               RFC-822 + TRAI DLT
             </span>
           </div>
-          <h2 className="text-2xl font-black text-white">Interactive Mail & SMS Live Guard</h2>
-          <p className="text-xs sm:text-sm text-slate-400">
+          <h2 className="text-2xl sm:text-3xl font-serif font-bold text-[#181a15]">Interactive Mail & SMS Live Guard</h2>
+          <p className="text-xs sm:text-sm text-[#5c6454]">
             Experience automatic in-mail protection without logging in. Click any message to trigger real-time passive forensic analysis.
           </p>
         </div>
 
         <button
           onClick={() => setCustomComposerOpen(true)}
-          className="px-4 py-2.5 rounded-xl text-xs font-bold text-slate-950 bg-gradient-to-r from-cyan-400 to-blue-500 hover:from-cyan-300 hover:to-blue-400 transition-all flex items-center gap-2 shadow-md shadow-cyan-500/20 shrink-0"
+          className="px-5 py-2.5 rounded-2xl text-xs font-bold text-[#162704] bg-[#bef264] hover:bg-[#aee750] border border-[#a8df4a]/70 transition-all flex items-center gap-2 shadow-2xs shrink-0"
         >
           <Send className="w-3.5 h-3.5" />
           <span>Simulate Forwarded Webhook</span>
@@ -205,14 +205,14 @@ export const LiveInboxSimulator: React.FC = () => {
       {/* Main Split-Pane Client */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         {/* Left Pane: Mail / SMS List (5 cols) */}
-        <div className="lg:col-span-5 bg-slate-900/80 border border-slate-800 rounded-3xl overflow-hidden shadow-xl flex flex-col">
+        <div className="lg:col-span-5 bg-white border border-[#e2e6dc] rounded-3xl overflow-hidden shadow-[0_4px_24px_-4px_rgba(0,0,0,0.04)] flex flex-col">
           {/* List Filter Tabs */}
-          <div className="p-3 bg-slate-950/60 border-b border-slate-800 flex items-center justify-between">
+          <div className="p-3 bg-[#f8faf6] border-b border-[#edf1e8] flex items-center justify-between">
             <div className="flex items-center gap-1.5">
               <button
                 onClick={() => setFilterType("all")}
                 className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-colors ${
-                  filterType === "all" ? "bg-slate-800 text-cyan-300 border border-slate-700" : "text-slate-400 hover:text-white"
+                  filterType === "all" ? "bg-[#181a15] text-white shadow-2xs" : "text-[#556149] hover:text-[#181a15]"
                 }`}
               >
                 All Messages
@@ -220,7 +220,7 @@ export const LiveInboxSimulator: React.FC = () => {
               <button
                 onClick={() => setFilterType("email")}
                 className={`px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-colors ${
-                  filterType === "email" ? "bg-slate-800 text-cyan-300 border border-slate-700" : "text-slate-400 hover:text-white"
+                  filterType === "email" ? "bg-[#181a15] text-white shadow-2xs" : "text-[#556149] hover:text-[#181a15]"
                 }`}
               >
                 <Mail className="w-3.5 h-3.5" />
@@ -229,18 +229,18 @@ export const LiveInboxSimulator: React.FC = () => {
               <button
                 onClick={() => setFilterType("sms")}
                 className={`px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-colors ${
-                  filterType === "sms" ? "bg-slate-800 text-cyan-300 border border-slate-700" : "text-slate-400 hover:text-white"
+                  filterType === "sms" ? "bg-[#181a15] text-white shadow-2xs" : "text-[#556149] hover:text-[#181a15]"
                 }`}
               >
                 <MessageSquare className="w-3.5 h-3.5" />
                 <span>SMS</span>
               </button>
             </div>
-            <span className="text-[11px] font-mono text-slate-500">{filteredItems.length} items</span>
+            <span className="text-[11px] font-mono text-[#636c5c]">{filteredItems.length} items</span>
           </div>
 
           {/* Messages Stream */}
-          <div className="divide-y divide-slate-800/80 max-h-[640px] overflow-y-auto">
+          <div className="divide-y divide-[#edf1e8] max-h-[640px] overflow-y-auto">
             {filteredItems.map((item) => {
               const isSelected = activeItem?.id === item.id;
               return (
@@ -249,36 +249,36 @@ export const LiveInboxSimulator: React.FC = () => {
                   onClick={() => setActiveItem(item)}
                   className={`p-4 cursor-pointer transition-all flex items-start justify-between gap-3 ${
                     isSelected
-                      ? "bg-slate-800/80 border-l-4 border-cyan-400"
-                      : "hover:bg-slate-800/40 text-slate-300"
+                      ? "bg-[#f4f8ee] border-l-4 border-[#8ec251]"
+                      : "hover:bg-[#fafbf9] text-[#181a15]"
                   }`}
                 >
                   <div className="space-y-1 flex-1 overflow-hidden">
                     <div className="flex items-center gap-2">
                       {item.type === "email" ? (
-                        <Mail className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
+                        <Mail className="w-3.5 h-3.5 text-[#3d5926] shrink-0" />
                       ) : (
-                        <MessageSquare className="w-3.5 h-3.5 text-purple-400 shrink-0" />
+                        <MessageSquare className="w-3.5 h-3.5 text-purple-600 shrink-0" />
                       )}
-                      <span className="text-xs font-bold text-white truncate max-w-[200px]">
+                      <span className="text-xs font-bold text-[#181a15] truncate max-w-[200px]">
                         {item.sender.split("<")[0].replace(/"/g, "")}
                       </span>
                     </div>
 
-                    <h4 className="text-xs font-semibold text-slate-200 truncate">{item.subject}</h4>
-                    <p className="text-[11px] text-slate-400 line-clamp-1">{item.snippet}</p>
+                    <h4 className="text-xs font-semibold text-[#2c3524] truncate">{item.subject}</h4>
+                    <p className="text-[11px] text-[#636c5c] line-clamp-1">{item.snippet}</p>
                   </div>
 
                   <div className="text-right shrink-0 space-y-1">
-                    <span className="text-[10px] font-mono text-slate-500">{item.timestamp}</span>
+                    <span className="text-[10px] font-mono text-[#717a69]">{item.timestamp}</span>
                     <div>
                       <span
-                        className={`text-[9px] font-bold px-1.5 py-0.2 rounded uppercase font-mono ${
+                        className={`text-[9px] font-bold px-2 py-0.5 rounded-full uppercase font-mono ${
                           item.expectedRisk === "high"
-                            ? "bg-rose-950 text-rose-400 border border-rose-800/40"
+                            ? "bg-rose-50 text-rose-700 border border-rose-200"
                             : item.expectedRisk === "suspicious"
-                            ? "bg-amber-950 text-amber-400 border border-amber-800/40"
-                            : "bg-emerald-950 text-emerald-400 border border-emerald-800/40"
+                            ? "bg-amber-50 text-amber-800 border border-amber-200"
+                            : "bg-[#eef5e6] text-[#2c401c] border border-[#cbe0b8]"
                         }`}
                       >
                         {item.expectedRisk}
@@ -296,22 +296,22 @@ export const LiveInboxSimulator: React.FC = () => {
           {/* Inline Security Banner */}
           {analysisResult && (
             <div
-              className={`p-4 rounded-2xl border flex items-center justify-between gap-3 shadow-lg ${
+              className={`p-4 rounded-2xl border flex items-center justify-between gap-3 shadow-2xs ${
                 analysisResult.overallRisk === "high"
-                  ? "bg-rose-950/30 border-rose-500/50 text-rose-200"
+                  ? "bg-rose-50 border-rose-200 text-rose-900"
                   : analysisResult.overallRisk === "suspicious"
-                  ? "bg-amber-950/30 border-amber-500/50 text-amber-200"
-                  : "bg-emerald-950/30 border-emerald-500/50 text-emerald-200"
+                  ? "bg-amber-50 border-amber-200 text-amber-900"
+                  : "bg-[#eef5e6] border-[#cbe0b8] text-[#2c401c]"
               }`}
             >
               <div className="flex items-center gap-3">
-                <div className="p-2 rounded-xl bg-slate-950/60 border border-slate-800">
+                <div className="p-2 rounded-xl bg-white border border-black/5 shadow-2xs">
                   {analysisResult.overallRisk === "high" ? (
-                    <ShieldAlert className="w-6 h-6 text-rose-400" />
+                    <ShieldAlert className="w-6 h-6 text-rose-600" />
                   ) : analysisResult.overallRisk === "suspicious" ? (
-                    <AlertTriangle className="w-6 h-6 text-amber-400" />
+                    <AlertTriangle className="w-6 h-6 text-amber-600" />
                   ) : (
-                    <ShieldCheck className="w-6 h-6 text-emerald-400" />
+                    <ShieldCheck className="w-6 h-6 text-emerald-600" />
                   )}
                 </div>
                 <div>
@@ -319,12 +319,12 @@ export const LiveInboxSimulator: React.FC = () => {
                     <span className="font-mono text-xs font-black uppercase tracking-wider">
                       SafeGuard Live Guard: {analysisResult.overallRisk.toUpperCase()} RISK
                     </span>
-                    <span className="text-[10px] font-mono text-slate-400">
+                    <span className="text-[10px] font-mono opacity-75">
                       Score: {analysisResult.riskScore}/100
                     </span>
-                    {isAnalyzing && <Loader2 className="w-3.5 h-3.5 animate-spin text-cyan-400" />}
+                    {isAnalyzing && <Loader2 className="w-3.5 h-3.5 animate-spin text-[#3d5926]" />}
                   </div>
-                  <p className="text-xs text-slate-300 pt-0.5 leading-snug">
+                  <p className="text-xs pt-0.5 leading-snug opacity-90">
                     {analysisResult.plainLanguageSummary}
                   </p>
                 </div>
@@ -333,15 +333,15 @@ export const LiveInboxSimulator: React.FC = () => {
           )}
 
           {/* Message Payload Viewer */}
-          <div className="p-5 bg-slate-900/90 border border-slate-800 rounded-3xl space-y-4 shadow-xl">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-800 text-xs">
+          <div className="p-6 bg-white border border-[#e2e6dc] rounded-3xl space-y-4 shadow-[0_4px_24px_-4px_rgba(0,0,0,0.04)]">
+            <div className="flex items-center justify-between pb-3 border-b border-[#edf1e8] text-xs">
               <div className="space-y-0.5">
-                <span className="text-[10px] uppercase font-mono text-slate-400 tracking-wider">
+                <span className="text-[10px] uppercase font-mono text-[#636c5c] tracking-wider">
                   Originating Channel
                 </span>
-                <div className="font-bold text-white text-sm">{activeItem.sender}</div>
+                <div className="font-bold text-[#181a15] text-sm">{activeItem.sender}</div>
               </div>
-              <span className="text-xs font-mono text-slate-400">{activeItem.timestamp}</span>
+              <span className="text-xs font-mono text-[#717a69]">{activeItem.timestamp}</span>
             </div>
 
             {/* Evidentiary Highlighter directly in the reader view */}

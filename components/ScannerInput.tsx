@@ -560,17 +560,17 @@ export const ScannerInput: React.FC<ScannerInputProps> = ({ onAnalyze, isLoading
   };
 
   return (
-    <div className="bg-slate-900/60 border border-slate-800 rounded-3xl p-5 sm:p-6 shadow-xl backdrop-blur-sm space-y-4">
-      {/* Input Mode Selector & 1-Click Paste & Scan (Tab clicks ONLY switch mode, NEVER auto-open OS dialog) */}
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 border-b border-slate-800/80 pb-3">
-        <div className="flex flex-wrap items-center gap-2">
+    <div className="bg-white border border-[#e2e6dc] rounded-3xl p-5 sm:p-7 shadow-[0_4px_24px_-4px_rgba(0,0,0,0.04)] space-y-4">
+      {/* Input Mode Selector & 1-Click Paste & Scan */}
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 border-b border-[#edf1e8] pb-4">
+        <div className="flex flex-wrap items-center gap-2 bg-[#f4f7f1] p-1 rounded-2xl border border-[#e2e8dc]">
           <button
             type="button"
             onClick={() => setActiveMode("text")}
             className={`px-3 py-1.5 rounded-xl text-xs sm:text-sm font-medium flex items-center gap-2 transition-all ${
               activeMode === "text"
-                ? "bg-cyan-500/10 text-cyan-400 border border-cyan-500/30"
-                : "text-slate-400 hover:text-slate-200"
+                ? "bg-[#181a15] text-white shadow-xs font-semibold"
+                : "text-[#586150] hover:text-[#181a15] hover:bg-white/60"
             }`}
           >
             <FileText className="w-4 h-4" />
@@ -582,13 +582,13 @@ export const ScannerInput: React.FC<ScannerInputProps> = ({ onAnalyze, isLoading
             onClick={() => setActiveMode("image")}
             className={`px-3 py-1.5 rounded-xl text-xs sm:text-sm font-medium flex items-center gap-2 transition-all ${
               activeMode === "image"
-                ? "bg-cyan-500/10 text-cyan-400 border border-cyan-500/30"
-                : "text-slate-400 hover:text-slate-200"
+                ? "bg-[#181a15] text-white shadow-xs font-semibold"
+                : "text-[#586150] hover:text-[#181a15] hover:bg-white/60"
             }`}
           >
             <ImageIcon className="w-4 h-4" />
             <span>Screenshot OCR</span>
-            <span className="text-[10px] px-1 bg-cyan-950 text-cyan-300 rounded border border-cyan-800/50">
+            <span className="text-[10px] px-1.5 py-0.2 bg-[#eef4e8] text-[#3d5926] rounded border border-[#d5e0cb]">
               Ctrl+V
             </span>
           </button>
@@ -598,8 +598,8 @@ export const ScannerInput: React.FC<ScannerInputProps> = ({ onAnalyze, isLoading
             onClick={() => setActiveMode("email")}
             className={`px-3 py-1.5 rounded-xl text-xs sm:text-sm font-medium flex items-center gap-2 transition-all ${
               activeMode === "email"
-                ? "bg-cyan-500/10 text-cyan-400 border border-cyan-500/30"
-                : "text-slate-400 hover:text-slate-200"
+                ? "bg-[#181a15] text-white shadow-xs font-semibold"
+                : "text-[#586150] hover:text-[#181a15] hover:bg-white/60"
             }`}
           >
             <Mail className="w-4 h-4" />
@@ -612,18 +612,18 @@ export const ScannerInput: React.FC<ScannerInputProps> = ({ onAnalyze, isLoading
           type="button"
           onClick={handleQuickPasteAndScan}
           disabled={isLoading}
-          className="px-3.5 py-1.5 rounded-xl text-xs font-semibold bg-gradient-to-r from-purple-500/20 to-cyan-500/20 hover:from-purple-500/30 hover:to-cyan-500/30 text-cyan-300 border border-cyan-500/30 transition-all flex items-center justify-center gap-1.5 shadow-sm"
+          className="px-4 py-2 rounded-2xl text-xs font-semibold bg-[#eef4e8] hover:bg-[#e2edd8] text-[#2c401c] border border-[#d5e0cb] transition-all flex items-center justify-center gap-1.5 shadow-2xs"
         >
-          <Clipboard className="w-3.5 h-3.5 text-cyan-400" />
+          <Clipboard className="w-3.5 h-3.5 text-[#3d5926]" />
           <span>1-Click Paste & Auto-Scan</span>
         </button>
       </div>
 
       {/* Preset Quick Loads */}
       <div>
-        <div className="flex items-center gap-2 mb-2">
-          <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
-          <span className="text-xs font-medium text-slate-400">Attack Vectors & Email Presets:</span>
+        <div className="flex items-center gap-2 mb-2.5">
+          <Sparkles className="w-3.5 h-3.5 text-[#557e33]" />
+          <span className="text-xs font-semibold text-[#636c5c]">Attack Vectors & Email Presets:</span>
         </div>
         <div className="flex flex-wrap gap-2">
           {PRESET_SAMPLES.map((preset, idx) => (
@@ -638,15 +638,15 @@ export const ScannerInput: React.FC<ScannerInputProps> = ({ onAnalyze, isLoading
                 setMaskedEntities(maskRes.maskedEntities);
                 setActiveMode(preset.category === "Email Phish" ? "email" : "text");
               }}
-              className="text-xs px-2.5 py-1 rounded-xl bg-slate-800/70 hover:bg-slate-700/80 text-slate-300 border border-slate-700/50 transition-colors flex items-center gap-1.5"
+              className="text-xs px-3 py-1.5 rounded-full bg-[#f7f9f5] hover:bg-[#edf2e7] text-[#363f2e] border border-[#dce3d5] transition-all flex items-center gap-1.5 font-medium shadow-2xs"
             >
               <span
-                className={`w-1.5 h-1.5 rounded-full ${
+                className={`w-2 h-2 rounded-full ${
                   preset.category === "Legitimate"
-                    ? "bg-emerald-400"
+                    ? "bg-emerald-500"
                     : preset.category === "Email Phish"
-                    ? "bg-purple-400"
-                    : "bg-rose-400"
+                    ? "bg-purple-500"
+                    : "bg-rose-500"
                 }`}
               />
               <span>{preset.label}</span>
@@ -685,13 +685,13 @@ export const ScannerInput: React.FC<ScannerInputProps> = ({ onAnalyze, isLoading
         {activeMode === "image" && (
           <div className="space-y-3">
             {/* 1-Click Built-in Test Screenshots Toolbar */}
-            <div className="p-3 bg-gradient-to-r from-slate-950/90 via-slate-900/80 to-slate-950/90 border border-cyan-800/40 rounded-2xl space-y-2">
+            <div className="p-3.5 bg-[#f7f9f5] border border-[#dce3d5] rounded-2xl space-y-2">
               <div className="flex items-center justify-between text-xs">
-                <span className="font-semibold text-cyan-300 flex items-center gap-1.5">
-                  <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
+                <span className="font-semibold text-[#2c401c] flex items-center gap-1.5">
+                  <Sparkles className="w-3.5 h-3.5 text-[#557e33]" />
                   <span>1-Click Built-in Test Screenshots (Zero File Dialog Required):</span>
                 </span>
-                <span className="text-[10px] text-slate-500 font-mono">HTML5 Canvas Synthesized</span>
+                <span className="text-[10px] text-[#636c5c] font-mono">HTML5 Canvas Synthesized</span>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
@@ -699,12 +699,12 @@ export const ScannerInput: React.FC<ScannerInputProps> = ({ onAnalyze, isLoading
                   type="button"
                   disabled={isLoading}
                   onClick={() => handleLoadBuiltinScreenshot("bank")}
-                  className="px-3 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700/80 hover:border-cyan-500/50 text-left transition-all group flex items-start gap-2"
+                  className="px-3 py-2.5 rounded-xl bg-white hover:bg-[#edf2e7] border border-[#dce3d5] hover:border-[#9ec964] text-left transition-all group flex items-start gap-2 shadow-2xs"
                 >
-                  <Smartphone className="w-4 h-4 text-cyan-400 shrink-0 mt-0.5 group-hover:scale-110 transition-transform" />
+                  <Smartphone className="w-4 h-4 text-[#3d5926] shrink-0 mt-0.5 group-hover:scale-110 transition-transform" />
                   <div>
-                    <div className="text-xs font-semibold text-slate-200">📱 Bank KYC Scam</div>
-                    <div className="text-[10px] text-slate-400">SBI Alert SMS • Clear OCR (96% Conf)</div>
+                    <div className="text-xs font-semibold text-[#181a15]">📱 Bank KYC Scam</div>
+                    <div className="text-[10px] text-[#636c5c]">SBI Alert SMS • Clear OCR (96% Conf)</div>
                   </div>
                 </button>
 
@@ -712,12 +712,12 @@ export const ScannerInput: React.FC<ScannerInputProps> = ({ onAnalyze, isLoading
                   type="button"
                   disabled={isLoading}
                   onClick={() => handleLoadBuiltinScreenshot("courier")}
-                  className="px-3 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700/80 hover:border-rose-500/50 text-left transition-all group flex items-start gap-2"
+                  className="px-3 py-2.5 rounded-xl bg-white hover:bg-rose-50/50 border border-[#dce3d5] hover:border-rose-300 text-left transition-all group flex items-start gap-2 shadow-2xs"
                 >
-                  <Package className="w-4 h-4 text-rose-400 shrink-0 mt-0.5 group-hover:scale-110 transition-transform" />
+                  <Package className="w-4 h-4 text-rose-600 shrink-0 mt-0.5 group-hover:scale-110 transition-transform" />
                   <div>
-                    <div className="text-xs font-semibold text-slate-200">📦 Courier Parcel Trap</div>
-                    <div className="text-[10px] text-slate-400">India Post SMS • Customs Fee Link</div>
+                    <div className="text-xs font-semibold text-[#181a15]">📦 Courier Parcel Trap</div>
+                    <div className="text-[10px] text-[#636c5c]">India Post SMS • Customs Fee Link</div>
                   </div>
                 </button>
 
@@ -725,30 +725,30 @@ export const ScannerInput: React.FC<ScannerInputProps> = ({ onAnalyze, isLoading
                   type="button"
                   disabled={isLoading}
                   onClick={() => handleLoadBuiltinScreenshot("blurry")}
-                  className="px-3 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700/80 hover:border-amber-500/50 text-left transition-all group flex items-start gap-2"
+                  className="px-3 py-2.5 rounded-xl bg-white hover:bg-amber-50/50 border border-[#dce3d5] hover:border-amber-300 text-left transition-all group flex items-start gap-2 shadow-2xs"
                 >
-                  <EyeOff className="w-4 h-4 text-amber-400 shrink-0 mt-0.5 group-hover:scale-110 transition-transform" />
+                  <EyeOff className="w-4 h-4 text-amber-600 shrink-0 mt-0.5 group-hover:scale-110 transition-transform" />
                   <div>
-                    <div className="text-xs font-semibold text-slate-200">🌫️ Blurry / Degraded Image</div>
-                    <div className="text-[10px] text-slate-400">Graceful Failure & High Uncertainty</div>
+                    <div className="text-xs font-semibold text-[#181a15]">🌫️ Blurry / Degraded Image</div>
+                    <div className="text-[10px] text-[#636c5c]">Graceful Failure & High Uncertainty</div>
                   </div>
                 </button>
               </div>
             </div>
 
             {/* OCR Privacy Mode Toggle */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 p-3 bg-slate-950/70 border border-slate-800 rounded-xl text-xs">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 p-3 bg-[#f7f9f5] border border-[#dce3d5] rounded-xl text-xs">
               <div className="flex items-center gap-2">
                 {useCloudOcr ? (
-                  <Globe className="w-4 h-4 text-amber-400 shrink-0" />
+                  <Globe className="w-4 h-4 text-amber-600 shrink-0" />
                 ) : (
-                  <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0" />
+                  <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
                 )}
                 <div>
-                  <span className="font-medium text-slate-200">
+                  <span className="font-semibold text-[#181a15]">
                     {useCloudOcr ? "Cloud Gemini Vision OCR" : "Offline Local OCR (English + Hindi)"}
                   </span>
-                  <p className="text-[11px] text-slate-400">
+                  <p className="text-[11px] text-[#636c5c]">
                     {useCloudOcr
                       ? "⚠️ Notice: Sends screenshot image to Google Gemini API. Disable for strict offline privacy."
                       : "🔒 Processed entirely inside your browser via Web Worker. No screenshot leaves your device."}
@@ -761,9 +761,9 @@ export const ScannerInput: React.FC<ScannerInputProps> = ({ onAnalyze, isLoading
                   type="checkbox"
                   checked={useCloudOcr}
                   onChange={(e) => setUseCloudOcr(e.target.checked)}
-                  className="rounded border-slate-700 bg-slate-800 text-cyan-500 focus:ring-0 focus:ring-offset-0"
+                  className="rounded border-[#ccd4c4] text-[#bef264] focus:ring-0 focus:ring-offset-0"
                 />
-                <span className="text-[11px] text-slate-300">Enable Cloud OCR</span>
+                <span className="text-[11px] text-[#363f2e] font-medium">Enable Cloud OCR</span>
               </label>
             </div>
 
@@ -784,15 +784,15 @@ export const ScannerInput: React.FC<ScannerInputProps> = ({ onAnalyze, isLoading
               }}
               className={`border-2 border-dashed rounded-2xl p-6 text-center transition-all ${
                 dragOver
-                  ? "border-cyan-400 bg-cyan-950/20"
-                  : "border-slate-700 hover:border-slate-600 bg-slate-950/40"
+                  ? "border-[#84b83f] bg-[#eef5e6]"
+                  : "border-[#d0d8c8] hover:border-[#9ec964] bg-[#f9faf7]"
               }`}
             >
-              <Upload className="w-8 h-8 text-cyan-400 mx-auto mb-2" />
-              <p className="text-xs sm:text-sm font-medium text-slate-200">
+              <Upload className="w-8 h-8 text-[#3d5926] mx-auto mb-2" />
+              <p className="text-xs sm:text-sm font-semibold text-[#181a15]">
                 Drag and drop screenshot (.png, .jpg, .webp) here
               </p>
-              <p className="text-xs text-slate-500 mt-1 mb-3">
+              <p className="text-xs text-[#636c5c] mt-1 mb-3">
                 Paste directly from clipboard with Ctrl+V, or browse manually
               </p>
               <button
@@ -801,27 +801,27 @@ export const ScannerInput: React.FC<ScannerInputProps> = ({ onAnalyze, isLoading
                   e.stopPropagation();
                   fileInputRef.current?.click();
                 }}
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition-all shadow-sm"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold bg-white hover:bg-[#edf2e7] text-[#181a15] border border-[#d0d8c8] transition-all shadow-2xs"
               >
-                <FolderOpen className="w-3.5 h-3.5 text-cyan-400" />
+                <FolderOpen className="w-3.5 h-3.5 text-[#3d5926]" />
                 <span>Browse File from Computer</span>
               </button>
             </div>
 
             {selectedImage && (
-              <div className="p-3 bg-slate-950/80 border border-slate-800 rounded-xl flex items-center justify-between">
+              <div className="p-3 bg-[#f7f9f5] border border-[#dce3d5] rounded-xl flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={selectedImage}
                     alt="Loaded Screenshot"
-                    className="w-14 h-14 object-cover rounded-lg border border-slate-700 shadow-sm"
+                    className="w-14 h-14 object-cover rounded-lg border border-[#dce3d5] shadow-xs"
                   />
                   <div>
-                    <span className="text-xs font-semibold text-slate-200">
+                    <span className="text-xs font-semibold text-[#181a15]">
                       {isProcessingOcr ? ocrStatusText : "Screenshot Loaded & Parsed"}
                     </span>
-                    <p className="text-[11px] text-slate-400">
+                    <p className="text-[11px] text-[#636c5c]">
                       {isProcessingOcr
                         ? "Scanning characters..."
                         : `${ocrQuality?.charCount || inputText.length} characters extracted • Confidence ${
@@ -831,7 +831,7 @@ export const ScannerInput: React.FC<ScannerInputProps> = ({ onAnalyze, isLoading
                   </div>
                 </div>
 
-                {isProcessingOcr && <RefreshCw className="w-4 h-4 text-cyan-400 animate-spin" />}
+                {isProcessingOcr && <RefreshCw className="w-4 h-4 text-[#3d5926] animate-spin" />}
               </div>
             )}
           </div>
@@ -856,15 +856,15 @@ export const ScannerInput: React.FC<ScannerInputProps> = ({ onAnalyze, isLoading
               }}
               className={`border-2 border-dashed rounded-2xl p-6 text-center transition-all ${
                 dragOver
-                  ? "border-cyan-400 bg-cyan-950/20"
-                  : "border-slate-700 hover:border-slate-600 bg-slate-950/40"
+                  ? "border-[#84b83f] bg-[#eef5e6]"
+                  : "border-[#d0d8c8] hover:border-[#9ec964] bg-[#f9faf7]"
               }`}
             >
-              <Mail className="w-8 h-8 text-cyan-400 mx-auto mb-2" />
-              <p className="text-xs sm:text-sm font-medium text-slate-200">
+              <Mail className="w-8 h-8 text-[#3d5926] mx-auto mb-2" />
+              <p className="text-xs sm:text-sm font-semibold text-[#181a15]">
                 Drag and drop raw email file (.eml, .txt, .html)
               </p>
-              <p className="text-xs text-slate-500 mt-1 mb-3">
+              <p className="text-xs text-[#636c5c] mt-1 mb-3">
                 Inspects RFC-822 headers, From vs. Reply-To divergence, SPF/DKIM/DMARC & anchor mismatches
               </p>
               <button
@@ -873,9 +873,9 @@ export const ScannerInput: React.FC<ScannerInputProps> = ({ onAnalyze, isLoading
                   e.stopPropagation();
                   emailFileInputRef.current?.click();
                 }}
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition-all shadow-sm"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold bg-white hover:bg-[#edf2e7] text-[#181a15] border border-[#d0d8c8] transition-all shadow-2xs"
               >
-                <FolderOpen className="w-3.5 h-3.5 text-cyan-400" />
+                <FolderOpen className="w-3.5 h-3.5 text-[#3d5926]" />
                 <span>Browse .EML / Email File</span>
               </button>
             </div>
@@ -884,20 +884,20 @@ export const ScannerInput: React.FC<ScannerInputProps> = ({ onAnalyze, isLoading
 
         {/* Credential Masking Safety Notice */}
         {maskedEntities.length > 0 && (
-          <div className="p-3 bg-cyan-950/40 border border-cyan-800/40 rounded-xl text-xs text-cyan-300 flex items-start gap-2.5 animate-in fade-in">
-            <KeyRound className="w-4 h-4 text-cyan-400 shrink-0 mt-0.5" />
+          <div className="p-3.5 bg-[#eef5e6] border border-[#cbe0b8] rounded-2xl text-xs text-[#2c401c] flex items-start gap-2.5 animate-in fade-in">
+            <KeyRound className="w-4 h-4 text-[#3d5926] shrink-0 mt-0.5" />
             <div className="space-y-1">
-              <span className="font-semibold text-cyan-200">
+              <span className="font-semibold text-[#1f3012]">
                 Sensitive Credential Masking Active:
               </span>
-              <p className="text-[11px] text-slate-400 leading-relaxed">
+              <p className="text-[11px] text-[#556149] leading-relaxed">
                 Protected {maskedEntities.length} sensitive credential value(s) in browser memory prior to any analysis.
               </p>
               <div className="flex flex-wrap gap-1.5 pt-0.5">
                 {maskedEntities.map((ent, idx) => (
                   <span
                     key={idx}
-                    className="px-2 py-0.5 rounded bg-slate-900 border border-cyan-800/50 text-[10px] font-mono text-cyan-300"
+                    className="px-2 py-0.5 rounded-md bg-white border border-[#cbe0b8] text-[10px] font-mono text-[#2c401c] shadow-2xs"
                   >
                     {ent.label}: {ent.originalRedacted}
                   </span>
@@ -909,10 +909,10 @@ export const ScannerInput: React.FC<ScannerInputProps> = ({ onAnalyze, isLoading
 
         {/* OCR Quality Notice / Warnings */}
         {ocrQuality && ocrQuality.warnings.length > 0 && (
-          <div className="p-3 bg-amber-950/30 border border-amber-800/50 rounded-xl text-xs text-amber-200 flex items-start gap-2.5">
-            <AlertCircle className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+          <div className="p-3 bg-amber-50 border border-amber-200 rounded-xl text-xs text-amber-800 flex items-start gap-2.5">
+            <AlertCircle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
             <div>
-              <span className="font-semibold text-amber-300">OCR Image Quality Notice: </span>
+              <span className="font-semibold text-amber-900">OCR Image Quality Notice: </span>
               {ocrQuality.warnings.join(" ")}
             </div>
           </div>
@@ -932,9 +932,9 @@ export const ScannerInput: React.FC<ScannerInputProps> = ({ onAnalyze, isLoading
                 : "Paste suspicious SMS, WhatsApp message, email excerpt, or URL here..."
             }
             rows={5}
-            className="w-full bg-slate-950/80 border border-slate-800 rounded-2xl p-4 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500 transition-all font-mono resize-y"
+            className="w-full bg-[#fcfdfa] border border-[#d8e0d0] rounded-2xl p-4 text-sm text-[#181a15] placeholder-[#9aa392] focus:outline-none focus:ring-2 focus:ring-[#bef264] focus:border-[#a0d944] transition-all font-mono resize-y shadow-2xs"
           />
-          <div className="absolute bottom-3 right-3 text-[11px] text-slate-500 bg-slate-950/90 px-2 py-0.5 rounded border border-slate-800">
+          <div className="absolute bottom-3 right-3 text-[11px] text-[#636c5c] bg-white/90 px-2 py-0.5 rounded-md border border-[#d8e0d0]">
             {inputText.length} chars
           </div>
         </div>
@@ -949,7 +949,7 @@ export const ScannerInput: React.FC<ScannerInputProps> = ({ onAnalyze, isLoading
               setOcrQuality(null);
               setMaskedEntities([]);
             }}
-            className="text-xs text-slate-400 hover:text-slate-200"
+            className="text-xs text-[#717a69] hover:text-[#181a15] transition-colors"
           >
             Clear input
           </button>
@@ -957,7 +957,7 @@ export const ScannerInput: React.FC<ScannerInputProps> = ({ onAnalyze, isLoading
           <button
             type="submit"
             disabled={isLoading || !inputText.trim()}
-            className="px-6 py-2.5 rounded-xl font-bold text-sm text-slate-950 bg-gradient-to-r from-cyan-400 to-blue-500 hover:from-cyan-300 hover:to-blue-400 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-cyan-500/20 transition-all flex items-center gap-2"
+            className="px-6 py-2.5 rounded-2xl font-bold text-sm text-[#162704] bg-[#bef264] hover:bg-[#aee750] border border-[#a8df4a]/70 disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_2px_12px_rgba(190,242,100,0.35)] transition-all flex items-center gap-2"
           >
             {isLoading ? (
               <>

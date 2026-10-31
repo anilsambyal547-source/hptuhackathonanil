@@ -18,27 +18,27 @@ export const EvidenceHighlighter: React.FC<EvidenceHighlighterProps> = ({ text, 
     switch (category) {
       case "credential_harvesting":
         return {
-          bg: "bg-rose-500/20 text-rose-300 border-b-2 border-rose-500 hover:bg-rose-500/30",
-          badge: "bg-rose-500/20 text-rose-400 border border-rose-500/30",
+          bg: "bg-rose-100 text-rose-800 border-b-2 border-rose-500 hover:bg-rose-200",
+          badge: "bg-rose-50 text-rose-700 border border-rose-200",
           label: "Credential Harvesting",
         };
       case "urgency":
         return {
-          bg: "bg-amber-500/20 text-amber-300 border-b-2 border-amber-500 hover:bg-amber-500/30",
-          badge: "bg-amber-500/20 text-amber-400 border border-amber-500/30",
+          bg: "bg-amber-100 text-amber-900 border-b-2 border-amber-500 hover:bg-amber-200",
+          badge: "bg-amber-50 text-amber-800 border border-amber-200",
           label: "Manufactured Urgency",
         };
       case "fear_coercion":
       case "fear_intimidation":
         return {
-          bg: "bg-red-600/25 text-red-300 border-b-2 border-red-500 hover:bg-red-600/35",
-          badge: "bg-red-600/20 text-red-400 border border-red-600/30",
+          bg: "bg-purple-100 text-purple-900 border-b-2 border-purple-500 hover:bg-purple-200",
+          badge: "bg-purple-50 text-purple-800 border border-purple-200",
           label: "Fear & Intimidation",
         };
       case "impersonation":
         return {
-          bg: "bg-purple-500/20 text-purple-300 border-b-2 border-purple-500 hover:bg-purple-500/30",
-          badge: "bg-purple-500/20 text-purple-400 border border-purple-500/30",
+          bg: "bg-indigo-100 text-indigo-900 border-b-2 border-indigo-500 hover:bg-indigo-200",
+          badge: "bg-indigo-50 text-indigo-800 border border-indigo-200",
           label: "Entity Impersonation",
         };
       case "suspicious_link":
@@ -47,15 +47,15 @@ export const EvidenceHighlighter: React.FC<EvidenceHighlighterProps> = ({ text, 
       case "typosquatting":
       case "shortener":
         return {
-          bg: "bg-cyan-500/20 text-cyan-300 border-b-2 border-cyan-500 hover:bg-cyan-500/30",
-          badge: "bg-cyan-500/20 text-cyan-400 border border-cyan-500/30",
+          bg: "bg-teal-100 text-teal-900 border-b-2 border-teal-500 hover:bg-teal-200",
+          badge: "bg-teal-50 text-teal-800 border border-teal-200",
           label: "Deceptive Link",
         };
       case "financial_solicitation":
       default:
         return {
-          bg: "bg-emerald-500/20 text-emerald-300 border-b-2 border-emerald-500 hover:bg-emerald-500/30",
-          badge: "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30",
+          bg: "bg-[#e2edd8] text-[#2c401c] border-b-2 border-[#7db432] hover:bg-[#d5e6c7]",
+          badge: "bg-[#eef4e8] text-[#3d5926] border border-[#d5e0cb]",
           label: "Financial Solicitation",
         };
     }
@@ -125,58 +125,58 @@ export const EvidenceHighlighter: React.FC<EvidenceHighlighterProps> = ({ text, 
   };
 
   return (
-    <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-6 shadow-xl backdrop-blur-sm">
-      <div className="flex items-center justify-between border-b border-slate-800/80 pb-4 mb-4">
+    <div className="bg-white border border-[#e2e6dc] rounded-3xl p-6 sm:p-7 shadow-[0_4px_24px_-4px_rgba(0,0,0,0.04)]">
+      <div className="flex items-center justify-between border-b border-[#edf1e8] pb-4 mb-4">
         <div className="flex items-center gap-2">
-          <Tag className="w-4 h-4 text-cyan-400" />
-          <h3 className="text-sm font-semibold text-white tracking-wide">
+          <Tag className="w-4 h-4 text-[#3d5926]" />
+          <h3 className="text-base font-serif font-bold text-[#181a15] tracking-tight">
             Interactive Evidentiary Highlight Spans
           </h3>
         </div>
-        <span className="text-xs text-slate-400">
+        <span className="text-xs text-[#636c5c] font-medium">
           {spans.length} trigger{spans.length === 1 ? "" : "s"} identified
         </span>
       </div>
 
       {/* Rendered Text with Highlights */}
-      <div className="p-4 bg-slate-950/90 rounded-xl border border-slate-800/80 text-sm sm:text-base leading-relaxed font-mono whitespace-pre-wrap break-words text-slate-200">
+      <div className="p-4 bg-[#fcfdfa] rounded-2xl border border-[#d8e0d0] text-sm sm:text-base leading-relaxed font-mono whitespace-pre-wrap break-words text-[#181a15]">
         {renderHighlightedText()}
       </div>
 
       {/* Selected Evidence Detail Box */}
       {selectedSpan ? (
-        <div className="mt-4 p-4 rounded-xl bg-slate-950 border border-cyan-900/40 shadow-inner">
+        <div className="mt-4 p-4 rounded-2xl bg-[#f8faf6] border border-[#dce3d5] shadow-2xs">
           <div className="flex items-center justify-between gap-2 mb-2">
             <div className="flex items-center gap-2">
               <span
-                className={`text-[11px] font-bold px-2 py-0.5 rounded ${
+                className={`text-[11px] font-bold px-2.5 py-0.5 rounded-full ${
                   getCategoryStyles(selectedSpan.category).badge
                 }`}
               >
                 {getCategoryStyles(selectedSpan.category).label}
               </span>
-              <span className="text-xs font-semibold text-slate-200">
+              <span className="text-xs font-semibold text-[#181a15]">
                 {selectedSpan.title || selectedSpan.category.replace(/_/g, " ")}
               </span>
             </div>
-            <span className="text-[11px] uppercase tracking-wider font-bold text-rose-400 px-1.5 py-0.5 bg-rose-950/50 rounded border border-rose-800/40">
+            <span className="text-[10px] uppercase tracking-wider font-bold text-rose-700 px-2 py-0.5 bg-rose-50 rounded-full border border-rose-200">
               {selectedSpan.severity} Severity
             </span>
           </div>
 
-          <p className="text-xs text-slate-300 leading-relaxed">
+          <p className="text-xs text-[#525a4c] leading-relaxed">
             {selectedSpan.description || selectedSpan.explanation || selectedSpan.text}
           </p>
 
-          <div className="mt-2 text-[11px] text-slate-400 flex items-center gap-1.5">
-            <span className="text-slate-500 font-mono">Matched snippet:</span>
-            <code className="text-cyan-300 font-mono bg-slate-900 px-1.5 py-0.5 rounded border border-slate-800">
+          <div className="mt-2.5 text-[11px] text-[#636c5c] flex items-center gap-1.5">
+            <span className="text-[#717a69] font-mono">Matched snippet:</span>
+            <code className="text-[#2c401c] font-mono bg-white px-2 py-0.5 rounded-md border border-[#dce3d5]">
               &ldquo;{selectedSpan.text}&rdquo;
             </code>
           </div>
         </div>
       ) : spans.length === 0 ? (
-        <div className="mt-4 text-xs text-slate-400 italic text-center py-2">
+        <div className="mt-4 text-xs text-[#636c5c] italic text-center py-2">
           No suspicious spans identified in this message text.
         </div>
       ) : null}

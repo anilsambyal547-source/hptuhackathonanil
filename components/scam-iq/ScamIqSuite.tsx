@@ -130,7 +130,7 @@ export const ScamIqSuite: React.FC = () => {
   return (
     <div className="space-y-8 animate-in fade-in duration-300">
       {/* Top Suite Navigation Bar */}
-      <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+      <div className="flex items-center justify-between pb-3.5 border-b border-[#edf1e8]">
         <div className="flex items-center gap-2">
           {activeMode !== "home" && (
             <button
@@ -138,14 +138,14 @@ export const ScamIqSuite: React.FC = () => {
                 soundEffects.playClick();
                 setActiveMode("home");
               }}
-              className="text-xs font-semibold text-slate-400 hover:text-white transition-colors flex items-center gap-1 mr-2 px-2.5 py-1 rounded-lg bg-slate-900 border border-slate-800"
+              className="text-xs font-semibold text-[#556149] hover:text-[#181a15] transition-colors flex items-center gap-1 mr-2 px-3 py-1.5 rounded-xl bg-white border border-[#dce3d5] shadow-2xs"
             >
               <span>← All Modes</span>
             </button>
           )}
-          <span className="text-xs font-mono font-bold text-cyan-400 uppercase tracking-wider flex items-center gap-1.5">
-            <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
-            <span>ScamAdviser Lab • Scam IQ Test Suite</span>
+          <span className="text-xs font-mono font-bold text-[#3d5926] uppercase tracking-wider flex items-center gap-1.5">
+            <Sparkles className="w-3.5 h-3.5 text-[#3d5926]" />
+            <span>SafeGuard Lab • Scam IQ Test Suite</span>
           </span>
         </div>
 
@@ -154,17 +154,17 @@ export const ScamIqSuite: React.FC = () => {
           <button
             onClick={toggleSound}
             title={isMuted ? "Unmute Audio" : "Mute Audio"}
-            className="p-2 rounded-xl text-xs font-mono bg-slate-900 border border-slate-800 text-slate-300 hover:text-white hover:bg-slate-800 transition-colors flex items-center gap-1.5"
+            className="p-2 rounded-2xl text-xs font-mono bg-white border border-[#dce3d5] text-[#556149] hover:text-[#181a15] hover:bg-[#f4f7f1] transition-colors flex items-center gap-1.5 shadow-2xs"
           >
             {isMuted ? (
               <>
-                <VolumeX className="w-4 h-4 text-rose-400" />
-                <span className="hidden sm:inline text-[11px] text-slate-400">Muted</span>
+                <VolumeX className="w-4 h-4 text-rose-600" />
+                <span className="hidden sm:inline text-[11px] text-[#636c5c]">Muted</span>
               </>
             ) : (
               <>
-                <Volume2 className="w-4 h-4 text-emerald-400" />
-                <span className="hidden sm:inline text-[11px] text-slate-400">Audio ON</span>
+                <Volume2 className="w-4 h-4 text-[#3d5926]" />
+                <span className="hidden sm:inline text-[11px] text-[#636c5c]">Audio ON</span>
               </>
             )}
           </button>
@@ -215,34 +215,34 @@ export const ScamIqSuite: React.FC = () => {
         <div className="space-y-8">
           {/* Hero Header */}
           <div className="text-center max-w-3xl mx-auto space-y-3">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-950/60 border border-purple-800/40 text-purple-300 text-xs font-medium">
-              <Sparkles className="w-3.5 h-3.5" />
+            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#eef4e8] border border-[#d5e0cb] text-[#3d5926] text-xs font-medium shadow-2xs">
+              <Sparkles className="w-3.5 h-3.5 text-[#3d5926]" />
               <span>Interactive Cybersecurity Academy</span>
             </div>
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-white">
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-bold tracking-tight text-[#181a15]">
               Can You Spot a Scam? Test Your Scam IQ.
             </h1>
-            <p className="text-xs sm:text-base text-slate-400 leading-relaxed max-w-2xl mx-auto font-sans">
-              Master the three authentic training modes from ScamAdviser: test your scenario knowledge, challenge your split-second instincts, and spot subtle forensic red flags.
+            <p className="text-xs sm:text-base text-[#5c6454] leading-relaxed max-w-2xl mx-auto font-sans">
+              Master the three authentic training modes: test your scenario knowledge, challenge your split-second instincts, and spot subtle forensic red flags.
             </p>
           </div>
 
           {/* Current Composite Progress Banner */}
-          <div className="max-w-4xl mx-auto p-4 sm:p-6 bg-slate-900/80 border border-slate-800 rounded-3xl flex flex-col sm:flex-row items-center justify-between gap-4 backdrop-blur-md shadow-xl">
+          <div className="max-w-4xl mx-auto p-5 sm:p-6 bg-white border border-[#e2e6dc] rounded-3xl flex flex-col sm:flex-row items-center justify-between gap-4 shadow-[0_4px_24px_-4px_rgba(0,0,0,0.04)]">
             <div className="flex items-center gap-4">
-              <div className="p-3.5 rounded-2xl bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 shadow-lg shadow-cyan-500/10">
+              <div className="p-3.5 rounded-2xl bg-[#bef264] text-[#162704] border border-[#a8df4a]/60 shadow-2xs">
                 <Award className="w-8 h-8" />
               </div>
               <div>
                 <div className="flex items-center gap-2">
-                  <span className="text-xs uppercase font-mono tracking-widest text-slate-400">
+                  <span className="text-xs uppercase font-mono tracking-widest text-[#636c5c]">
                     Current Scam IQ:
                   </span>
-                  <span className="text-xl font-black text-white font-mono">
-                    {totalScore} <span className="text-xs text-slate-500 font-light">/ 300 pts</span>
+                  <span className="text-2xl font-serif font-bold text-[#181a15]">
+                    {totalScore} <span className="text-xs text-[#717a69] font-sans font-normal">/ 300 pts</span>
                   </span>
                 </div>
-                <p className="text-xs text-slate-400 pt-0.5">
+                <p className="text-xs text-[#525a4c] pt-0.5">
                   {hasAttempted.quiz && hasAttempted.drill && hasAttempted.redflag
                     ? "✓ All 3 modes completed! Click to view your full accredited report card."
                     : `Completed ${
@@ -261,7 +261,7 @@ export const ScamIqSuite: React.FC = () => {
                     soundEffects.playClick();
                     setActiveMode("results");
                   }}
-                  className="w-full sm:w-auto px-5 py-2.5 rounded-xl text-xs font-bold bg-cyan-500 hover:bg-cyan-400 text-slate-950 transition-all flex items-center justify-center gap-1.5 shadow-md shadow-cyan-500/20"
+                  className="w-full sm:w-auto px-5 py-2.5 rounded-2xl text-xs font-bold bg-[#bef264] hover:bg-[#aee750] text-[#162704] border border-[#a8df4a]/70 transition-all flex items-center justify-center gap-1.5 shadow-2xs"
                 >
                   <span>View Report Card</span>
                   <ArrowRight className="w-3.5 h-3.5" />
@@ -278,34 +278,34 @@ export const ScamIqSuite: React.FC = () => {
                 soundEffects.playClick();
                 setActiveMode("redflag");
               }}
-              className="group relative p-6 bg-slate-900/90 border border-slate-800 hover:border-purple-500/60 rounded-3xl flex flex-col justify-between space-y-6 cursor-pointer transition-all hover:-translate-y-1 hover:shadow-2xl hover:shadow-purple-500/10 backdrop-blur-md"
+              className="group relative p-6 bg-white border border-[#e2e6dc] hover:border-[#8ec251] rounded-3xl flex flex-col justify-between space-y-6 cursor-pointer transition-all hover:-translate-y-1 hover:shadow-lg shadow-[0_4px_24px_-4px_rgba(0,0,0,0.04)]"
             >
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <div className="p-3 rounded-2xl bg-purple-500/10 border border-purple-500/30 text-purple-400 group-hover:scale-105 transition-transform">
+                  <div className="p-3 rounded-2xl bg-purple-50 border border-purple-200 text-purple-700 group-hover:scale-105 transition-transform">
                     <Flag className="w-6 h-6" />
                   </div>
-                  <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-purple-500/15 text-purple-300 border border-purple-500/30 font-mono">
+                  <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-purple-50 text-purple-800 border border-purple-200 font-mono">
                     Feature 1 • Spot Tells
                   </span>
                 </div>
 
                 <div className="space-y-1.5">
-                  <h3 className="text-xl font-black text-white group-hover:text-purple-300 transition-colors">
+                  <h3 className="text-xl font-serif font-bold text-[#181a15] group-hover:text-purple-900 transition-colors">
                     Red Flag Spotter
                   </h3>
-                  <p className="text-xs font-semibold text-purple-400">Forensic Investigation</p>
-                  <p className="text-xs text-slate-400 leading-relaxed font-sans">
+                  <p className="text-xs font-semibold text-purple-700">Forensic Investigation</p>
+                  <p className="text-xs text-[#525a4c] leading-relaxed font-sans">
                     Tap every suspicious element in a real scam artifact. Examine deceptive subdomains, fake headers, and APK attachments.
                   </p>
                 </div>
               </div>
 
-              <div className="pt-4 border-t border-slate-800/80 flex items-center justify-between">
-                <span className="text-xs font-mono font-semibold text-purple-300">
+              <div className="pt-4 border-t border-[#edf1e8] flex items-center justify-between">
+                <span className="text-xs font-mono font-semibold text-purple-800">
                   {hasAttempted.redflag ? `Score: ${scores.redflag}/100` : "100 Points"}
                 </span>
-                <span className="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-purple-500/20 text-purple-300 group-hover:bg-purple-500 group-hover:text-slate-950 transition-all flex items-center gap-1.5">
+                <span className="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-[#f4f7f1] text-[#181a15] group-hover:bg-[#181a15] group-hover:text-white transition-all flex items-center gap-1.5 shadow-2xs">
                   <span>{hasAttempted.redflag ? "Retake" : "Spot Tells"}</span>
                   <ArrowRight className="w-3.5 h-3.5" />
                 </span>
@@ -318,34 +318,34 @@ export const ScamIqSuite: React.FC = () => {
                 soundEffects.playClick();
                 setActiveMode("drill");
               }}
-              className="group relative p-6 bg-slate-900/90 border border-slate-800 hover:border-rose-500/60 rounded-3xl flex flex-col justify-between space-y-6 cursor-pointer transition-all hover:-translate-y-1 hover:shadow-2xl hover:shadow-rose-500/10 backdrop-blur-md"
+              className="group relative p-6 bg-white border border-[#e2e6dc] hover:border-[#8ec251] rounded-3xl flex flex-col justify-between space-y-6 cursor-pointer transition-all hover:-translate-y-1 hover:shadow-lg shadow-[0_4px_24px_-4px_rgba(0,0,0,0.04)]"
             >
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <div className="p-3 rounded-2xl bg-rose-500/10 border border-rose-500/30 text-rose-500 group-hover:scale-105 transition-transform">
+                  <div className="p-3 rounded-2xl bg-rose-50 border border-rose-200 text-rose-600 group-hover:scale-105 transition-transform">
                     <Zap className="w-6 h-6" />
                   </div>
-                  <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-rose-500/15 text-rose-300 border border-rose-500/30 font-mono">
+                  <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-rose-50 text-rose-800 border border-rose-200 font-mono">
                     Feature 2 • Instinct
                   </span>
                 </div>
 
                 <div className="space-y-1.5">
-                  <h3 className="text-xl font-black text-white group-hover:text-rose-300 transition-colors">
+                  <h3 className="text-xl font-serif font-bold text-[#181a15] group-hover:text-rose-900 transition-colors">
                     Simulator Drill
                   </h3>
-                  <p className="text-xs font-semibold text-rose-400">Trust Your Gut</p>
-                  <p className="text-xs text-slate-400 leading-relaxed font-sans">
+                  <p className="text-xs font-semibold text-rose-700">Trust Your Gut</p>
+                  <p className="text-xs text-[#525a4c] leading-relaxed font-sans">
                     Real or Scam? Make the call, message after message. 20-second active timer with streak multipliers and instant SafeGuard engine verdicts.
                   </p>
                 </div>
               </div>
 
-              <div className="pt-4 border-t border-slate-800/80 flex items-center justify-between">
-                <span className="text-xs font-mono font-semibold text-rose-300">
+              <div className="pt-4 border-t border-[#edf1e8] flex items-center justify-between">
+                <span className="text-xs font-mono font-semibold text-rose-800">
                   {hasAttempted.drill ? `Score: ${scores.drill}/100` : "100 Points"}
                 </span>
-                <span className="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-rose-500/20 text-rose-300 group-hover:bg-rose-500 group-hover:text-white transition-all flex items-center gap-1.5">
+                <span className="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-[#f4f7f1] text-[#181a15] group-hover:bg-[#181a15] group-hover:text-white transition-all flex items-center gap-1.5 shadow-2xs">
                   <span>{hasAttempted.drill ? "Retake" : "Start Drill"}</span>
                   <ArrowRight className="w-3.5 h-3.5" />
                 </span>
@@ -358,34 +358,34 @@ export const ScamIqSuite: React.FC = () => {
                 soundEffects.playClick();
                 setActiveMode("quiz");
               }}
-              className="group relative p-6 bg-slate-900/90 border border-slate-800 hover:border-amber-500/60 rounded-3xl flex flex-col justify-between space-y-6 cursor-pointer transition-all hover:-translate-y-1 hover:shadow-2xl hover:shadow-amber-500/10 backdrop-blur-md"
+              className="group relative p-6 bg-white border border-[#e2e6dc] hover:border-[#8ec251] rounded-3xl flex flex-col justify-between space-y-6 cursor-pointer transition-all hover:-translate-y-1 hover:shadow-lg shadow-[0_4px_24px_-4px_rgba(0,0,0,0.04)]"
             >
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <div className="p-3 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-400 group-hover:scale-105 transition-transform">
+                  <div className="p-3 rounded-2xl bg-amber-50 border border-amber-200 text-amber-700 group-hover:scale-105 transition-transform">
                     <BookOpen className="w-6 h-6" />
                   </div>
-                  <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-amber-500/15 text-amber-300 border border-amber-500/30 font-mono">
+                  <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-amber-50 text-amber-900 border border-amber-200 font-mono">
                     Feature 3 • Knowledge
                   </span>
                 </div>
 
                 <div className="space-y-1.5">
-                  <h3 className="text-xl font-black text-white group-hover:text-amber-300 transition-colors">
+                  <h3 className="text-xl font-serif font-bold text-[#181a15] group-hover:text-amber-900 transition-colors">
                     Scenario Quiz
                   </h3>
-                  <p className="text-xs font-semibold text-amber-400">In-Depth Case Studies</p>
-                  <p className="text-xs text-slate-400 leading-relaxed font-sans">
+                  <p className="text-xs font-semibold text-amber-800">In-Depth Case Studies</p>
+                  <p className="text-xs text-[#525a4c] leading-relaxed font-sans">
                     Read simulated phone and email threat scenarios covering crypto pig butchering, customs seizures, and digital arrest extortion.
                   </p>
                 </div>
               </div>
 
-              <div className="pt-4 border-t border-slate-800/80 flex items-center justify-between">
-                <span className="text-xs font-mono font-semibold text-amber-300">
+              <div className="pt-4 border-t border-[#edf1e8] flex items-center justify-between">
+                <span className="text-xs font-mono font-semibold text-amber-900">
                   {hasAttempted.quiz ? `Score: ${scores.quiz}/100` : "100 Points"}
                 </span>
-                <span className="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-amber-500/20 text-amber-300 group-hover:bg-amber-400 group-hover:text-slate-950 transition-all flex items-center gap-1.5">
+                <span className="px-3.5 py-1.5 rounded-xl text-xs font-bold bg-[#f4f7f1] text-[#181a15] group-hover:bg-[#181a15] group-hover:text-white transition-all flex items-center gap-1.5 shadow-2xs">
                   <span>{hasAttempted.quiz ? "Retake" : "Start Quiz"}</span>
                   <ArrowRight className="w-3.5 h-3.5" />
                 </span>

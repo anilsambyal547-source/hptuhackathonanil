@@ -21,40 +21,40 @@ interface NavbarProps {
 
 export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab, onOpenExtensionModal }) => {
   return (
-    <header className="sticky top-0 z-50 border-b border-slate-800/80 bg-slate-950/80 backdrop-blur-md">
+    <header className="sticky top-0 z-50 border-b border-[#e2e6dc] bg-[#f7f8f4]/90 backdrop-blur-md">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         {/* Brand */}
         <div className="flex items-center gap-3 cursor-pointer" onClick={() => setActiveTab("scanner")}>
-          <div className="relative flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 shadow-lg shadow-cyan-500/20 text-slate-950">
-            <Shield className="w-5 h-5 text-white" />
+          <div className="relative flex items-center justify-center w-10 h-10 rounded-2xl bg-[#bef264] border border-[#a8df4a]/60 shadow-xs text-[#162704]">
+            <Shield className="w-5 h-5 text-[#162704]" />
             <span className="absolute -bottom-0.5 -right-0.5 flex h-3 w-3">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-500 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-600"></span>
             </span>
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-lg font-bold tracking-tight bg-gradient-to-r from-white via-slate-100 to-slate-400 bg-clip-text text-transparent">
+              <span className="text-xl font-serif font-bold tracking-tight text-[#181a15]">
                 SafeGuard AI
               </span>
-              <span className="px-1.5 py-0.5 text-[10px] font-semibold bg-cyan-950/80 text-cyan-400 border border-cyan-800/50 rounded">
+              <span className="px-2 py-0.5 text-[10px] font-semibold bg-[#eef4e8] text-[#3d5926] border border-[#d5e0cb] rounded-full">
                 v2.0
               </span>
             </div>
-            <p className="text-[11px] text-slate-400 hidden sm:block">
-              Multimodal Scam Detection & Safe URL Inspection
+            <p className="text-[11px] text-[#636c5c] hidden sm:block">
+              Multimodal Scam Detection & Official Recovery Assistant
             </p>
           </div>
         </div>
 
         {/* Navigation Tabs */}
-        <nav className="flex items-center gap-1 sm:gap-2">
+        <nav className="flex items-center gap-1 sm:gap-1.5 bg-[#edf1e8] p-1 rounded-2xl border border-[#dde3d6]">
           <button
             onClick={() => setActiveTab("scanner")}
-            className={`px-2.5 sm:px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-all flex items-center gap-1.5 ${
+            className={`px-3 py-1.5 rounded-xl text-xs sm:text-sm font-medium transition-all flex items-center gap-1.5 ${
               activeTab === "scanner"
-                ? "bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 shadow-sm shadow-cyan-500/10"
-                : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/50"
+                ? "bg-[#181a15] text-white shadow-xs font-semibold"
+                : "text-[#586150] hover:text-[#181a15] hover:bg-white/60"
             }`}
           >
             <ShieldAlert className="w-4 h-4" />
@@ -63,40 +63,40 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab, onOpenE
 
           <button
             onClick={() => setActiveTab("inbox")}
-            className={`px-2.5 sm:px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-all flex items-center gap-1.5 ${
+            className={`px-3 py-1.5 rounded-xl text-xs sm:text-sm font-medium transition-all flex items-center gap-1.5 ${
               activeTab === "inbox"
-                ? "bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 shadow-sm shadow-cyan-500/10 font-semibold"
-                : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/50"
+                ? "bg-[#181a15] text-white shadow-xs font-semibold"
+                : "text-[#586150] hover:text-[#181a15] hover:bg-white/60"
             }`}
           >
-            <Inbox className="w-4 h-4 text-cyan-400" />
+            <Inbox className="w-4 h-4" />
             <span className="hidden sm:inline">Inbox Guard</span>
             <span className="sm:hidden">Inbox</span>
           </button>
 
           <button
             onClick={() => setActiveTab("recovery")}
-            className={`px-2.5 sm:px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-all flex items-center gap-1.5 ${
+            className={`px-3 py-1.5 rounded-xl text-xs sm:text-sm font-medium transition-all flex items-center gap-1.5 ${
               activeTab === "recovery"
-                ? "bg-rose-500/20 text-rose-300 border border-rose-500/40 shadow-sm shadow-rose-500/20 font-semibold"
-                : "text-rose-400/90 hover:text-rose-300 hover:bg-rose-950/30"
+                ? "bg-rose-600 text-white shadow-xs font-semibold"
+                : "text-rose-700 bg-rose-50/80 hover:bg-rose-100/80 border border-rose-200"
             }`}
           >
-            <LifeBuoy className="w-4 h-4 text-rose-400" />
+            <LifeBuoy className="w-4 h-4 text-rose-500 group-hover:text-rose-600" />
             <span className="hidden sm:inline">Victim Help</span>
             <span className="sm:hidden">Help</span>
             <span className="flex h-1.5 w-1.5 relative">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-rose-500"></span>
+              <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-rose-600"></span>
             </span>
           </button>
 
           <button
             onClick={() => setActiveTab("benchmark")}
-            className={`px-2.5 sm:px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-all flex items-center gap-1.5 ${
+            className={`px-3 py-1.5 rounded-xl text-xs sm:text-sm font-medium transition-all flex items-center gap-1.5 ${
               activeTab === "benchmark"
-                ? "bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 shadow-sm shadow-cyan-500/10"
-                : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/50"
+                ? "bg-[#181a15] text-white shadow-xs font-semibold"
+                : "text-[#586150] hover:text-[#181a15] hover:bg-white/60"
             }`}
           >
             <Activity className="w-4 h-4" />
@@ -106,10 +106,10 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab, onOpenE
 
           <button
             onClick={() => setActiveTab("architecture")}
-            className={`px-2.5 sm:px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-all flex items-center gap-1.5 ${
+            className={`px-3 py-1.5 rounded-xl text-xs sm:text-sm font-medium transition-all flex items-center gap-1.5 ${
               activeTab === "architecture"
-                ? "bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 shadow-sm shadow-cyan-500/10"
-                : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/50"
+                ? "bg-[#181a15] text-white shadow-xs font-semibold"
+                : "text-[#586150] hover:text-[#181a15] hover:bg-white/60"
             }`}
           >
             <Cpu className="w-4 h-4" />
@@ -119,13 +119,13 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab, onOpenE
 
           <button
             onClick={() => setActiveTab("scam-iq")}
-            className={`px-2.5 sm:px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-all flex items-center gap-1.5 ${
+            className={`px-3 py-1.5 rounded-xl text-xs sm:text-sm font-medium transition-all flex items-center gap-1.5 ${
               activeTab === "scam-iq"
-                ? "bg-purple-500/10 text-purple-400 border border-purple-500/30 shadow-sm shadow-purple-500/10 font-semibold"
-                : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/50"
+                ? "bg-[#181a15] text-white shadow-xs font-semibold"
+                : "text-[#586150] hover:text-[#181a15] hover:bg-white/60"
             }`}
           >
-            <BrainCircuit className="w-4 h-4 text-purple-400" />
+            <BrainCircuit className="w-4 h-4 text-purple-600" />
             <span className="hidden md:inline">Scam IQ</span>
             <span className="md:hidden">IQ</span>
           </button>
@@ -136,17 +136,17 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab, onOpenE
           {onOpenExtensionModal && (
             <button
               onClick={onOpenExtensionModal}
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-cyan-950/40 hover:bg-cyan-900/40 border border-cyan-700/40 text-cyan-300 rounded-lg text-xs font-medium transition-all shadow-sm"
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-white hover:bg-[#edf1e8] border border-[#d5ded0] text-[#2c3524] rounded-full text-xs font-medium transition-all shadow-xs"
               title="Integrations: Chrome Extension, 1-Click Bookmarklet, Mobile PWA Share"
             >
-              <Share2 className="w-3.5 h-3.5 text-cyan-400" />
+              <Share2 className="w-3.5 h-3.5 text-[#3d5926]" />
               <span className="hidden lg:inline">Extensions</span>
             </button>
           )}
 
           {/* Security badge */}
-          <div className="hidden xl:flex items-center gap-2 px-3 py-1 bg-slate-900/80 border border-slate-800 rounded-full text-xs text-slate-300">
-            <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
+          <div className="hidden xl:flex items-center gap-2 px-3 py-1 bg-[#eef4e8] border border-[#d5e0cb] rounded-full text-xs text-[#3d5926] font-medium">
+            <Sparkles className="w-3.5 h-3.5 text-[#557e33]" />
             <span>Zero-Fetch Active</span>
           </div>
         </div>

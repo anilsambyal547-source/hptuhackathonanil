@@ -82,15 +82,15 @@ export const BenchmarkDashboard: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Header and Controls */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-slate-900/60 border border-slate-800 rounded-2xl p-6 shadow-xl backdrop-blur-sm">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-white border border-[#e2e6dc] rounded-3xl p-6 sm:p-7 shadow-[0_4px_24px_-4px_rgba(0,0,0,0.04)]">
         <div>
           <div className="flex items-center gap-2">
-            <Activity className="w-5 h-5 text-cyan-400" />
-            <h2 className="text-lg font-bold text-white tracking-tight">
+            <Activity className="w-5 h-5 text-[#3d5926]" />
+            <h2 className="text-xl sm:text-2xl font-serif font-bold text-[#181a15] tracking-tight">
               Evaluation & Benchmark Suite
             </h2>
           </div>
-          <p className="text-xs text-slate-400 mt-1">
+          <p className="text-xs text-[#636c5c] mt-1">
             Independent evaluation across curated smishing, extortion, phishing, and legitimate baselines.
           </p>
         </div>
@@ -98,7 +98,7 @@ export const BenchmarkDashboard: React.FC = () => {
         <button
           onClick={runBenchmark}
           disabled={isRunning}
-          className="px-4 py-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-semibold text-xs transition-all flex items-center gap-2 disabled:opacity-50 shadow-md shadow-cyan-500/20"
+          className="px-5 py-2.5 rounded-2xl bg-[#bef264] hover:bg-[#aee750] text-[#162704] font-bold text-xs border border-[#a8df4a]/70 transition-all flex items-center gap-2 disabled:opacity-50 shadow-2xs"
         >
           {isRunning ? (
             <>
@@ -116,10 +116,10 @@ export const BenchmarkDashboard: React.FC = () => {
 
       {/* Sample Size Transparency Note */}
       {metrics && (
-        <div className="flex items-start gap-2.5 p-3.5 bg-slate-950/80 border border-slate-800 rounded-xl text-xs text-slate-300">
-          <Info className="w-4 h-4 text-cyan-400 shrink-0 mt-0.5" />
+        <div className="flex items-start gap-2.5 p-4 bg-[#f8faf6] border border-[#dce3d5] rounded-2xl text-xs text-[#525a4c] shadow-2xs">
+          <Info className="w-4 h-4 text-[#3d5926] shrink-0 mt-0.5" />
           <div>
-            <span className="font-semibold text-slate-200">Evaluation Scope Note: </span>
+            <span className="font-semibold text-[#181a15]">Evaluation Scope Note: </span>
             {metrics.sampleSizeNote}
           </div>
         </div>
@@ -129,57 +129,57 @@ export const BenchmarkDashboard: React.FC = () => {
       {metrics && (
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {/* Accuracy */}
-          <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-5 backdrop-blur-sm">
-            <div className="flex items-center justify-between text-slate-400 text-xs mb-2">
-              <span>Overall Accuracy</span>
-              <Award className="w-4 h-4 text-emerald-400" />
+          <div className="bg-white border border-[#e2e6dc] rounded-3xl p-5 sm:p-6 shadow-[0_4px_24px_-4px_rgba(0,0,0,0.04)]">
+            <div className="flex items-center justify-between text-[#636c5c] text-xs mb-2">
+              <span className="font-medium">Overall Accuracy</span>
+              <Award className="w-4 h-4 text-[#3d5926]" />
             </div>
-            <div className="text-2xl sm:text-3xl font-extrabold text-white font-mono">
+            <div className="text-3xl sm:text-4xl font-serif font-bold text-[#181a15]">
               {metrics.accuracy}%
             </div>
-            <div className="text-[11px] text-slate-500 mt-1">
+            <div className="text-[11px] text-[#717a69] mt-1">
               {metrics.correctPredictions} / {metrics.totalSamples} correct predictions
             </div>
           </div>
 
           {/* Scam Recall */}
-          <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-5 backdrop-blur-sm">
-            <div className="flex items-center justify-between text-slate-400 text-xs mb-2">
-              <span>Scam Recall (High)</span>
-              <CheckCircle2 className="w-4 h-4 text-cyan-400" />
+          <div className="bg-white border border-[#e2e6dc] rounded-3xl p-5 sm:p-6 shadow-[0_4px_24px_-4px_rgba(0,0,0,0.04)]">
+            <div className="flex items-center justify-between text-[#636c5c] text-xs mb-2">
+              <span className="font-medium">Scam Recall (High)</span>
+              <CheckCircle2 className="w-4 h-4 text-emerald-600" />
             </div>
-            <div className="text-2xl sm:text-3xl font-extrabold text-cyan-400 font-mono">
+            <div className="text-3xl sm:text-4xl font-serif font-bold text-rose-700">
               {metrics.recall.high}%
             </div>
-            <div className="text-[11px] text-slate-500 mt-1">
+            <div className="text-[11px] text-[#717a69] mt-1">
               F1: {metrics.f1Score.high}% • Prec: {metrics.precision.high}%
             </div>
           </div>
 
           {/* Legit Precision */}
-          <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-5 backdrop-blur-sm">
-            <div className="flex items-center justify-between text-slate-400 text-xs mb-2">
-              <span>Legit Precision (Low)</span>
-              <Layers className="w-4 h-4 text-purple-400" />
+          <div className="bg-white border border-[#e2e6dc] rounded-3xl p-5 sm:p-6 shadow-[0_4px_24px_-4px_rgba(0,0,0,0.04)]">
+            <div className="flex items-center justify-between text-[#636c5c] text-xs mb-2">
+              <span className="font-medium">Legit Precision (Low)</span>
+              <Layers className="w-4 h-4 text-purple-600" />
             </div>
-            <div className="text-2xl sm:text-3xl font-extrabold text-purple-400 font-mono">
+            <div className="text-3xl sm:text-4xl font-serif font-bold text-[#3d5926]">
               {metrics.precision.low}%
             </div>
-            <div className="text-[11px] text-slate-500 mt-1">
+            <div className="text-[11px] text-[#717a69] mt-1">
               Low false alarm rate on authentic bank/courier alerts
             </div>
           </div>
 
           {/* Execution Latency */}
-          <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-5 backdrop-blur-sm">
-            <div className="flex items-center justify-between text-slate-400 text-xs mb-2">
-              <span>Avg Engine Latency</span>
-              <Clock className="w-4 h-4 text-amber-400" />
+          <div className="bg-white border border-[#e2e6dc] rounded-3xl p-5 sm:p-6 shadow-[0_4px_24px_-4px_rgba(0,0,0,0.04)]">
+            <div className="flex items-center justify-between text-[#636c5c] text-xs mb-2">
+              <span className="font-medium">Avg Engine Latency</span>
+              <Clock className="w-4 h-4 text-amber-600" />
             </div>
-            <div className="text-2xl sm:text-3xl font-extrabold text-amber-400 font-mono">
+            <div className="text-3xl sm:text-4xl font-serif font-bold text-amber-800">
               {metrics.averageLatencyMs}ms
             </div>
-            <div className="text-[11px] text-slate-500 mt-1">
+            <div className="text-[11px] text-[#717a69] mt-1">
               High-throughput local deterministic execution
             </div>
           </div>
@@ -190,63 +190,63 @@ export const BenchmarkDashboard: React.FC = () => {
       {metrics && metrics.devMetrics && metrics.holdoutMetrics && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* Dev Set */}
-          <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-5 backdrop-blur-sm">
-            <div className="flex items-center justify-between border-b border-slate-800 pb-3 mb-3">
+          <div className="bg-white border border-[#e2e6dc] rounded-3xl p-5 sm:p-6 shadow-[0_4px_24px_-4px_rgba(0,0,0,0.04)]">
+            <div className="flex items-center justify-between border-b border-[#e2e6dc] pb-3 mb-3">
               <div>
-                <span className="text-xs uppercase tracking-wider font-bold text-slate-300">
+                <span className="text-xs uppercase tracking-wider font-bold text-[#181a15]">
                   Dev Set (Tuning Subset)
                 </span>
-                <p className="text-[11px] text-slate-500">
+                <p className="text-[11px] text-[#717a69]">
                   {metrics.devMetrics.totalSamples} samples used during initial rule tuning
                 </p>
               </div>
-              <span className="text-lg font-bold font-mono text-cyan-400">
+              <span className="text-lg font-serif font-bold text-[#3d5926]">
                 {metrics.devMetrics.accuracy}% Acc
               </span>
             </div>
             <div className="grid grid-cols-3 gap-2 text-center text-xs">
-              <div className="p-2 bg-slate-950 rounded-lg border border-slate-800/80">
-                <span className="text-[10px] text-slate-500 uppercase block">High Recall</span>
-                <strong className="text-slate-200 font-mono">{metrics.devMetrics.recall.high}%</strong>
+              <div className="p-2.5 bg-[#f7f9f5] rounded-xl border border-[#e2e6dc]">
+                <span className="text-[10px] text-[#717a69] uppercase block font-medium">High Recall</span>
+                <strong className="text-rose-700 font-mono">{metrics.devMetrics.recall.high}%</strong>
               </div>
-              <div className="p-2 bg-slate-950 rounded-lg border border-slate-800/80">
-                <span className="text-[10px] text-slate-500 uppercase block">Low Precision</span>
-                <strong className="text-slate-200 font-mono">{metrics.devMetrics.precision.low}%</strong>
+              <div className="p-2.5 bg-[#f7f9f5] rounded-xl border border-[#e2e6dc]">
+                <span className="text-[10px] text-[#717a69] uppercase block font-medium">Low Precision</span>
+                <strong className="text-[#3d5926] font-mono">{metrics.devMetrics.precision.low}%</strong>
               </div>
-              <div className="p-2 bg-slate-950 rounded-lg border border-slate-800/80">
-                <span className="text-[10px] text-slate-500 uppercase block">Macro F1</span>
-                <strong className="text-slate-200 font-mono">{metrics.devMetrics.f1Score.macroAvg}%</strong>
+              <div className="p-2.5 bg-[#f7f9f5] rounded-xl border border-[#e2e6dc]">
+                <span className="text-[10px] text-[#717a69] uppercase block font-medium">Macro F1</span>
+                <strong className="text-[#181a15] font-mono">{metrics.devMetrics.f1Score.macroAvg}%</strong>
               </div>
             </div>
           </div>
 
           {/* Holdout Set */}
-          <div className="bg-slate-900/60 border border-cyan-900/40 rounded-2xl p-5 backdrop-blur-sm">
-            <div className="flex items-center justify-between border-b border-slate-800 pb-3 mb-3">
+          <div className="bg-white border border-[#e2e6dc] rounded-3xl p-5 sm:p-6 shadow-[0_4px_24px_-4px_rgba(0,0,0,0.04)]">
+            <div className="flex items-center justify-between border-b border-[#e2e6dc] pb-3 mb-3">
               <div>
-                <span className="text-xs uppercase tracking-wider font-bold text-cyan-300">
+                <span className="text-xs uppercase tracking-wider font-bold text-[#3d5926]">
                   Holdout Set (Untuned Test)
                 </span>
-                <p className="text-[11px] text-slate-500">
+                <p className="text-[11px] text-[#717a69]">
                   {metrics.holdoutMetrics.totalSamples} samples strictly held out; zero rule tuning
                 </p>
               </div>
-              <span className="text-lg font-bold font-mono text-emerald-400">
+              <span className="text-lg font-serif font-bold text-[#3d5926]">
                 {metrics.holdoutMetrics.accuracy}% Acc
               </span>
             </div>
             <div className="grid grid-cols-3 gap-2 text-center text-xs">
-              <div className="p-2 bg-slate-950 rounded-lg border border-slate-800/80">
-                <span className="text-[10px] text-slate-500 uppercase block">High Recall</span>
-                <strong className="text-slate-200 font-mono">{metrics.holdoutMetrics.recall.high}%</strong>
+              <div className="p-2.5 bg-[#f7f9f5] rounded-xl border border-[#e2e6dc]">
+                <span className="text-[10px] text-[#717a69] uppercase block font-medium">High Recall</span>
+                <strong className="text-rose-700 font-mono">{metrics.holdoutMetrics.recall.high}%</strong>
               </div>
-              <div className="p-2 bg-slate-950 rounded-lg border border-slate-800/80">
-                <span className="text-[10px] text-slate-500 uppercase block">Low Precision</span>
-                <strong className="text-slate-200 font-mono">{metrics.holdoutMetrics.precision.low}%</strong>
+              <div className="p-2.5 bg-[#f7f9f5] rounded-xl border border-[#e2e6dc]">
+                <span className="text-[10px] text-[#717a69] uppercase block font-medium">Low Precision</span>
+                <strong className="text-[#3d5926] font-mono">{metrics.holdoutMetrics.precision.low}%</strong>
               </div>
-              <div className="p-2 bg-slate-950 rounded-lg border border-slate-800/80">
-                <span className="text-[10px] text-slate-500 uppercase block">Macro F1</span>
-                <strong className="text-slate-200 font-mono">{metrics.holdoutMetrics.f1Score.macroAvg}%</strong>
+              <div className="p-2.5 bg-[#f7f9f5] rounded-xl border border-[#e2e6dc]">
+                <span className="text-[10px] text-[#717a69] uppercase block font-medium">Macro F1</span>
+                <strong className="text-[#181a15] font-mono">{metrics.holdoutMetrics.f1Score.macroAvg}%</strong>
               </div>
             </div>
           </div>
@@ -255,15 +255,15 @@ export const BenchmarkDashboard: React.FC = () => {
 
       {/* Misclassified Samples Section */}
       {metrics && metrics.misclassifiedSamples && metrics.misclassifiedSamples.length > 0 && (
-        <div className="bg-slate-900/60 border border-amber-900/40 rounded-2xl p-6 shadow-xl backdrop-blur-sm">
-          <div className="flex items-center justify-between border-b border-slate-800/80 pb-3 mb-4">
+        <div className="bg-white border border-[#e2e6dc] rounded-3xl p-6 shadow-[0_4px_24px_-4px_rgba(0,0,0,0.04)]">
+          <div className="flex items-center justify-between border-b border-[#e2e6dc] pb-3 mb-4">
             <div className="flex items-center gap-2">
-              <AlertTriangle className="w-4 h-4 text-amber-400" />
-              <h3 className="text-sm font-semibold text-white tracking-wide">
+              <AlertTriangle className="w-4 h-4 text-amber-600" />
+              <h3 className="font-serif text-sm font-bold text-[#181a15] tracking-wide">
                 Misclassified Samples Audit ({metrics.misclassifiedSamples.length} instances)
               </h3>
             </div>
-            <span className="text-xs text-slate-400">
+            <span className="text-xs text-[#717a69]">
               Examining borderline thresholds and rule gaps
             </span>
           </div>
@@ -272,17 +272,17 @@ export const BenchmarkDashboard: React.FC = () => {
             {metrics.misclassifiedSamples.map((sample) => (
               <div
                 key={sample.id}
-                className="p-3.5 bg-slate-950/80 border border-slate-800/80 rounded-xl text-xs space-y-2"
+                className="p-3.5 bg-[#f7f9f5] border border-[#e2e6dc] rounded-2xl text-xs space-y-2"
               >
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <div className="flex items-center gap-2">
-                    <span className="font-mono font-bold text-slate-200">{sample.id}</span>
-                    <span className="text-slate-400">({sample.title})</span>
+                    <span className="font-mono font-bold text-[#181a15]">{sample.id}</span>
+                    <span className="text-[#636c5c]">({sample.title})</span>
                     <span
                       className={`text-[10px] uppercase font-mono px-1.5 py-0.5 rounded border ${
                         sample.split === "holdout"
-                          ? "bg-purple-950/60 text-purple-300 border-purple-800/50"
-                          : "bg-slate-800 text-slate-300 border-slate-700"
+                          ? "bg-purple-50 text-purple-700 border-purple-200"
+                          : "bg-white text-[#636c5c] border-[#e2e6dc]"
                       }`}
                     >
                       {sample.split}
@@ -290,41 +290,41 @@ export const BenchmarkDashboard: React.FC = () => {
                   </div>
 
                   <div className="flex items-center gap-2 font-mono text-[11px]">
-                    <span className="text-slate-500">Actual:</span>
+                    <span className="text-[#717a69]">Actual:</span>
                     <span
                       className={`font-bold uppercase ${
                         sample.groundTruth === "high"
-                          ? "text-rose-400"
+                          ? "text-rose-700"
                           : sample.groundTruth === "suspicious"
-                          ? "text-amber-400"
-                          : "text-emerald-400"
+                          ? "text-amber-700"
+                          : "text-[#3d5926]"
                       }`}
                     >
                       {sample.groundTruth}
                     </span>
-                    <span className="text-slate-600">→</span>
-                    <span className="text-slate-500">Predicted:</span>
+                    <span className="text-[#a5ada0]">→</span>
+                    <span className="text-[#717a69]">Predicted:</span>
                     <span
                       className={`font-bold uppercase ${
                         sample.predictedRisk === "high"
-                          ? "text-rose-400"
+                          ? "text-rose-700"
                           : sample.predictedRisk === "suspicious"
-                          ? "text-amber-400"
-                          : "text-emerald-400"
+                          ? "text-amber-700"
+                          : "text-[#3d5926]"
                       }`}
                     >
                       {sample.predictedRisk}
                     </span>
-                    <span className="text-slate-400">(Score: {sample.riskScore})</span>
+                    <span className="text-[#717a69]">(Score: {sample.riskScore})</span>
                   </div>
                 </div>
 
-                <p className="text-slate-300 font-mono text-[11px] bg-slate-900/80 p-2 rounded border border-slate-800/60">
+                <p className="text-[#181a15] font-mono text-[11px] bg-white p-2 rounded-xl border border-[#e2e6dc]">
                   &ldquo;{sample.text}&rdquo;
                 </p>
 
-                <div className="text-[11px] text-slate-400">
-                  <span className="text-slate-500">Rules Fired: </span>
+                <div className="text-[11px] text-[#636c5c]">
+                  <span className="text-[#717a69]">Rules Fired: </span>
                   {sample.rulesFired.length > 0 ? sample.rulesFired.join("; ") : "None (Pass-through)"}
                 </div>
               </div>
@@ -337,64 +337,64 @@ export const BenchmarkDashboard: React.FC = () => {
       {metrics && (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* 3x3 Confusion Matrix */}
-          <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-6 shadow-xl backdrop-blur-sm">
+          <div className="bg-white border border-[#e2e6dc] rounded-3xl p-6 shadow-[0_4px_24px_-4px_rgba(0,0,0,0.04)]">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-sm font-semibold text-white tracking-wide">
+              <h3 className="font-serif text-sm font-bold text-[#181a15] tracking-wide">
                 3x3 Multi-Class Confusion Matrix
               </h3>
-              <span className="text-xs text-slate-500">Rows: Actual • Cols: Predicted</span>
+              <span className="text-xs text-[#717a69]">Rows: Actual • Cols: Predicted</span>
             </div>
 
             <div className="overflow-x-auto">
               <table className="w-full text-center text-xs border-collapse">
                 <thead>
-                  <tr className="border-b border-slate-800 text-slate-400">
+                  <tr className="border-b border-[#e2e6dc] text-[#636c5c]">
                     <th className="p-2 text-left font-medium">Actual \ Predicted</th>
-                    <th className="p-2 font-medium text-rose-400">Pred High</th>
-                    <th className="p-2 font-medium text-amber-400">Pred Suspicious</th>
-                    <th className="p-2 font-medium text-emerald-400">Pred Low</th>
+                    <th className="p-2 font-medium text-rose-700">Pred High</th>
+                    <th className="p-2 font-medium text-amber-700">Pred Suspicious</th>
+                    <th className="p-2 font-medium text-[#3d5926]">Pred Low</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-800/50 font-mono text-xs">
+                <tbody className="divide-y divide-[#e2e6dc]/60 font-mono text-xs">
                   <tr>
-                    <td className="p-3 text-left font-semibold text-rose-300">
+                    <td className="p-3 text-left font-semibold text-rose-700">
                       Actual: High
                     </td>
-                    <td className="p-3 bg-emerald-950/40 text-emerald-300 font-bold border border-emerald-800/40">
+                    <td className="p-3 bg-[#eef5e6] text-[#3d5926] font-bold border border-[#d5e0cb]">
                       {metrics.confusionMatrix.actualHigh_predHigh} (TP)
                     </td>
-                    <td className="p-3 bg-slate-950 text-slate-300">
+                    <td className="p-3 bg-[#f7f9f5] text-[#181a15]">
                       {metrics.confusionMatrix.actualHigh_predSuspicious}
                     </td>
-                    <td className="p-3 bg-rose-950/40 text-rose-400 border border-rose-800/40">
+                    <td className="p-3 bg-rose-50 text-rose-700 border border-rose-200">
                       {metrics.confusionMatrix.actualHigh_predLow} (FN)
                     </td>
                   </tr>
                   <tr>
-                    <td className="p-3 text-left font-semibold text-amber-300">
+                    <td className="p-3 text-left font-semibold text-amber-700">
                       Actual: Suspicious
                     </td>
-                    <td className="p-3 bg-slate-950 text-slate-300">
+                    <td className="p-3 bg-[#f7f9f5] text-[#181a15]">
                       {metrics.confusionMatrix.actualSuspicious_predHigh}
                     </td>
-                    <td className="p-3 bg-emerald-950/40 text-emerald-300 font-bold border border-emerald-800/40">
+                    <td className="p-3 bg-[#eef5e6] text-[#3d5926] font-bold border border-[#d5e0cb]">
                       {metrics.confusionMatrix.actualSuspicious_predSuspicious} (Match)
                     </td>
-                    <td className="p-3 bg-slate-950 text-slate-300">
+                    <td className="p-3 bg-[#f7f9f5] text-[#181a15]">
                       {metrics.confusionMatrix.actualSuspicious_predLow}
                     </td>
                   </tr>
                   <tr>
-                    <td className="p-3 text-left font-semibold text-emerald-300">
+                    <td className="p-3 text-left font-semibold text-[#3d5926]">
                       Actual: Low
                     </td>
-                    <td className="p-3 bg-rose-950/40 text-rose-400 border border-rose-800/40">
+                    <td className="p-3 bg-rose-50 text-rose-700 border border-rose-200">
                       {metrics.confusionMatrix.actualLow_predHigh} (FP)
                     </td>
-                    <td className="p-3 bg-slate-950 text-slate-300">
+                    <td className="p-3 bg-[#f7f9f5] text-[#181a15]">
                       {metrics.confusionMatrix.actualLow_predSuspicious}
                     </td>
-                    <td className="p-3 bg-emerald-950/40 text-emerald-300 font-bold border border-emerald-800/40">
+                    <td className="p-3 bg-[#eef5e6] text-[#3d5926] font-bold border border-[#d5e0cb]">
                       {metrics.confusionMatrix.actualLow_predLow} (TN)
                     </td>
                   </tr>
@@ -402,42 +402,44 @@ export const BenchmarkDashboard: React.FC = () => {
               </table>
             </div>
 
-            <p className="text-[11px] text-slate-500 mt-4 leading-relaxed">
+            <p className="text-[11px] text-[#717a69] mt-4 leading-relaxed">
               Diagonal green cells represent correct matches. Off-diagonal cells indicate false alarms or boundary differences.
             </p>
           </div>
 
           {/* Category Accuracy Recharts */}
-          <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-6 shadow-xl backdrop-blur-sm">
-            <h3 className="text-sm font-semibold text-white tracking-wide mb-4">
+          <div className="bg-white border border-[#e2e6dc] rounded-3xl p-6 shadow-[0_4px_24px_-4px_rgba(0,0,0,0.04)]">
+            <h3 className="font-serif text-sm font-bold text-[#181a15] tracking-wide mb-4">
               Accuracy by Attack Vector & Category (%)
             </h3>
 
             <div className="h-56 w-full">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={categoryChartData} layout="vertical" margin={{ left: 20 }}>
-                  <XAxis type="number" domain={[0, 100]} stroke="#64748b" fontSize={11} />
+                  <XAxis type="number" domain={[0, 100]} stroke="#717a69" fontSize={11} />
                   <YAxis
                     type="category"
                     dataKey="name"
-                    stroke="#cbd5e1"
+                    stroke="#181a15"
                     fontSize={11}
                     width={110}
-                    tick={{ fill: "#94a3b8" }}
+                    tick={{ fill: "#636c5c" }}
                   />
                   <Tooltip
                     contentStyle={{
-                      backgroundColor: "#0f172a",
-                      borderColor: "#334155",
-                      borderRadius: "8px",
+                      backgroundColor: "#ffffff",
+                      borderColor: "#e2e6dc",
+                      borderRadius: "12px",
                       fontSize: "12px",
+                      color: "#181a15",
+                      boxShadow: "0 4px 20px -2px rgba(0,0,0,0.08)",
                     }}
                   />
                   <Bar dataKey="accuracy" radius={[0, 4, 4, 0]}>
                     {categoryChartData.map((entry, index) => (
                       <Cell
                         key={`cell-${index}`}
-                        fill={entry.accuracy >= 90 ? "#10b981" : entry.accuracy >= 75 ? "#38bdf8" : "#f59e0b"}
+                        fill={entry.accuracy >= 90 ? "#7db432" : entry.accuracy >= 75 ? "#3b82f6" : "#f59e0b"}
                       />
                     ))}
                   </Bar>
@@ -449,9 +451,9 @@ export const BenchmarkDashboard: React.FC = () => {
       )}
 
       {/* Interactive Sample Explorer */}
-      <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-6 shadow-xl backdrop-blur-sm">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-slate-800/80 pb-4 mb-4">
-          <h3 className="text-sm font-semibold text-white tracking-wide">
+      <div className="bg-white border border-[#e2e6dc] rounded-3xl p-6 shadow-[0_4px_24px_-4px_rgba(0,0,0,0.04)]">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-[#e2e6dc] pb-4 mb-4">
+          <h3 className="font-serif text-sm font-bold text-[#181a15] tracking-wide">
             Curated Benchmark Sample Explorer ({filteredItems.length} samples)
           </h3>
 
@@ -460,7 +462,7 @@ export const BenchmarkDashboard: React.FC = () => {
             <select
               value={filterSplit}
               onChange={(e) => setFilterSplit(e.target.value as "all" | "dev" | "holdout")}
-              className="bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1 text-xs text-slate-300 focus:outline-none focus:border-cyan-500"
+              className="bg-[#f7f9f5] border border-[#e2e6dc] rounded-xl px-2.5 py-1 text-xs text-[#181a15] focus:outline-none focus:border-[#8ec251]"
             >
               <option value="all">All Splits</option>
               <option value="dev">Dev Only (40)</option>
@@ -471,7 +473,7 @@ export const BenchmarkDashboard: React.FC = () => {
             <select
               value={filterCategory}
               onChange={(e) => setFilterCategory(e.target.value)}
-              className="bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1 text-xs text-slate-300 focus:outline-none focus:border-cyan-500"
+              className="bg-[#f7f9f5] border border-[#e2e6dc] rounded-xl px-2.5 py-1 text-xs text-[#181a15] focus:outline-none focus:border-[#8ec251]"
             >
               <option value="all">All Categories</option>
               {categories.map((c) => (
@@ -485,7 +487,7 @@ export const BenchmarkDashboard: React.FC = () => {
             <select
               value={filterStatus}
               onChange={(e) => setFilterStatus(e.target.value as "all" | "correct" | "incorrect")}
-              className="bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1 text-xs text-slate-300 focus:outline-none focus:border-cyan-500"
+              className="bg-[#f7f9f5] border border-[#e2e6dc] rounded-xl px-2.5 py-1 text-xs text-[#181a15] focus:outline-none focus:border-[#8ec251]"
             >
               <option value="all">All Outcomes</option>
               <option value="correct">Correct Only</option>
@@ -498,29 +500,29 @@ export const BenchmarkDashboard: React.FC = () => {
           {filteredItems.map((item) => (
             <div
               key={item.id}
-              className={`p-3.5 rounded-xl border transition-all text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3 ${
+              className={`p-3.5 rounded-2xl border transition-all text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3 ${
                 item.isCorrect
-                  ? "bg-slate-950/70 border-slate-800/70 hover:border-slate-700"
-                  : "bg-rose-950/20 border-rose-800/50"
+                  ? "bg-[#f7f9f5] border-[#e2e6dc] hover:border-[#8ec251]"
+                  : "bg-rose-50/50 border-rose-200"
               }`}
             >
               <div className="space-y-1 max-w-xl">
                 <div className="flex items-center gap-2">
-                  <span className="font-semibold text-slate-200">{item.title}</span>
-                  <span className="text-[10px] uppercase font-mono px-1.5 py-0.2 bg-slate-800 text-slate-400 rounded">
+                  <span className="font-semibold text-[#181a15]">{item.title}</span>
+                  <span className="text-[10px] uppercase font-mono px-1.5 py-0.2 bg-white text-[#636c5c] rounded border border-[#e2e6dc]">
                     {item.category.replace(/_/g, " ")}
                   </span>
                   <span
                     className={`text-[9px] uppercase font-mono px-1 rounded ${
                       item.split === "holdout"
-                        ? "bg-purple-950 text-purple-300 border border-purple-800/40"
-                        : "bg-slate-900 text-slate-400 border border-slate-800"
+                        ? "bg-purple-50 text-purple-700 border border-purple-200"
+                        : "bg-[#eef5e6] text-[#3d5926] border border-[#d5e0cb]"
                     }`}
                   >
                     {item.split}
                   </span>
                 </div>
-                <div className="text-slate-400 text-[11px] flex items-center gap-2">
+                <div className="text-[#636c5c] text-[11px] flex items-center gap-2">
                   <span>Triggers identified: {item.triggerCount}</span>
                   <span>•</span>
                   <span>Latency: {item.latencyMs}ms</span>
@@ -529,46 +531,46 @@ export const BenchmarkDashboard: React.FC = () => {
 
               <div className="flex items-center gap-3 shrink-0">
                 <div className="text-right">
-                  <div className="text-[10px] text-slate-500 uppercase">Ground Truth</div>
+                  <div className="text-[10px] text-[#717a69] uppercase font-mono">Ground Truth</div>
                   <span
                     className={`font-mono font-bold uppercase text-[11px] ${
                       item.groundTruth === "high"
-                        ? "text-rose-400"
+                        ? "text-rose-700"
                         : item.groundTruth === "suspicious"
-                        ? "text-amber-400"
-                        : "text-emerald-400"
+                        ? "text-amber-700"
+                        : "text-[#3d5926]"
                     }`}
                   >
                     {item.groundTruth}
                   </span>
                 </div>
 
-                <div className="text-slate-600 font-bold">→</div>
+                <div className="text-[#a5ada0] font-bold">→</div>
 
                 <div className="text-left">
-                  <div className="text-[10px] text-slate-500 uppercase">Predicted</div>
+                  <div className="text-[10px] text-[#717a69] uppercase font-mono">Predicted</div>
                   <span
                     className={`font-mono font-bold uppercase text-[11px] ${
                       item.predictedRisk === "high"
-                        ? "text-rose-400"
+                        ? "text-rose-700"
                         : item.predictedRisk === "suspicious"
-                        ? "text-amber-400"
-                        : "text-emerald-400"
+                        ? "text-amber-700"
+                        : "text-[#3d5926]"
                     }`}
                   >
                     {item.predictedRisk}
                   </span>
                 </div>
 
-                <div className="pl-2 border-l border-slate-800">
+                <div className="pl-2 border-l border-[#e2e6dc]">
                   {item.isCorrect ? (
-                    <span className="flex items-center gap-1 text-emerald-400 font-medium">
-                      <CheckCircle2 className="w-4 h-4" />
+                    <span className="flex items-center gap-1 text-[#3d5926] font-medium">
+                      <CheckCircle2 className="w-4 h-4 text-[#5c8a27]" />
                       <span>Pass</span>
                     </span>
                   ) : (
-                    <span className="flex items-center gap-1 text-rose-400 font-medium">
-                      <XCircle className="w-4 h-4" />
+                    <span className="flex items-center gap-1 text-rose-700 font-medium">
+                      <XCircle className="w-4 h-4 text-rose-600" />
                       <span>Fail</span>
                     </span>
                   )}

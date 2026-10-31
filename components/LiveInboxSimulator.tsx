@@ -9,6 +9,9 @@ import {
   AlertTriangle,
   Send,
   Loader2,
+  Radar,
+  Link2,
+  CheckSquare,
 } from "lucide-react";
 import { ScamAnalysisResult } from "@/lib/types";
 import { EmailForensicsCard } from "./EmailForensicsCard";
@@ -167,6 +170,7 @@ export const LiveInboxSimulator: React.FC = () => {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [customComposerOpen, setCustomComposerOpen] = useState(false);
   const [customPayload, setCustomPayload] = useState(WEBHOOK_PRESETS[0].payload);
+  const [readerTab, setReaderTab] = useState<"message" | "forensics" | "urls" | "actions">("message");
 
   const analyzeSelected = async (payload: string) => {
     setIsAnalyzing(true);
@@ -392,53 +396,125 @@ export const LiveInboxSimulator: React.FC = () => {
             </div>
           )}
 
-          {/* Message Payload Viewer */}
-          <div className="p-6 bg-white border border-[#e2e6dc] rounded-3xl space-y-4 shadow-[0_4px_24px_-4px_rgba(0,0,0,0.04)]">
-            <div className="flex items-center justify-between pb-3 border-b border-[#edf1e8] text-xs">
-              <div className="space-y-0.5">
-                <span className="text-[10px] uppercase font-mono text-[#636c5c] tracking-wider">
-                  Originating Channel
-                </span>
-                <div className="font-bold text-[#181a15] text-sm">{activeItem.sender}</div>
-              </div>
-              <span className="text-xs font-mono text-[#717a69]">{activeItem.timestamp}</span>
+          {/* macOS Reader Navigation Tabs (Eliminates Long Stacking) */}
+          {analysisResult && (
+            <div className="flex items-center gap-1.5 p-1.5 bg-[#f4f7f1] rounded-2xl border border-[#e2e8dc] text-xs overflow-x-auto">
+              <button
+                type="button"
+                onClick={() => setReaderTab("message")}
+                className={`px-3 py-1.5 rounded-xl font-semibold transition-all flex items-center gap-1.5 whitespace-nowrap ${
+                  readerTab === "message"
+                    ? "bg-[#181a15] text-white shadow-xs"
+                    : "text-[#586150] hover:text-[#181a15] hover:bg-white/60"
+                }`}
+              >
+                <Mail className="w-3.5 h-3.5" />
+                <span>Message & Spans</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setReaderTab("forensics")}
+                className={`px-3 py-1.5 rounded-xl font-semibold transition-all flex items-center gap-1.5 whitespace-nowrap ${
+                  readerTab === "forensics"
+                    ? "bg-[#181a15] text-white shadow-xs"
+                    : "text-[#586150] hover:text-[#181a15] hover:bg-white/60"
+                }`}
+              >
+                <Radar className="w-3.5 h-3.5" />
+                <span>Forensics & Headers</span>
+                {analysisResult.emailForensics && (
+                  <span className="w-1.5 h-1.5 rounded-full bg-rose-500" />
+                )}
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setReaderTab("urls")}
+                className={`px-3 py-1.5 rounded-xl font-semibold transition-all flex items-center gap-1.5 whitespace-nowrap ${
+                  readerTab === "urls"
+                    ? "bg-[#181a15] text-white shadow-xs"
+                    : "text-[#586150] hover:text-[#181a15] hover:bg-white/60"
+                }`}
+              >
+                <Link2 className="w-3.5 h-3.5" />
+                <span>URL Sandbox ({analysisResult.urlReports?.length || 0})</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setReaderTab("actions")}
+                className={`px-3 py-1.5 rounded-xl font-semibold transition-all flex items-center gap-1.5 whitespace-nowrap ${
+                  readerTab === "actions"
+                    ? "bg-[#181a15] text-white shadow-xs"
+                    : "text-[#586150] hover:text-[#181a15] hover:bg-white/60"
+                }`}
+              >
+                <CheckSquare className="w-3.5 h-3.5" />
+                <span>Action Plan</span>
+              </button>
             </div>
+          )}
 
-            {/* Evidentiary Highlighter directly in the reader view */}
-            {analysisResult ? (
-              <EvidenceHighlighter
-                text={analysisResult.inputText}
-                spans={analysisResult.evidenceSpans}
-              />
-            ) : (
-              <div className="p-4 bg-[#f7f9f5] rounded-2xl border border-[#e2e6dc] font-mono text-xs text-[#181a15] whitespace-pre-wrap">
-                {activeItem.rawPayload}
+          {/* Tab 1: Message Payload & Highlighted Evidence Spans */}
+          {readerTab === "message" && (
+            <div className="p-6 bg-white border border-[#e2e6dc] rounded-3xl space-y-4 shadow-[0_4px_24px_-4px_rgba(0,0,0,0.04)] animate-in fade-in duration-200">
+              <div className="flex items-center justify-between pb-3 border-b border-[#edf1e8] text-xs">
+                <div className="space-y-0.5">
+                  <span className="text-[10px] uppercase font-mono text-[#636c5c] tracking-wider">
+                    Originating Channel
+                  </span>
+                  <div className="font-bold text-[#181a15] text-sm">{activeItem.sender}</div>
+                </div>
+                <span className="text-xs font-mono text-[#717a69]">{activeItem.timestamp}</span>
               </div>
-            )}
-          </div>
 
-          {/* Email Forensics Card if applicable */}
-          {analysisResult?.emailForensics && (
-            <EmailForensicsCard emailForensics={analysisResult.emailForensics} />
+              {analysisResult ? (
+                <EvidenceHighlighter
+                  text={analysisResult.inputText}
+                  spans={analysisResult.evidenceSpans}
+                />
+              ) : (
+                <div className="p-4 bg-[#f7f9f5] rounded-2xl border border-[#e2e6dc] font-mono text-xs text-[#181a15] whitespace-pre-wrap">
+                  {activeItem.rawPayload}
+                </div>
+              )}
+            </div>
           )}
 
-          {/* Tactics Radar Card */}
-          {analysisResult?.tacticsBreakdown && (
-            <TacticsRadarCard tactics={analysisResult.tacticsBreakdown} />
+          {/* Tab 2: Forensics & Psychological Tactics */}
+          {readerTab === "forensics" && analysisResult && (
+            <div className="space-y-4 animate-in fade-in duration-200">
+              {analysisResult.emailForensics ? (
+                <EmailForensicsCard emailForensics={analysisResult.emailForensics} />
+              ) : (
+                <div className="p-4 bg-white border border-[#e2e6dc] rounded-2xl text-xs text-[#636c5c]">
+                  No RFC-822 email headers found (SMS message). Psychological pressure tactics evaluated below.
+                </div>
+              )}
+
+              {analysisResult.tacticsBreakdown && (
+                <TacticsRadarCard tactics={analysisResult.tacticsBreakdown} />
+              )}
+            </div>
           )}
 
-          {/* Safe URL Inspector */}
-          {analysisResult && (
-            <SafeUrlInspectorCard urlReports={analysisResult.urlReports} />
+          {/* Tab 3: Safe Passive URL Sandbox */}
+          {readerTab === "urls" && analysisResult && (
+            <div className="animate-in fade-in duration-200">
+              <SafeUrlInspectorCard urlReports={analysisResult.urlReports} />
+            </div>
           )}
 
-          {/* Safe Action Steps */}
-          {analysisResult && (
-            <ActionStepsCard
-              actionSteps={analysisResult.actionSteps}
-              plainLanguageSummary={analysisResult.plainLanguageSummary}
-              fullResult={analysisResult}
-            />
+          {/* Tab 4: Action Steps & Guidance */}
+          {readerTab === "actions" && analysisResult && (
+            <div className="animate-in fade-in duration-200">
+              <ActionStepsCard
+                actionSteps={analysisResult.actionSteps}
+                plainLanguageSummary={analysisResult.plainLanguageSummary}
+                fullResult={analysisResult}
+              />
+            </div>
           )}
         </div>
       </div>

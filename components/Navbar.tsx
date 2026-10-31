@@ -59,7 +59,7 @@ export const Navbar: React.FC<NavbarProps> = ({
         <div
           className="flex items-center gap-3 cursor-pointer select-none"
           onClick={handleLogoClick}
-          title="SafeGuard AI (Triple-click for Judge & Security Audit Console)"
+          title="DIGIkavach (Triple-click for Judge & Security Audit Console)"
         >
           <div className="relative flex items-center justify-center w-10 h-10 rounded-2xl bg-[#bef264] border border-[#a8df4a]/60 shadow-xs text-[#162704]">
             <Shield className="w-5 h-5 text-[#162704]" />
@@ -71,14 +71,14 @@ export const Navbar: React.FC<NavbarProps> = ({
           <div>
             <div className="flex items-center gap-2">
               <span className="text-xl font-serif font-bold tracking-tight text-[#181a15]">
-                SafeGuard AI
+                DIGIkavach
               </span>
               <span className="px-2 py-0.5 text-[10px] font-semibold bg-[#eef4e8] text-[#3d5926] border border-[#d5e0cb] rounded-full">
                 v2.0
               </span>
             </div>
             <p className="text-[11px] text-[#636c5c] hidden sm:block">
-              Multimodal Scam Detection & Official Recovery Assistant
+              AI Cyber Fraud Defense & Official Victim Recovery
             </p>
           </div>
         </div>

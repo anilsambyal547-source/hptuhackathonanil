@@ -13,11 +13,9 @@ import {
   KeyRound,
   Clipboard,
   Mail,
-  Smartphone,
-  Package,
-  EyeOff,
   FolderOpen,
-  ShieldAlert,
+  ChevronDown,
+  SlidersHorizontal,
 } from "lucide-react";
 import { OcrQualityReport } from "@/lib/types";
 import { runLocalOcr } from "@/lib/ocr/local-ocr";
@@ -311,6 +309,7 @@ export const ScannerInput: React.FC<ScannerInputProps> = ({ onAnalyze, isLoading
   const [dragOver, setDragOver] = useState(false);
   const [useCloudOcr, setUseCloudOcr] = useState(false);
   const [maskedEntities, setMaskedEntities] = useState<MaskedEntity[]>([]);
+  const [isQuickMenuOpen, setIsQuickMenuOpen] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const emailFileInputRef = useRef<HTMLInputElement>(null);
 
@@ -603,10 +602,11 @@ Amazon Customer Service`;
   };
 
   return (
-    <div className="bg-white border border-[#e2e6dc] rounded-3xl p-5 sm:p-7 shadow-[0_4px_24px_-4px_rgba(0,0,0,0.04)] space-y-4">
-      {/* Input Mode Selector & 1-Click Paste & Scan */}
+    <div className="bg-white/80 backdrop-blur-xl border border-white/60 shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-3xl p-5 sm:p-7 space-y-4">
+      {/* Input Mode Selector, Retractable Quick Menu Button & 1-Click Paste */}
       <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 border-b border-[#edf1e8] pb-4">
-        <div className="flex flex-wrap items-center gap-2 bg-[#f4f7f1] p-1 rounded-2xl border border-[#e2e8dc]">
+        {/* macOS-style segmented mode switch */}
+        <div className="flex flex-wrap items-center gap-1.5 bg-[#f4f7f1] p-1 rounded-2xl border border-[#e2e8dc]">
           <button
             type="button"
             onClick={() => setActiveMode("text")}
@@ -650,53 +650,179 @@ Amazon Customer Service`;
           </button>
         </div>
 
-        {/* 1-Click Smart Paste & Scan Button */}
-        <button
-          type="button"
-          onClick={handleQuickPasteAndScan}
-          disabled={isLoading}
-          className="px-4 py-2 rounded-2xl text-xs font-semibold bg-[#eef4e8] hover:bg-[#e2edd8] text-[#2c401c] border border-[#d5e0cb] transition-all flex items-center justify-center gap-1.5 shadow-2xs"
-        >
-          <Clipboard className="w-3.5 h-3.5 text-[#3d5926]" />
-          <span>1-Click Paste & Auto-Scan</span>
-        </button>
+        {/* Right side controls: Quick Retractable Menu & Smart Paste */}
+        <div className="flex items-center gap-2">
+          {/* Quick Retractable Menu Toggle */}
+          <button
+            type="button"
+            onClick={() => setIsQuickMenuOpen(!isQuickMenuOpen)}
+            className={`px-3.5 py-1.5 rounded-2xl text-xs font-semibold transition-all flex items-center gap-1.5 border shadow-2xs ${
+              isQuickMenuOpen
+                ? "bg-[#181a15] text-white border-[#181a15]"
+                : "bg-white hover:bg-[#edf2e7] text-[#2c401c] border-[#d5e0cb]"
+            }`}
+            title="Expand / Retract Quick Test Presets & OCR Settings"
+          >
+            <SlidersHorizontal className="w-3.5 h-3.5 text-[#557e33]" />
+            <span>Presets & Options</span>
+            <ChevronDown
+              className={`w-3.5 h-3.5 transition-transform duration-200 ${
+                isQuickMenuOpen ? "rotate-180" : ""
+              }`}
+            />
+          </button>
+
+          {/* 1-Click Smart Paste & Scan Button */}
+          <button
+            type="button"
+            onClick={handleQuickPasteAndScan}
+            disabled={isLoading}
+            className="px-3.5 py-1.5 rounded-2xl text-xs font-semibold bg-[#eef4e8] hover:bg-[#e2edd8] text-[#2c401c] border border-[#d5e0cb] transition-all flex items-center justify-center gap-1.5 shadow-2xs"
+          >
+            <Clipboard className="w-3.5 h-3.5 text-[#3d5926]" />
+            <span className="hidden sm:inline">1-Click</span>
+            <span>Paste & Scan</span>
+          </button>
+        </div>
       </div>
 
-      {/* Preset Quick Loads */}
-      <div>
-        <div className="flex items-center gap-2 mb-2.5">
-          <Sparkles className="w-3.5 h-3.5 text-[#557e33]" />
-          <span className="text-xs font-semibold text-[#636c5c]">Attack Vectors & Email Presets:</span>
-        </div>
-        <div className="flex flex-wrap gap-2">
-          {PRESET_SAMPLES.map((preset, idx) => (
-            <button
-              key={idx}
-              type="button"
-              onClick={() => {
-                const maskRes = maskCredentials(preset.text);
-                setInputText(maskRes.maskedText);
-                setSelectedImage(null);
-                setOcrQuality(null);
-                setMaskedEntities(maskRes.maskedEntities);
-                setActiveMode(preset.category === "Email Phish" ? "email" : "text");
-              }}
-              className="text-xs px-3 py-1.5 rounded-full bg-[#f7f9f5] hover:bg-[#edf2e7] text-[#363f2e] border border-[#dce3d5] transition-all flex items-center gap-1.5 font-medium shadow-2xs"
-            >
-              <span
-                className={`w-2 h-2 rounded-full ${
-                  preset.category === "Legitimate"
-                    ? "bg-emerald-500"
-                    : preset.category === "Email Phish"
-                    ? "bg-purple-500"
-                    : "bg-rose-500"
-                }`}
+      {/* QUICK RETRACTABLE MENU (Collapsible Frosted Drawer) */}
+      {isQuickMenuOpen && (
+        <div className="p-4 sm:p-5 bg-[#f7f9f5]/90 backdrop-blur-md border border-[#dce3d5] rounded-2xl space-y-4 animate-in fade-in duration-200">
+          {/* Section 1: Attack Vectors & Presets */}
+          <div>
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-xs font-semibold text-[#2c401c] flex items-center gap-1.5">
+                <Sparkles className="w-3.5 h-3.5 text-[#557e33]" />
+                <span>Quick Attack Vectors & Sample Messages:</span>
+              </span>
+              <span className="text-[10px] text-[#636c5c] font-mono">1-Click Auto-Load</span>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {PRESET_SAMPLES.map((preset, idx) => (
+                <button
+                  key={idx}
+                  type="button"
+                  onClick={() => {
+                    const maskRes = maskCredentials(preset.text);
+                    setInputText(maskRes.maskedText);
+                    setSelectedImage(null);
+                    setOcrQuality(null);
+                    setMaskedEntities(maskRes.maskedEntities);
+                    setActiveMode(preset.category === "Email Phish" ? "email" : "text");
+                  }}
+                  className="text-xs px-3 py-1.5 rounded-full bg-white hover:bg-[#edf2e7] text-[#363f2e] border border-[#dce3d5] transition-all flex items-center gap-1.5 font-medium shadow-2xs"
+                >
+                  <span
+                    className={`w-2 h-2 rounded-full ${
+                      preset.category === "Legitimate"
+                        ? "bg-emerald-500"
+                        : preset.category === "Email Phish"
+                        ? "bg-purple-500"
+                        : "bg-rose-500"
+                    }`}
+                  />
+                  <span>{preset.label}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Section 2: Synthetic Screenshot & Email Generators */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2 border-t border-[#e2e8dc]">
+            {/* Screenshot Generators */}
+            <div className="space-y-1.5">
+              <span className="text-xs font-semibold text-[#2c401c] flex items-center gap-1.5">
+                <ImageIcon className="w-3.5 h-3.5 text-[#557e33]" />
+                <span>Built-in Synthetic Screenshots (Canvas OCR):</span>
+              </span>
+              <div className="grid grid-cols-3 gap-1.5">
+                <button
+                  type="button"
+                  disabled={isLoading}
+                  onClick={() => handleLoadBuiltinScreenshot("bank")}
+                  className="px-2.5 py-1.5 rounded-xl bg-white hover:bg-[#edf2e7] border border-[#dce3d5] text-left transition-all text-[11px] font-semibold text-[#181a15] shadow-2xs"
+                >
+                  📱 Bank Scam
+                </button>
+                <button
+                  type="button"
+                  disabled={isLoading}
+                  onClick={() => handleLoadBuiltinScreenshot("courier")}
+                  className="px-2.5 py-1.5 rounded-xl bg-white hover:bg-rose-50/50 border border-[#dce3d5] text-left transition-all text-[11px] font-semibold text-[#181a15] shadow-2xs"
+                >
+                  📦 Courier Scam
+                </button>
+                <button
+                  type="button"
+                  disabled={isLoading}
+                  onClick={() => handleLoadBuiltinScreenshot("blurry")}
+                  className="px-2.5 py-1.5 rounded-xl bg-white hover:bg-amber-50/50 border border-[#dce3d5] text-left transition-all text-[11px] font-semibold text-[#181a15] shadow-2xs"
+                >
+                  🌫️ Blurry Test
+                </button>
+              </div>
+            </div>
+
+            {/* Email Generators */}
+            <div className="space-y-1.5">
+              <span className="text-xs font-semibold text-[#2c401c] flex items-center gap-1.5">
+                <Mail className="w-3.5 h-3.5 text-[#557e33]" />
+                <span>RFC-822 Forensic Email Scenarios:</span>
+              </span>
+              <div className="grid grid-cols-2 gap-1.5">
+                <button
+                  type="button"
+                  disabled={isLoading}
+                  onClick={() => handleLoadBuiltinEmail("spoofed")}
+                  className="px-2.5 py-1.5 rounded-xl bg-white hover:bg-rose-50/50 border border-[#dce3d5] text-left transition-all text-[11px] font-semibold text-[#181a15] shadow-2xs"
+                >
+                  🚨 Spoofed SBI EML
+                </button>
+                <button
+                  type="button"
+                  disabled={isLoading}
+                  onClick={() => handleLoadBuiltinEmail("legit")}
+                  className="px-2.5 py-1.5 rounded-xl bg-white hover:bg-[#edf2e7] border border-[#dce3d5] text-left transition-all text-[11px] font-semibold text-[#181a15] shadow-2xs"
+                >
+                  ✅ Legit Amazon EML
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* Section 3: Privacy & Cloud OCR Toggle */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 p-2.5 bg-white/70 border border-[#dce3d5] rounded-xl text-xs">
+            <div className="flex items-center gap-2">
+              {useCloudOcr ? (
+                <Globe className="w-4 h-4 text-amber-600 shrink-0" />
+              ) : (
+                <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
+              )}
+              <div>
+                <span className="font-semibold text-[#181a15]">
+                  {useCloudOcr ? "Cloud Gemini Vision OCR" : "Offline Local OCR (English + Hindi)"}
+                </span>
+                <p className="text-[11px] text-[#636c5c]">
+                  {useCloudOcr
+                    ? "⚠️ Notice: Sends screenshot image to Gemini API. Disable for strict offline privacy."
+                    : "🔒 Processed entirely inside your browser via Web Worker. Zero external network transfer."}
+                </p>
+              </div>
+            </div>
+
+            <label className="flex items-center gap-2 cursor-pointer shrink-0">
+              <input
+                type="checkbox"
+                checked={useCloudOcr}
+                onChange={(e) => setUseCloudOcr(e.target.checked)}
+                className="rounded border-[#ccd4c4] text-[#bef264] focus:ring-0 focus:ring-offset-0"
               />
-              <span>{preset.label}</span>
-            </button>
-          ))}
+              <span className="text-[11px] text-[#363f2e] font-medium">Enable Cloud OCR</span>
+            </label>
+          </div>
         </div>
-      </div>
+      )}
 
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* Hidden File Inputs */}
@@ -705,6 +831,7 @@ Amazon Customer Service`;
           ref={fileInputRef}
           accept="image/*,.eml,.txt,.html"
           className="hidden"
+          style={{ display: "none" }}
           onChange={(e) => {
             if (e.target.files && e.target.files[0]) {
               handleImageFile(e.target.files[0]);
@@ -717,6 +844,7 @@ Amazon Customer Service`;
           ref={emailFileInputRef}
           accept=".eml,.txt,.html,message/rfc822"
           className="hidden"
+          style={{ display: "none" }}
           onChange={(e) => {
             if (e.target.files && e.target.files[0]) {
               handleEmailOrTextFile(e.target.files[0]);
@@ -727,89 +855,6 @@ Amazon Customer Service`;
         {/* Screenshot OCR Mode */}
         {activeMode === "image" && (
           <div className="space-y-3">
-            {/* 1-Click Built-in Test Screenshots Toolbar */}
-            <div className="p-3.5 bg-[#f7f9f5] border border-[#dce3d5] rounded-2xl space-y-2">
-              <div className="flex items-center justify-between text-xs">
-                <span className="font-semibold text-[#2c401c] flex items-center gap-1.5">
-                  <Sparkles className="w-3.5 h-3.5 text-[#557e33]" />
-                  <span>1-Click Built-in Test Screenshots (Zero File Dialog Required):</span>
-                </span>
-                <span className="text-[10px] text-[#636c5c] font-mono">HTML5 Canvas Synthesized</span>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
-                <button
-                  type="button"
-                  disabled={isLoading}
-                  onClick={() => handleLoadBuiltinScreenshot("bank")}
-                  className="px-3 py-2.5 rounded-xl bg-white hover:bg-[#edf2e7] border border-[#dce3d5] hover:border-[#9ec964] text-left transition-all group flex items-start gap-2 shadow-2xs"
-                >
-                  <Smartphone className="w-4 h-4 text-[#3d5926] shrink-0 mt-0.5 group-hover:scale-110 transition-transform" />
-                  <div>
-                    <div className="text-xs font-semibold text-[#181a15]">📱 Test Bank Scam Screenshot</div>
-                    <div className="text-[10px] text-[#636c5c]">SBI Alert SMS • Clear OCR (96% Conf)</div>
-                  </div>
-                </button>
-
-                <button
-                  type="button"
-                  disabled={isLoading}
-                  onClick={() => handleLoadBuiltinScreenshot("courier")}
-                  className="px-3 py-2.5 rounded-xl bg-white hover:bg-rose-50/50 border border-[#dce3d5] hover:border-rose-300 text-left transition-all group flex items-start gap-2 shadow-2xs"
-                >
-                  <Package className="w-4 h-4 text-rose-600 shrink-0 mt-0.5 group-hover:scale-110 transition-transform" />
-                  <div>
-                    <div className="text-xs font-semibold text-[#181a15]">📦 Test Courier Scam Screenshot</div>
-                    <div className="text-[10px] text-[#636c5c]">India Post SMS • Customs Fee Link</div>
-                  </div>
-                </button>
-
-                <button
-                  type="button"
-                  disabled={isLoading}
-                  onClick={() => handleLoadBuiltinScreenshot("blurry")}
-                  className="px-3 py-2.5 rounded-xl bg-white hover:bg-amber-50/50 border border-[#dce3d5] hover:border-amber-300 text-left transition-all group flex items-start gap-2 shadow-2xs"
-                >
-                  <EyeOff className="w-4 h-4 text-amber-600 shrink-0 mt-0.5 group-hover:scale-110 transition-transform" />
-                  <div>
-                    <div className="text-xs font-semibold text-[#181a15]">🌫️ Test Blurry Screenshot (Graceful Failure)</div>
-                    <div className="text-[10px] text-[#636c5c]">Graceful Failure & High Uncertainty</div>
-                  </div>
-                </button>
-              </div>
-            </div>
-
-            {/* OCR Privacy Mode Toggle */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 p-3 bg-[#f7f9f5] border border-[#dce3d5] rounded-xl text-xs">
-              <div className="flex items-center gap-2">
-                {useCloudOcr ? (
-                  <Globe className="w-4 h-4 text-amber-600 shrink-0" />
-                ) : (
-                  <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
-                )}
-                <div>
-                  <span className="font-semibold text-[#181a15]">
-                    {useCloudOcr ? "Cloud Gemini Vision OCR" : "Offline Local OCR (English + Hindi)"}
-                  </span>
-                  <p className="text-[11px] text-[#636c5c]">
-                    {useCloudOcr
-                      ? "⚠️ Notice: Sends screenshot image to Google Gemini API. Disable for strict offline privacy."
-                      : "🔒 Processed entirely inside your browser via Web Worker. No screenshot leaves your device."}
-                  </p>
-                </div>
-              </div>
-
-              <label className="flex items-center gap-2 cursor-pointer self-start sm:self-center shrink-0">
-                <input
-                  type="checkbox"
-                  checked={useCloudOcr}
-                  onChange={(e) => setUseCloudOcr(e.target.checked)}
-                  className="rounded border-[#ccd4c4] text-[#bef264] focus:ring-0 focus:ring-offset-0"
-                />
-                <span className="text-[11px] text-[#363f2e] font-medium">Enable Cloud OCR</span>
-              </label>
-            </div>
-
             {/* Interactive Image Dropzone with Explicit Button */}
             <div
               onDragOver={(e) => {
@@ -883,45 +928,6 @@ Amazon Customer Service`;
         {/* Drop .EML / Email Mode */}
         {activeMode === "email" && (
           <div className="space-y-3">
-            {/* 1-Click Built-in Email Presets */}
-            <div className="p-3.5 bg-[#f7f9f5] border border-[#dce3d5] rounded-2xl space-y-2">
-              <div className="flex items-center justify-between text-xs">
-                <span className="font-semibold text-[#2c401c] flex items-center gap-1.5">
-                  <Sparkles className="w-3.5 h-3.5 text-[#557e33]" />
-                  <span>1-Click Test Email Scenarios (Zero File Upload Required):</span>
-                </span>
-                <span className="text-[10px] text-[#636c5c] font-mono">RFC-822 & Auth Forensics</span>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                <button
-                  type="button"
-                  disabled={isLoading}
-                  onClick={() => handleLoadBuiltinEmail("spoofed")}
-                  className="px-3 py-2.5 rounded-xl bg-white hover:bg-rose-50/50 border border-[#dce3d5] hover:border-rose-300 text-left transition-all group flex items-start gap-2 shadow-2xs"
-                >
-                  <ShieldAlert className="w-4 h-4 text-rose-600 shrink-0 mt-0.5 group-hover:scale-110 transition-transform" />
-                  <div>
-                    <div className="text-xs font-semibold text-[#181a15]">🚨 Test Spoofed SBI Email</div>
-                    <div className="text-[10px] text-[#636c5c]">SPF/DKIM Fail • Reply-To Divergence • Link Mismatch</div>
-                  </div>
-                </button>
-
-                <button
-                  type="button"
-                  disabled={isLoading}
-                  onClick={() => handleLoadBuiltinEmail("legit")}
-                  className="px-3 py-2.5 rounded-xl bg-white hover:bg-[#edf2e7] border border-[#dce3d5] hover:border-[#9ec964] text-left transition-all group flex items-start gap-2 shadow-2xs"
-                >
-                  <ShieldCheck className="w-4 h-4 text-[#3d5926] shrink-0 mt-0.5 group-hover:scale-110 transition-transform" />
-                  <div>
-                    <div className="text-xs font-semibold text-[#181a15]">✅ Test Legit Amazon Email</div>
-                    <div className="text-[10px] text-[#636c5c]">SPF/DKIM Pass • Authentic amazon.in Domain</div>
-                  </div>
-                </button>
-              </div>
-            </div>
-
             <div
               onDragOver={(e) => {
                 e.preventDefault();

@@ -34,15 +34,15 @@ export const PhoneMockup: React.FC<PhoneMockupProps> = ({
 }) => {
   if (type === "email") {
     return (
-      <div className="w-full max-w-xl mx-auto rounded-3xl bg-slate-950 border border-slate-800 shadow-2xl overflow-hidden font-sans">
+      <div className="w-full max-w-xl mx-auto rounded-3xl bg-white border border-[#e2e6dc] shadow-[0_4px_24px_-4px_rgba(0,0,0,0.04)] overflow-hidden font-sans">
         {/* Email App Header */}
-        <div className="px-5 py-3.5 bg-slate-900 border-b border-slate-800/80 flex items-center justify-between text-slate-400">
-          <div className="flex items-center gap-2 text-xs font-semibold text-slate-200">
-            <Mail className="w-4 h-4 text-cyan-400" />
+        <div className="px-5 py-3.5 bg-[#f7f9f5] border-b border-[#e2e6dc] flex items-center justify-between text-[#636c5c]">
+          <div className="flex items-center gap-2 text-xs font-semibold text-[#181a15]">
+            <Mail className="w-4 h-4 text-[#3d5926]" />
             <span>SecureMail Preview</span>
           </div>
           <div className="flex items-center gap-3 text-[11px] font-mono">
-            <span className="px-2 py-0.5 rounded bg-rose-950 text-rose-300 border border-rose-800/40 text-[10px]">
+            <span className="px-2 py-0.5 rounded bg-rose-50 text-rose-700 border border-rose-200 text-[10px]">
               EXTERNAL SENDER
             </span>
             <span>{timestamp}</span>
@@ -50,50 +50,50 @@ export const PhoneMockup: React.FC<PhoneMockupProps> = ({
         </div>
 
         {/* Sender Info */}
-        <div className="p-4 sm:p-5 bg-slate-900/40 border-b border-slate-800/60 space-y-2">
+        <div className="p-4 sm:p-5 bg-white border-b border-[#e2e6dc] space-y-2">
           <div className="flex items-start justify-between gap-3">
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-full bg-gradient-to-tr from-cyan-600 to-blue-500 flex items-center justify-center text-xs font-bold text-white shadow-md">
+              <div className="w-9 h-9 rounded-full bg-[#181a15] flex items-center justify-center text-xs font-bold text-white shadow-xs">
                 {sender.slice(0, 2).toUpperCase()}
               </div>
               <div>
-                <div className="text-xs font-bold text-white flex items-center gap-1.5">
+                <div className="text-xs font-bold text-[#181a15] flex items-center gap-1.5">
                   <span>{sender}</span>
                   {badge && (
-                    <span className="px-1.5 py-0.2 rounded text-[10px] bg-slate-800 text-slate-300 font-normal">
+                    <span className="px-1.5 py-0.2 rounded text-[10px] bg-[#f7f9f5] border border-[#e2e6dc] text-[#636c5c] font-normal">
                       {badge}
                     </span>
                   )}
                 </div>
-                <div className="text-[11px] text-slate-400 flex items-center gap-1">
+                <div className="text-[11px] text-[#717a69] flex items-center gap-1">
                   <span>To: me &lt;recipient@mail.in&gt;</span>
                 </div>
               </div>
             </div>
-            <div className="text-[10px] text-amber-400 bg-amber-950/40 border border-amber-800/40 px-2 py-0.5 rounded flex items-center gap-1">
-              <AlertTriangle className="w-3 h-3" />
+            <div className="text-[10px] text-amber-800 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-lg flex items-center gap-1">
+              <AlertTriangle className="w-3 h-3 text-amber-600" />
               <span>Unverified DKIM</span>
             </div>
           </div>
         </div>
 
         {/* Email Body */}
-        <div className="p-5 sm:p-6 space-y-4 text-xs leading-relaxed text-slate-200 bg-slate-950">
-          <div className="whitespace-pre-line text-slate-200 font-sans text-xs sm:text-[13px] leading-relaxed">
+        <div className="p-5 sm:p-6 space-y-4 text-xs leading-relaxed text-[#181a15] bg-[#fcfdfa]">
+          <div className="whitespace-pre-line text-[#2c3127] font-sans text-xs sm:text-[13px] leading-relaxed">
             {content}
           </div>
 
           {url && (
             <div className="pt-2">
-              <div className="p-3 bg-slate-900 border border-cyan-500/30 rounded-xl space-y-1">
-                <div className="flex items-center justify-between text-[11px] text-cyan-400">
+              <div className="p-3 bg-white border border-[#e2e6dc] rounded-2xl space-y-1 shadow-2xs">
+                <div className="flex items-center justify-between text-[11px] text-[#3d5926]">
                   <span className="font-semibold flex items-center gap-1">
                     <ExternalLink className="w-3.5 h-3.5" />
                     <span>Embedded Action Link</span>
                   </span>
-                  <span className="font-mono text-[10px] text-slate-400">Untrusted Destination</span>
+                  <span className="font-mono text-[10px] text-[#717a69]">Untrusted Destination</span>
                 </div>
-                <div className="font-mono text-xs text-white break-all">{url}</div>
+                <div className="font-mono text-xs text-[#181a15] break-all">{url}</div>
               </div>
             </div>
           )}
@@ -104,45 +104,43 @@ export const PhoneMockup: React.FC<PhoneMockupProps> = ({
 
   if (type === "notice") {
     return (
-      <div className="w-full max-w-xl mx-auto rounded-3xl bg-slate-950 border border-amber-500/30 shadow-2xl overflow-hidden font-sans relative">
-        <div className="absolute top-0 right-0 transform translate-x-4 -translate-y-4 w-32 h-32 bg-amber-500/5 rounded-full blur-2xl pointer-events-none" />
-
+      <div className="w-full max-w-xl mx-auto rounded-3xl bg-[#fafaf7] border border-[#e2e6dc] shadow-[0_4px_24px_-4px_rgba(0,0,0,0.04)] overflow-hidden font-sans relative">
         {/* Formal Notice Header */}
-        <div className="px-5 py-4 bg-slate-900 border-b border-amber-500/20 flex items-center justify-between">
+        <div className="px-5 py-4 bg-[#f7f9f5] border-b border-[#e2e6dc] flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <div className="p-2 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-400">
+            <div className="p-2 rounded-xl bg-amber-50 border border-amber-200 text-amber-700">
               <FileText className="w-4 h-4" />
             </div>
             <div>
-              <div className="text-xs font-bold text-white tracking-wide uppercase">
+              <div className="text-xs font-bold text-[#181a15] tracking-wide uppercase font-serif">
                 {sender}
               </div>
-              <div className="text-[10px] text-slate-400 font-mono">
+              <div className="text-[10px] text-[#717a69] font-mono">
                 Official Regulatory / Coercive Notice Dispatch
               </div>
             </div>
           </div>
-          <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-amber-950 text-amber-300 border border-amber-800/40">
+          <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-amber-50 text-amber-800 border border-amber-200 font-bold">
             CONFIDENTIAL / LEGAL
           </span>
         </div>
 
         {/* Notice Body */}
-        <div className="p-5 sm:p-6 space-y-4 text-xs text-slate-200">
-          <div className="whitespace-pre-line leading-relaxed font-sans text-xs sm:text-[13px] text-slate-200">
+        <div className="p-5 sm:p-6 space-y-4 text-xs text-[#181a15]">
+          <div className="whitespace-pre-line leading-relaxed font-sans text-xs sm:text-[13px] text-[#2c3127]">
             {content}
           </div>
 
           {url && (
-            <div className="p-3 bg-slate-900/80 border border-amber-500/40 rounded-xl space-y-1">
-              <span className="text-[10px] font-mono text-amber-400 uppercase tracking-wider font-semibold">
+            <div className="p-3 bg-white border border-[#e2e6dc] rounded-2xl space-y-1 shadow-2xs">
+              <span className="text-[10px] font-mono text-amber-800 uppercase tracking-wider font-semibold">
                 Designated Enforcement Portal:
               </span>
-              <div className="font-mono text-xs text-white break-all">{url}</div>
+              <div className="font-mono text-xs text-[#181a15] break-all">{url}</div>
             </div>
           )}
 
-          <div className="pt-2 flex items-center justify-between border-t border-slate-900 text-[10px] text-slate-500 font-mono">
+          <div className="pt-2 flex items-center justify-between border-t border-[#e2e6dc] text-[10px] text-[#717a69] font-mono">
             <span>DISPATCH TIMESTAMP: {timestamp}</span>
             <span>SIMULATED AUDIT ARTIFACT</span>
           </div>

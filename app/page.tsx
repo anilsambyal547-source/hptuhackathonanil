@@ -101,7 +101,7 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="min-h-screen flex flex-col text-slate-100 bg-slate-950">
+    <div className="min-h-screen flex flex-col text-[#181a15] bg-[#f7f8f4]">
       <Navbar
         activeTab={activeTab}
         setActiveTab={setActiveTab}
@@ -112,15 +112,15 @@ export default function Home() {
         {activeTab === "scanner" && (
           <div className="space-y-8">
             {/* Hero Header */}
-            <div className="text-center max-w-3xl mx-auto space-y-3">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-950/60 border border-cyan-800/40 text-cyan-300 text-xs font-medium">
-                <Sparkles className="w-3.5 h-3.5" />
+            <div className="text-center max-w-3xl mx-auto space-y-3 pt-2">
+              <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#eef4e8] border border-[#d5e0cb] text-[#3d5926] text-xs font-medium shadow-xs">
+                <Sparkles className="w-3.5 h-3.5 text-[#4e742e]" />
                 <span>Multimodal OCR + Safe Passive URL Sandbox + Transparent AI</span>
               </div>
-              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight bg-gradient-to-r from-white via-slate-100 to-slate-400 bg-clip-text text-transparent">
+              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-bold tracking-tight text-[#161a12]">
                 Scan Suspicious Messages with Evidentiary Proof
               </h1>
-              <p className="text-sm sm:text-base text-slate-400 leading-relaxed">
+              <p className="text-sm sm:text-base text-[#5c6454] leading-relaxed">
                 Analyze SMS, WhatsApp alerts, screenshot captures, and deceptive links without visiting them. Get an explainable, plain-language breakdown of psychological pressure and credential theft vectors.
               </p>
             </div>
@@ -179,10 +179,10 @@ export default function Home() {
                 />
 
                 {/* Safety & Compliance Disclaimer */}
-                <div className="p-4 bg-slate-900/40 border border-slate-800 rounded-xl text-xs text-slate-500 leading-relaxed flex items-start gap-2.5">
-                  <Shield className="w-4 h-4 text-slate-400 shrink-0 mt-0.5" />
+                <div className="p-4 bg-white border border-[#e2e6dc] rounded-2xl text-xs text-[#5c6454] leading-relaxed flex items-start gap-2.5 shadow-xs">
+                  <Shield className="w-4 h-4 text-[#3d5926] shrink-0 mt-0.5" />
                   <div>
-                    <span className="font-semibold text-slate-400">Security & Privacy Guarantee: </span>
+                    <span className="font-semibold text-[#181a15]">Security & Privacy Guarantee: </span>
                     {analysisResult.disclaimer}
                   </div>
                 </div>
@@ -211,18 +211,19 @@ export default function Home() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-slate-900 bg-slate-950 py-8 text-xs text-slate-500">
+      <footer className="border-t border-[#e2e6dc] bg-white/70 py-8 text-xs text-[#636c5c] mt-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex flex-wrap items-center gap-2 sm:gap-3">
             <div className="flex items-center gap-2">
-              <Lock className="w-4 h-4 text-cyan-400" />
-              <span>SafeGuard AI • Built for Cybersecurity Scam Detection Hackathon</span>
+              <Lock className="w-4 h-4 text-[#3d5926]" />
+              <span className="font-medium text-[#181a15]">SafeGuard AI</span>
+              <span>• Built for Cybersecurity Scam Detection & Recovery</span>
             </div>
-            <span className="hidden sm:inline text-slate-700">•</span>
+            <span className="hidden sm:inline text-[#ccd4c4]">•</span>
             <button
               type="button"
               onClick={() => setActiveTab("audit")}
-              className="text-[11px] text-slate-600 hover:text-cyan-400 font-mono transition-colors flex items-center gap-1.5"
+              className="text-[11px] text-[#636c5c] hover:text-[#181a15] font-mono transition-colors flex items-center gap-1.5"
               title="Open Judge & Benchmark Audit Console (Ctrl+Shift+J)"
             >
               <span>🔒 Judge / Benchmark Audit Console (Ctrl+Shift+J)</span>
@@ -230,16 +231,15 @@ export default function Home() {
           </div>
 
           <div className="flex items-center gap-4">
-            <span className="flex items-center gap-1.5 text-rose-400 font-mono">
+            <span className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-rose-50 text-rose-700 border border-rose-200 font-mono text-xs font-semibold">
               <PhoneCall className="w-3.5 h-3.5" />
-              <span>National Cybercrime Helpline: 1930</span>
+              <span>Helpline: 1930</span>
             </span>
-            <span>•</span>
             <a
               href="https://cybercrime.gov.in"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-cyan-400 hover:underline"
+              className="text-[#3d5926] font-medium hover:underline hover:text-[#253915]"
             >
               cybercrime.gov.in
             </a>

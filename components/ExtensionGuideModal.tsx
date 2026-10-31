@@ -70,35 +70,35 @@ SBI Security Division`,
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-in fade-in duration-200">
-      <div className="relative w-full max-w-2xl bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm animate-in fade-in duration-200">
+      <div className="relative w-full max-w-2xl bg-white border border-[#e2e6dc] rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
         {/* Header */}
-        <div className="p-5 border-b border-slate-800 flex items-center justify-between bg-slate-900/50">
+        <div className="p-5 sm:p-6 border-b border-[#edf1e8] flex items-center justify-between bg-[#f8faf6]">
           <div className="flex items-center gap-2.5">
-            <div className="p-2 rounded-lg bg-cyan-500/10 border border-cyan-500/20 text-cyan-400">
+            <div className="p-2 rounded-xl bg-[#eef4e8] border border-[#d5e0cb] text-[#3d5926]">
               <ShieldCheck className="w-5 h-5" />
             </div>
             <div>
-              <h2 className="text-base font-bold text-slate-100">SafeGuard Multi-Channel Ingestion & Integrations</h2>
-              <p className="text-xs text-slate-400">Zero-friction scanning across Browser, Mobile PWA, and Mail</p>
+              <h2 className="text-lg font-serif font-bold text-[#181a15]">SafeGuard Multi-Channel Ingestion & Integrations</h2>
+              <p className="text-xs text-[#636c5c]">Zero-friction scanning across Browser, Mobile PWA, and Mail</p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-lg text-slate-400 hover:text-slate-100 hover:bg-slate-800 transition-colors"
+            className="p-2 rounded-xl text-[#636c5c] hover:text-[#181a15] hover:bg-white border border-transparent hover:border-[#dce3d5] transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Tab Switcher */}
-        <div className="flex border-b border-slate-800 px-5 bg-slate-950/40 gap-4 text-xs font-medium">
+        <div className="flex border-b border-[#edf1e8] px-6 bg-[#fafbf9] gap-4 text-xs font-medium overflow-x-auto">
           <button
             onClick={() => setActiveTab("chrome")}
-            className={`py-3 flex items-center gap-2 border-b-2 transition-all ${
+            className={`py-3.5 flex items-center gap-2 border-b-2 transition-all whitespace-nowrap ${
               activeTab === "chrome"
-                ? "border-cyan-400 text-cyan-300 font-semibold"
-                : "border-transparent text-slate-400 hover:text-slate-200"
+                ? "border-[#8ec251] text-[#181a15] font-bold"
+                : "border-transparent text-[#636c5c] hover:text-[#181a15]"
             }`}
           >
             <Chrome className="w-4 h-4" />
@@ -106,10 +106,10 @@ SBI Security Division`,
           </button>
           <button
             onClick={() => setActiveTab("bookmarklet")}
-            className={`py-3 flex items-center gap-2 border-b-2 transition-all ${
+            className={`py-3.5 flex items-center gap-2 border-b-2 transition-all whitespace-nowrap ${
               activeTab === "bookmarklet"
-                ? "border-cyan-400 text-cyan-300 font-semibold"
-                : "border-transparent text-slate-400 hover:text-slate-200"
+                ? "border-[#8ec251] text-[#181a15] font-bold"
+                : "border-transparent text-[#636c5c] hover:text-[#181a15]"
             }`}
           >
             <Bookmark className="w-4 h-4" />
@@ -117,10 +117,10 @@ SBI Security Division`,
           </button>
           <button
             onClick={() => setActiveTab("pwa")}
-            className={`py-3 flex items-center gap-2 border-b-2 transition-all ${
+            className={`py-3.5 flex items-center gap-2 border-b-2 transition-all whitespace-nowrap ${
               activeTab === "pwa"
-                ? "border-cyan-400 text-cyan-300 font-semibold"
-                : "border-transparent text-slate-400 hover:text-slate-200"
+                ? "border-[#8ec251] text-[#181a15] font-bold"
+                : "border-transparent text-[#636c5c] hover:text-[#181a15]"
             }`}
           >
             <Smartphone className="w-4 h-4" />
@@ -128,10 +128,10 @@ SBI Security Division`,
           </button>
           <button
             onClick={() => setActiveTab("email")}
-            className={`py-3 flex items-center gap-2 border-b-2 transition-all ${
+            className={`py-3.5 flex items-center gap-2 border-b-2 transition-all whitespace-nowrap ${
               activeTab === "email"
-                ? "border-cyan-400 text-cyan-300 font-semibold"
-                : "border-transparent text-slate-400 hover:text-slate-200"
+                ? "border-[#8ec251] text-[#181a15] font-bold"
+                : "border-transparent text-[#636c5c] hover:text-[#181a15]"
             }`}
           >
             <Mail className="w-4 h-4" />
@@ -140,10 +140,10 @@ SBI Security Division`,
         </div>
 
         {/* Content Body */}
-        <div className="p-6 overflow-y-auto space-y-4 text-sm text-slate-300 leading-relaxed">
+        <div className="p-6 overflow-y-auto space-y-4 text-sm text-[#363f2e] leading-relaxed">
           {activeTab === "chrome" && (
             <div className="space-y-4">
-              <div className="p-3.5 bg-cyan-950/30 border border-cyan-800/40 rounded-xl text-xs text-cyan-300">
+              <div className="p-4 bg-[#eef4e8] border border-[#d5e0cb] rounded-2xl text-xs text-[#2c401c]">
                 🚀 The SafeGuard AI Chrome Extension adds context menu right-click scanning on any webpage, highlights suspicious links, and provides one-tap popup inspection.
               </div>
 
@@ -151,33 +151,33 @@ SBI Security Division`,
               <button
                 type="button"
                 onClick={handleSimulateChrome}
-                className="w-full py-2.5 px-4 rounded-xl font-bold text-xs bg-gradient-to-r from-cyan-400 to-blue-500 hover:from-cyan-300 hover:to-blue-400 text-slate-950 shadow-md shadow-cyan-500/20 transition-all flex items-center justify-center gap-2"
+                className="w-full py-3 px-4 rounded-2xl font-bold text-xs bg-[#bef264] hover:bg-[#aee750] text-[#162704] border border-[#a8df4a]/70 shadow-2xs transition-all flex items-center justify-center gap-2"
               >
                 <Zap className="w-4 h-4" />
                 <span>⚡ Simulate Live Browser Context-Menu Scan</span>
               </button>
 
-              <ol className="space-y-3 list-decimal list-inside text-xs text-slate-300 pt-1">
+              <ol className="space-y-3 list-decimal list-inside text-xs text-[#525a4c] pt-1">
                 <li>
-                  Open your browser and navigate to <code className="px-1.5 py-0.5 bg-slate-800 rounded font-mono text-cyan-400">chrome://extensions</code>
+                  Open your browser and navigate to <code className="px-2 py-0.5 bg-[#f4f7f1] rounded font-mono text-[#181a15] border border-[#dce3d5]">chrome://extensions</code>
                 </li>
                 <li>
-                  Toggle <strong className="text-slate-100">Developer mode</strong> in the top-right corner.
+                  Toggle <strong className="text-[#181a15]">Developer mode</strong> in the top-right corner.
                 </li>
                 <li>
-                  Click <strong className="text-slate-100">Load unpacked</strong> and select the directory:
-                  <div className="mt-1.5 p-2 bg-slate-950 border border-slate-800 rounded font-mono text-[11px] text-amber-300 flex items-center justify-between">
+                  Click <strong className="text-[#181a15]">Load unpacked</strong> and select the directory:
+                  <div className="mt-1.5 p-2.5 bg-[#f8faf6] border border-[#dce3d5] rounded-xl font-mono text-[11px] text-[#181a15] flex items-center justify-between">
                     <span>chrome-extension/</span>
                     <button
                       onClick={() => copyToClipboard("chrome-extension", "path")}
-                      className="text-slate-400 hover:text-cyan-400"
+                      className="text-[#636c5c] hover:text-[#181a15]"
                     >
-                      {copied === "path" ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                      {copied === "path" ? <Check className="w-3.5 h-3.5 text-[#3d5926]" /> : <Copy className="w-3.5 h-3.5" />}
                     </button>
                   </div>
                 </li>
                 <li>
-                  Highlight any text or right-click any link on the web to trigger <strong className="text-slate-100">&ldquo;🛡️ Passively Inspect with SafeGuard AI&rdquo;</strong>.
+                  Highlight any text or right-click any link on the web to trigger <strong className="text-[#181a15]">&ldquo;🛡️ Passively Inspect with SafeGuard AI&rdquo;</strong>.
                 </li>
               </ol>
             </div>
@@ -185,31 +185,31 @@ SBI Security Division`,
 
           {activeTab === "bookmarklet" && (
             <div className="space-y-4">
-              <div className="p-3.5 bg-purple-950/30 border border-purple-800/40 rounded-xl text-xs text-purple-300">
+              <div className="p-4 bg-purple-50 border border-purple-200 rounded-2xl text-xs text-purple-900">
                 ⚡ Zero install required! Works instantly in any browser (Chrome, Firefox, Safari, Edge, Mobile).
               </div>
-              <div className="p-4 bg-slate-950 border border-slate-800 rounded-xl text-center space-y-3">
-                <p className="text-xs text-slate-400">Drag this button to your Bookmarks Toolbar:</p>
+              <div className="p-5 bg-[#f8faf6] border border-[#dce3d5] rounded-2xl text-center space-y-3">
+                <p className="text-xs text-[#636c5c]">Drag this button to your Bookmarks Toolbar:</p>
                 <a
                   href={bookmarkletCode}
                   onClick={(e) => {
                     e.preventDefault();
                     alert("Drag this button to your Bookmarks bar, or copy the code below!");
                   }}
-                  className="inline-block px-4 py-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-slate-950 font-bold text-xs rounded-lg shadow-md cursor-grab active:cursor-grabbing hover:opacity-95"
+                  className="inline-block px-5 py-2.5 bg-[#bef264] hover:bg-[#aee750] text-[#162704] font-bold text-xs rounded-xl shadow-2xs cursor-grab active:cursor-grabbing border border-[#a8df4a]/70"
                 >
                   🛡️ Scan with SafeGuard
                 </a>
               </div>
               <div>
-                <p className="text-xs text-slate-400 mb-1.5">Or copy the bookmarklet JavaScript manually:</p>
-                <div className="p-2.5 bg-slate-950 border border-slate-800 rounded-lg flex items-center justify-between text-[11px] font-mono text-slate-300">
+                <p className="text-xs text-[#636c5c] mb-1.5">Or copy the bookmarklet JavaScript manually:</p>
+                <div className="p-3 bg-[#f8faf6] border border-[#dce3d5] rounded-xl flex items-center justify-between text-[11px] font-mono text-[#181a15]">
                   <span className="truncate max-w-[480px]">{bookmarkletCode}</span>
                   <button
                     onClick={() => copyToClipboard(bookmarkletCode, "bm")}
-                    className="ml-2 px-2 py-1 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded text-xs flex items-center gap-1 shrink-0"
+                    className="ml-2 px-3 py-1 bg-white hover:bg-[#edf2e7] text-[#181a15] border border-[#dce3d5] rounded-lg text-xs flex items-center gap-1 shrink-0 shadow-2xs"
                   >
-                    {copied === "bm" ? <Check className="w-3 h-3 text-emerald-400" /> : <Copy className="w-3 h-3" />}
+                    {copied === "bm" ? <Check className="w-3 h-3 text-[#3d5926]" /> : <Copy className="w-3 h-3" />}
                     <span>{copied === "bm" ? "Copied" : "Copy"}</span>
                   </button>
                 </div>
@@ -219,7 +219,7 @@ SBI Security Division`,
 
           {activeTab === "pwa" && (
             <div className="space-y-4">
-              <div className="p-3.5 bg-emerald-950/30 border border-emerald-800/40 rounded-xl text-xs text-emerald-300">
+              <div className="p-4 bg-[#eef5e6] border border-[#cbe0b8] rounded-2xl text-xs text-[#2c401c]">
                 📲 Mobile Web Share Target enables native &ldquo;Share to SafeGuard&rdquo; directly from WhatsApp, Telegram, or SMS apps!
               </div>
 
@@ -227,17 +227,17 @@ SBI Security Division`,
               <button
                 type="button"
                 onClick={handleSimulatePwa}
-                className="w-full py-2.5 px-4 rounded-xl font-bold text-xs bg-gradient-to-r from-emerald-400 to-teal-500 hover:from-emerald-300 hover:to-teal-400 text-slate-950 shadow-md shadow-emerald-500/20 transition-all flex items-center justify-center gap-2"
+                className="w-full py-3 px-4 rounded-2xl font-bold text-xs bg-[#bef264] hover:bg-[#aee750] text-[#162704] border border-[#a8df4a]/70 shadow-2xs transition-all flex items-center justify-center gap-2"
               >
                 <Zap className="w-4 h-4" />
                 <span>⚡ Simulate Live Mobile Share Target (WhatsApp Phish)</span>
               </button>
 
-              <ol className="space-y-2.5 list-decimal list-inside text-xs text-slate-300 pt-1">
+              <ol className="space-y-2.5 list-decimal list-inside text-xs text-[#525a4c] pt-1">
                 <li>Open SafeGuard in Chrome or Safari on your phone.</li>
-                <li>Tap browser menu → <strong className="text-slate-100">Add to Home Screen</strong> (Install Web App).</li>
+                <li>Tap browser menu → <strong className="text-[#181a15]">Add to Home Screen</strong> (Install Web App).</li>
                 <li>
-                  When you receive a suspicious WhatsApp message or SMS, tap <strong className="text-slate-100">Share</strong> → select <strong className="text-cyan-400">SafeGuard AI</strong>.
+                  When you receive a suspicious WhatsApp message or SMS, tap <strong className="text-[#181a15]">Share</strong> → select <strong className="text-[#3d5926]">SafeGuard AI</strong>.
                 </li>
                 <li>The payload is received via Web Share Target and evaluated with passive zero-fetch analysis immediately.</li>
               </ol>
@@ -246,7 +246,7 @@ SBI Security Division`,
 
           {activeTab === "email" && (
             <div className="space-y-4">
-              <div className="p-3.5 bg-amber-950/30 border border-amber-800/40 rounded-xl text-xs text-amber-300">
+              <div className="p-4 bg-amber-50 border border-amber-200 rounded-2xl text-xs text-amber-900">
                 📨 Forward suspicious emails directly or integrate with your corporate mail flow via webhooks.
               </div>
 
@@ -254,19 +254,19 @@ SBI Security Division`,
               <button
                 type="button"
                 onClick={handleSimulateEmail}
-                className="w-full py-2.5 px-4 rounded-xl font-bold text-xs bg-gradient-to-r from-amber-400 to-orange-500 hover:from-amber-300 hover:to-orange-400 text-slate-950 shadow-md shadow-amber-500/20 transition-all flex items-center justify-center gap-2"
+                className="w-full py-3 px-4 rounded-2xl font-bold text-xs bg-[#bef264] hover:bg-[#aee750] text-[#162704] border border-[#a8df4a]/70 shadow-2xs transition-all flex items-center justify-center gap-2"
               >
                 <Zap className="w-4 h-4" />
                 <span>⚡ Simulate Forwarded Phishing Email Webhook (.EML)</span>
               </button>
 
-              <p className="text-xs text-slate-400 pt-1">
-                SafeGuard exposes a dedicated inbound mail endpoint at <code className="text-amber-300 font-mono">/api/inbound-mail</code>:
+              <p className="text-xs text-[#636c5c] pt-1">
+                SafeGuard exposes a dedicated inbound mail endpoint at <code className="text-[#181a15] font-mono bg-[#f4f7f1] px-1.5 py-0.5 rounded border border-[#dce3d5]">/api/inbound-mail</code>:
               </p>
-              <div className="p-3 bg-slate-950 border border-slate-800 rounded-xl font-mono text-xs text-slate-300 space-y-2">
-                <div className="text-cyan-400">POST /api/inbound-mail</div>
-                <div className="text-slate-400 text-[11px] leading-relaxed">
-                  Accepts JSON <code className="text-slate-200">&#123; rawEmail: string, from?: string, subject?: string &#125;</code> or multipart form. Inspects SPF, DKIM, DMARC, display spoofing, and anchor text mismatches with zero network calls.
+              <div className="p-3.5 bg-[#f8faf6] border border-[#dce3d5] rounded-2xl font-mono text-xs text-[#181a15] space-y-2 shadow-2xs">
+                <div className="text-[#2c401c] font-bold">POST /api/inbound-mail</div>
+                <div className="text-[#525a4c] text-[11px] leading-relaxed">
+                  Accepts JSON <code className="text-[#181a15] bg-white px-1 rounded border border-[#dce3d5]">&#123; rawEmail: string, from?: string, subject?: string &#125;</code> or multipart form. Inspects SPF, DKIM, DMARC, display spoofing, and anchor text mismatches with zero network calls.
                 </div>
               </div>
             </div>
@@ -274,10 +274,10 @@ SBI Security Division`,
         </div>
 
         {/* Footer */}
-        <div className="p-4 border-t border-slate-800 bg-slate-950/60 flex items-center justify-end">
+        <div className="p-4 sm:p-5 border-t border-[#edf1e8] bg-[#f8faf6] flex items-center justify-end">
           <button
             onClick={onClose}
-            className="px-4 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium rounded-lg transition-colors"
+            className="px-5 py-2 bg-white hover:bg-[#edf2e7] text-[#181a15] border border-[#dce3d5] text-xs font-semibold rounded-xl shadow-2xs transition-colors"
           >
             Close
           </button>

@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { Navbar } from "@/components/Navbar";
 import { ScannerInput } from "@/components/ScannerInput";
 import { RiskMeter } from "@/components/RiskMeter";
+import { MultiEngineBreakdown } from "@/components/MultiEngineBreakdown";
 import { UncertaintyBanner } from "@/components/UncertaintyBanner";
 import { EvidenceHighlighter } from "@/components/EvidenceHighlighter";
 import { SafeUrlInspectorCard } from "@/components/SafeUrlInspectorCard";
@@ -125,6 +126,16 @@ export default function Home() {
                   breakdown={analysisResult.metricsBreakdown}
                 />
 
+                {/* 4-Engine Multi-Method Detection Breakdown */}
+                <MultiEngineBreakdown
+                  metricsBreakdown={analysisResult.metricsBreakdown}
+                  heuristicsHits={analysisResult.heuristicsHits}
+                  urlReports={analysisResult.urlReports}
+                  impersonationMatch={analysisResult.impersonationMatch}
+                  aiAnalysis={analysisResult.aiAnalysis}
+                  confidencePercent={analysisResult.uncertainty.confidencePercent}
+                />
+
                 {/* Calibrated Uncertainty Banner */}
                 <UncertaintyBanner uncertainty={analysisResult.uncertainty} />
 
@@ -191,6 +202,11 @@ export default function Home() {
       <ExtensionGuideModal
         isOpen={showExtensionModal}
         onClose={() => setShowExtensionModal(false)}
+        onSimulateScan={(text, type) => {
+          setShowExtensionModal(false);
+          setActiveTab("scanner");
+          handleAnalyze(text, type);
+        }}
       />
 
       {/* Footer */}

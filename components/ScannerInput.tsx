@@ -13,6 +13,10 @@ import {
   KeyRound,
   Clipboard,
   Mail,
+  Smartphone,
+  Package,
+  EyeOff,
+  FolderOpen,
 } from "lucide-react";
 import { OcrQualityReport } from "@/lib/types";
 import { runLocalOcr } from "@/lib/ocr/local-ocr";
@@ -88,6 +92,213 @@ SBI Security Division`,
     text: "Your A/C XX4921 has been debited by Rs 350.00 on 30-Oct-26 via UPI to Starbucks. Avl Bal: Rs 24,150.25. If not you, SMS BLOCK to 5676712 - HDFC Bank",
   },
 ];
+
+/**
+ * Dynamically synthesizes realistic mobile screenshots using HTML5 Canvas.
+ * ZERO external network fetches; operates 100% inside browser memory.
+ */
+function createSyntheticScreenshot(type: "bank" | "courier" | "blurry"): {
+  dataUrl: string;
+  text: string;
+  ocrQuality: OcrQualityReport;
+} {
+  const canvas = document.createElement("canvas");
+  const ctx = canvas.getContext("2d");
+  if (!ctx) {
+    throw new Error("HTML5 Canvas context unavailable");
+  }
+
+  if (type === "bank") {
+    canvas.width = 640;
+    canvas.height = 360;
+
+    // Dark sleek phone background
+    const bgGrad = ctx.createLinearGradient(0, 0, 0, 360);
+    bgGrad.addColorStop(0, "#0b0f19");
+    bgGrad.addColorStop(1, "#111827");
+    ctx.fillStyle = bgGrad;
+    ctx.fillRect(0, 0, 640, 360);
+
+    // Top mobile status bar
+    ctx.fillStyle = "#64748b";
+    ctx.font = "12px system-ui, sans-serif";
+    ctx.fillText("9:41 AM", 24, 26);
+    ctx.fillText("5G • 88%", 560, 26);
+
+    // Sender title bar
+    ctx.fillStyle = "#1e293b";
+    ctx.fillRect(0, 40, 640, 56);
+    ctx.strokeStyle = "#334155";
+    ctx.strokeRect(0, 40, 640, 1);
+
+    // Bank Icon Badge
+    ctx.beginPath();
+    ctx.arc(42, 68, 16, 0, Math.PI * 2);
+    ctx.fillStyle = "#1d4ed8";
+    ctx.fill();
+    ctx.fillStyle = "#ffffff";
+    ctx.font = "bold 11px system-ui, sans-serif";
+    ctx.fillText("SBI", 32, 72);
+
+    // Sender Info
+    ctx.fillStyle = "#f8fafc";
+    ctx.font = "bold 14px system-ui, sans-serif";
+    ctx.fillText("SBI Alerts (+91 9876543210)", 70, 63);
+    ctx.fillStyle = "#94a3b8";
+    ctx.font = "11px system-ui, sans-serif";
+    ctx.fillText("Transactional & Security Notification • Official", 70, 80);
+
+    // Message Bubble
+    ctx.fillStyle = "#1e293b";
+    ctx.strokeStyle = "#3b82f6";
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.roundRect(30, 120, 580, 170, 14);
+    ctx.fill();
+    ctx.stroke();
+
+    // Message Text
+    ctx.fillStyle = "#f1f5f9";
+    ctx.font = "15px system-ui, sans-serif";
+    ctx.fillText("SBI Alert: Your NetBanking account KYC is expired.", 48, 155);
+    ctx.fillText("Update immediately to avoid permanent account block:", 48, 185);
+
+    // Malicious Phishing Link
+    ctx.fillStyle = "#38bdf8";
+    ctx.font = "bold 15px monospace";
+    ctx.fillText("http://sbi-kyc-update.xyz", 48, 220);
+
+    // Time & Delivered
+    ctx.fillStyle = "#64748b";
+    ctx.font = "11px system-ui, sans-serif";
+    ctx.fillText("Today 10:15 AM • SMS via +91 9876543210", 48, 260);
+
+    const text =
+      "SBI Alert: Your account KYC is expired. Update immediately at http://sbi-kyc-update.xyz or account will be blocked";
+    const dataUrl = canvas.toDataURL("image/png");
+    const ocrQuality: OcrQualityReport = {
+      isReadable: true,
+      confidence: 96,
+      charCount: text.length,
+      warnings: [],
+    };
+    return { dataUrl, text, ocrQuality };
+  } else if (type === "courier") {
+    canvas.width = 640;
+    canvas.height = 360;
+
+    // Dark sleek background
+    const bgGrad = ctx.createLinearGradient(0, 0, 0, 360);
+    bgGrad.addColorStop(0, "#090d16");
+    bgGrad.addColorStop(1, "#0f172a");
+    ctx.fillStyle = bgGrad;
+    ctx.fillRect(0, 0, 640, 360);
+
+    // Top status bar
+    ctx.fillStyle = "#64748b";
+    ctx.font = "12px system-ui, sans-serif";
+    ctx.fillText("2:30 PM", 24, 26);
+    ctx.fillText("LTE • 92%", 560, 26);
+
+    // Sender title bar
+    ctx.fillStyle = "#1e293b";
+    ctx.fillRect(0, 40, 640, 56);
+    ctx.strokeStyle = "#334155";
+    ctx.strokeRect(0, 40, 640, 1);
+
+    // Courier Badge
+    ctx.beginPath();
+    ctx.arc(42, 68, 16, 0, Math.PI * 2);
+    ctx.fillStyle = "#dc2626";
+    ctx.fill();
+    ctx.fillStyle = "#ffffff";
+    ctx.font = "bold 11px system-ui, sans-serif";
+    ctx.fillText("POST", 27, 72);
+
+    // Sender Info
+    ctx.fillStyle = "#f8fafc";
+    ctx.font = "bold 14px system-ui, sans-serif";
+    ctx.fillText("India Post Parcel Care (+91 9123456789)", 70, 63);
+    ctx.fillStyle = "#94a3b8";
+    ctx.font = "11px system-ui, sans-serif";
+    ctx.fillText("Consignment Delivery Desk • Urgent Notification", 70, 80);
+
+    // Message Bubble
+    ctx.fillStyle = "#1e293b";
+    ctx.strokeStyle = "#ef4444";
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.roundRect(30, 120, 580, 170, 14);
+    ctx.fill();
+    ctx.stroke();
+
+    // Message Text
+    ctx.fillStyle = "#f1f5f9";
+    ctx.font = "15px system-ui, sans-serif";
+    ctx.fillText("India Post: Parcel held at customs due to incomplete address.", 48, 155);
+    ctx.fillText("Pay Rs 49 fee within 12 hours or package will be returned:", 48, 185);
+
+    // Link
+    ctx.fillStyle = "#38bdf8";
+    ctx.font = "bold 15px monospace";
+    ctx.fillText("http://indiapost-track.org", 48, 220);
+
+    ctx.fillStyle = "#64748b";
+    ctx.font = "11px system-ui, sans-serif";
+    ctx.fillText("Consignment: CP98234190IN • Pay before return dispatch", 48, 260);
+
+    const text =
+      "India Post: Parcel held at customs due to incomplete address. Pay Rs 49 fee within 12 hours at http://indiapost-track.org";
+    const dataUrl = canvas.toDataURL("image/png");
+    const ocrQuality: OcrQualityReport = {
+      isReadable: true,
+      confidence: 94,
+      charCount: text.length,
+      warnings: [],
+    };
+    return { dataUrl, text, ocrQuality };
+  } else {
+    // Blurry / Degraded Screenshot (Graceful Failure Test)
+    canvas.width = 360;
+    canvas.height = 180;
+
+    // Muddy low contrast background
+    ctx.fillStyle = "#1e232b";
+    ctx.fillRect(0, 0, 360, 180);
+
+    // Faint low-contrast text with blur
+    ctx.fillStyle = "#334155";
+    ctx.font = "12px monospace";
+    ctx.fillText("URGENT: Verify account at bit.ly/unreadable", 16, 45);
+    ctx.fillText("OTP requested immediately within 5 mins", 16, 75);
+    ctx.fillText("Failure will cause immediate cancellation", 16, 105);
+    ctx.fillText("Contact support center 98xxxxxx", 16, 135);
+
+    // Add noise overlay to simulate compression and distortion
+    const imgData = ctx.getImageData(0, 0, 360, 180);
+    for (let i = 0; i < imgData.data.length; i += 4 * 3) {
+      const noise = (Math.random() - 0.5) * 40;
+      imgData.data[i] = Math.max(0, Math.min(255, imgData.data[i] + noise));
+      imgData.data[i + 1] = Math.max(0, Math.min(255, imgData.data[i + 1] + noise));
+      imgData.data[i + 2] = Math.max(0, Math.min(255, imgData.data[i + 2] + noise));
+    }
+    ctx.putImageData(imgData, 0, 0);
+
+    const text = "urg... ver... acc... [UNREADABLE / BLURRY OCR RESULT]";
+    const dataUrl = canvas.toDataURL("image/png");
+    const ocrQuality: OcrQualityReport = {
+      isReadable: false,
+      confidence: 18,
+      charCount: 22,
+      warnings: [
+        "Low screenshot sharpness (Laplacian variance 14/100). Image appears heavily blurred or out of focus.",
+        "Low contrast ratio detected between text and background. Optical character recognition cannot guarantee accurate URL or keyword extraction.",
+        "Graceful unreadable image handling: High uncertainty penalty applied to avoid overconfident safe verdicts.",
+      ],
+    };
+    return { dataUrl, text, ocrQuality };
+  }
+}
 
 export const ScannerInput: React.FC<ScannerInputProps> = ({ onAnalyze, isLoading }) => {
   const [activeMode, setActiveMode] = useState<"text" | "image" | "email">("text");
@@ -195,7 +406,6 @@ export const ScannerInput: React.FC<ScannerInputProps> = ({ onAnalyze, isLoading
   };
 
   const handleImageFile = (file: File) => {
-    // If dropped file is an email (.eml) or text file (.txt, .html)
     if (
       file.name.endsWith(".eml") ||
       file.name.endsWith(".txt") ||
@@ -319,6 +529,20 @@ export const ScannerInput: React.FC<ScannerInputProps> = ({ onAnalyze, isLoading
     reader.readAsDataURL(file);
   };
 
+  // 1-Click Built-in Test Screenshot Generator
+  const handleLoadBuiltinScreenshot = (type: "bank" | "courier" | "blurry") => {
+    try {
+      const sample = createSyntheticScreenshot(type);
+      setSelectedImage(sample.dataUrl);
+      setInputText(sample.text);
+      setOcrQuality(sample.ocrQuality);
+      setActiveMode("image");
+      onAnalyze(sample.text, "ocr_screenshot", sample.ocrQuality);
+    } catch (err) {
+      console.error("Failed to generate test screenshot:", err);
+    }
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!inputText.trim()) return;
@@ -337,7 +561,7 @@ export const ScannerInput: React.FC<ScannerInputProps> = ({ onAnalyze, isLoading
 
   return (
     <div className="bg-slate-900/60 border border-slate-800 rounded-3xl p-5 sm:p-6 shadow-xl backdrop-blur-sm space-y-4">
-      {/* Input Mode Selector & 1-Click Paste & Scan */}
+      {/* Input Mode Selector & 1-Click Paste & Scan (Tab clicks ONLY switch mode, NEVER auto-open OS dialog) */}
       <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 border-b border-slate-800/80 pb-3">
         <div className="flex flex-wrap items-center gap-2">
           <button
@@ -371,10 +595,7 @@ export const ScannerInput: React.FC<ScannerInputProps> = ({ onAnalyze, isLoading
 
           <button
             type="button"
-            onClick={() => {
-              setActiveMode("email");
-              emailFileInputRef.current?.click();
-            }}
+            onClick={() => setActiveMode("email")}
             className={`px-3 py-1.5 rounded-xl text-xs sm:text-sm font-medium flex items-center gap-2 transition-all ${
               activeMode === "email"
                 ? "bg-cyan-500/10 text-cyan-400 border border-cyan-500/30"
@@ -435,7 +656,19 @@ export const ScannerInput: React.FC<ScannerInputProps> = ({ onAnalyze, isLoading
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
-        {/* Hidden Email File Input */}
+        {/* Hidden File Inputs */}
+        <input
+          type="file"
+          ref={fileInputRef}
+          accept="image/*,.eml,.txt,.html"
+          className="hidden"
+          onChange={(e) => {
+            if (e.target.files && e.target.files[0]) {
+              handleImageFile(e.target.files[0]);
+            }
+          }}
+        />
+
         <input
           type="file"
           ref={emailFileInputRef}
@@ -448,9 +681,61 @@ export const ScannerInput: React.FC<ScannerInputProps> = ({ onAnalyze, isLoading
           }}
         />
 
-        {/* Screenshot / File Dropzone */}
+        {/* Screenshot OCR Mode */}
         {activeMode === "image" && (
           <div className="space-y-3">
+            {/* 1-Click Built-in Test Screenshots Toolbar */}
+            <div className="p-3 bg-gradient-to-r from-slate-950/90 via-slate-900/80 to-slate-950/90 border border-cyan-800/40 rounded-2xl space-y-2">
+              <div className="flex items-center justify-between text-xs">
+                <span className="font-semibold text-cyan-300 flex items-center gap-1.5">
+                  <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
+                  <span>1-Click Built-in Test Screenshots (Zero File Dialog Required):</span>
+                </span>
+                <span className="text-[10px] text-slate-500 font-mono">HTML5 Canvas Synthesized</span>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                <button
+                  type="button"
+                  disabled={isLoading}
+                  onClick={() => handleLoadBuiltinScreenshot("bank")}
+                  className="px-3 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700/80 hover:border-cyan-500/50 text-left transition-all group flex items-start gap-2"
+                >
+                  <Smartphone className="w-4 h-4 text-cyan-400 shrink-0 mt-0.5 group-hover:scale-110 transition-transform" />
+                  <div>
+                    <div className="text-xs font-semibold text-slate-200">📱 Bank KYC Scam</div>
+                    <div className="text-[10px] text-slate-400">SBI Alert SMS • Clear OCR (96% Conf)</div>
+                  </div>
+                </button>
+
+                <button
+                  type="button"
+                  disabled={isLoading}
+                  onClick={() => handleLoadBuiltinScreenshot("courier")}
+                  className="px-3 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700/80 hover:border-rose-500/50 text-left transition-all group flex items-start gap-2"
+                >
+                  <Package className="w-4 h-4 text-rose-400 shrink-0 mt-0.5 group-hover:scale-110 transition-transform" />
+                  <div>
+                    <div className="text-xs font-semibold text-slate-200">📦 Courier Parcel Trap</div>
+                    <div className="text-[10px] text-slate-400">India Post SMS • Customs Fee Link</div>
+                  </div>
+                </button>
+
+                <button
+                  type="button"
+                  disabled={isLoading}
+                  onClick={() => handleLoadBuiltinScreenshot("blurry")}
+                  className="px-3 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700/80 hover:border-amber-500/50 text-left transition-all group flex items-start gap-2"
+                >
+                  <EyeOff className="w-4 h-4 text-amber-400 shrink-0 mt-0.5 group-hover:scale-110 transition-transform" />
+                  <div>
+                    <div className="text-xs font-semibold text-slate-200">🌫️ Blurry / Degraded Image</div>
+                    <div className="text-[10px] text-slate-400">Graceful Failure & High Uncertainty</div>
+                  </div>
+                </button>
+              </div>
+            </div>
+
             {/* OCR Privacy Mode Toggle */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 p-3 bg-slate-950/70 border border-slate-800 rounded-xl text-xs">
               <div className="flex items-center gap-2">
@@ -482,6 +767,7 @@ export const ScannerInput: React.FC<ScannerInputProps> = ({ onAnalyze, isLoading
               </label>
             </div>
 
+            {/* Interactive Image Dropzone with Explicit Button */}
             <div
               onDragOver={(e) => {
                 e.preventDefault();
@@ -496,31 +782,30 @@ export const ScannerInput: React.FC<ScannerInputProps> = ({ onAnalyze, isLoading
                   handleImageFile(files[0]);
                 }
               }}
-              onClick={() => fileInputRef.current?.click()}
-              className={`border-2 border-dashed rounded-2xl p-6 text-center cursor-pointer transition-all ${
+              className={`border-2 border-dashed rounded-2xl p-6 text-center transition-all ${
                 dragOver
                   ? "border-cyan-400 bg-cyan-950/20"
                   : "border-slate-700 hover:border-slate-600 bg-slate-950/40"
               }`}
             >
-              <input
-                type="file"
-                ref={fileInputRef}
-                accept="image/*,.eml,.txt,.html"
-                className="hidden"
-                onChange={(e) => {
-                  if (e.target.files && e.target.files[0]) {
-                    handleImageFile(e.target.files[0]);
-                  }
-                }}
-              />
               <Upload className="w-8 h-8 text-cyan-400 mx-auto mb-2" />
               <p className="text-xs sm:text-sm font-medium text-slate-200">
-                Drop screenshot (.png, .jpg, .webp) or email file (.eml, .html)
+                Drag and drop screenshot (.png, .jpg, .webp) here
               </p>
-              <p className="text-xs text-slate-500 mt-1">
-                or click to browse • Paste directly from clipboard with Ctrl+V
+              <p className="text-xs text-slate-500 mt-1 mb-3">
+                Paste directly from clipboard with Ctrl+V, or browse manually
               </p>
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  fileInputRef.current?.click();
+                }}
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition-all shadow-sm"
+              >
+                <FolderOpen className="w-3.5 h-3.5 text-cyan-400" />
+                <span>Browse File from Computer</span>
+              </button>
             </div>
 
             {selectedImage && (
@@ -530,16 +815,18 @@ export const ScannerInput: React.FC<ScannerInputProps> = ({ onAnalyze, isLoading
                   <img
                     src={selectedImage}
                     alt="Loaded Screenshot"
-                    className="w-12 h-12 object-cover rounded-lg border border-slate-700"
+                    className="w-14 h-14 object-cover rounded-lg border border-slate-700 shadow-sm"
                   />
                   <div>
-                    <span className="text-xs font-medium text-slate-200">
-                      {isProcessingOcr ? ocrStatusText : "Screenshot OCR Extracted"}
+                    <span className="text-xs font-semibold text-slate-200">
+                      {isProcessingOcr ? ocrStatusText : "Screenshot Loaded & Parsed"}
                     </span>
                     <p className="text-[11px] text-slate-400">
                       {isProcessingOcr
                         ? "Scanning characters..."
-                        : `${ocrQuality?.charCount || inputText.length} characters parsed`}
+                        : `${ocrQuality?.charCount || inputText.length} characters extracted • Confidence ${
+                            ocrQuality?.confidence ?? 90
+                          }%`}
                     </p>
                   </div>
                 </div>
@@ -547,6 +834,51 @@ export const ScannerInput: React.FC<ScannerInputProps> = ({ onAnalyze, isLoading
                 {isProcessingOcr && <RefreshCw className="w-4 h-4 text-cyan-400 animate-spin" />}
               </div>
             )}
+          </div>
+        )}
+
+        {/* Drop .EML / Email Mode */}
+        {activeMode === "email" && (
+          <div className="space-y-3">
+            <div
+              onDragOver={(e) => {
+                e.preventDefault();
+                setDragOver(true);
+              }}
+              onDragLeave={() => setDragOver(false)}
+              onDrop={(e) => {
+                e.preventDefault();
+                setDragOver(false);
+                const files = e.dataTransfer.files;
+                if (files && files[0]) {
+                  handleEmailOrTextFile(files[0]);
+                }
+              }}
+              className={`border-2 border-dashed rounded-2xl p-6 text-center transition-all ${
+                dragOver
+                  ? "border-cyan-400 bg-cyan-950/20"
+                  : "border-slate-700 hover:border-slate-600 bg-slate-950/40"
+              }`}
+            >
+              <Mail className="w-8 h-8 text-cyan-400 mx-auto mb-2" />
+              <p className="text-xs sm:text-sm font-medium text-slate-200">
+                Drag and drop raw email file (.eml, .txt, .html)
+              </p>
+              <p className="text-xs text-slate-500 mt-1 mb-3">
+                Inspects RFC-822 headers, From vs. Reply-To divergence, SPF/DKIM/DMARC & anchor mismatches
+              </p>
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  emailFileInputRef.current?.click();
+                }}
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition-all shadow-sm"
+              >
+                <FolderOpen className="w-3.5 h-3.5 text-cyan-400" />
+                <span>Browse .EML / Email File</span>
+              </button>
+            </div>
           </div>
         )}
 
@@ -580,7 +912,7 @@ export const ScannerInput: React.FC<ScannerInputProps> = ({ onAnalyze, isLoading
           <div className="p-3 bg-amber-950/30 border border-amber-800/50 rounded-xl text-xs text-amber-200 flex items-start gap-2.5">
             <AlertCircle className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
             <div>
-              <span className="font-semibold text-amber-300">OCR Image Notice: </span>
+              <span className="font-semibold text-amber-300">OCR Image Quality Notice: </span>
               {ocrQuality.warnings.join(" ")}
             </div>
           </div>
@@ -595,6 +927,8 @@ export const ScannerInput: React.FC<ScannerInputProps> = ({ onAnalyze, isLoading
             placeholder={
               activeMode === "email"
                 ? "Paste RFC-822 email headers + body (From, Subject, Reply-To, Authentication-Results)..."
+                : activeMode === "image"
+                ? "Extracted screenshot text appears here automatically (or paste manually)..."
                 : "Paste suspicious SMS, WhatsApp message, email excerpt, or URL here..."
             }
             rows={5}
@@ -605,7 +939,7 @@ export const ScannerInput: React.FC<ScannerInputProps> = ({ onAnalyze, isLoading
           </div>
         </div>
 
-        {/* Action Button */}
+        {/* Action Buttons */}
         <div className="flex items-center justify-between pt-1">
           <button
             type="button"

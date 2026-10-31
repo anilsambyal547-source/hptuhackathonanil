@@ -1,14 +1,19 @@
 "use client";
 
 import React, { useState } from "react";
-import { X, Chrome, Bookmark, Smartphone, Mail, Copy, Check, ShieldCheck } from "lucide-react";
+import { X, Chrome, Bookmark, Smartphone, Mail, Copy, Check, ShieldCheck, Zap } from "lucide-react";
 
 interface ExtensionGuideModalProps {
   isOpen: boolean;
   onClose: () => void;
+  onSimulateScan?: (text: string, type: "text" | "ocr_screenshot" | "email_eml") => void;
 }
 
-export const ExtensionGuideModal: React.FC<ExtensionGuideModalProps> = ({ isOpen, onClose }) => {
+export const ExtensionGuideModal: React.FC<ExtensionGuideModalProps> = ({
+  isOpen,
+  onClose,
+  onSimulateScan,
+}) => {
   const [activeTab, setActiveTab] = useState<"chrome" | "bookmarklet" | "pwa" | "email">("chrome");
   const [copied, setCopied] = useState<string | null>(null);
 
@@ -20,6 +25,48 @@ export const ExtensionGuideModal: React.FC<ExtensionGuideModalProps> = ({ isOpen
     navigator.clipboard.writeText(text);
     setCopied(id);
     setTimeout(() => setCopied(null), 2000);
+  };
+
+  const handleSimulateChrome = () => {
+    onClose();
+    if (onSimulateScan) {
+      onSimulateScan(
+        "URGENT ALERT: Your HDFC Bank NetBanking access has been restricted due to incomplete KYC verification. Click https://hdfc-netbanking-kyc.top/verify immediately or account will be permanently deactivated within 24 hours.",
+        "text"
+      );
+    }
+  };
+
+  const handleSimulatePwa = () => {
+    onClose();
+    if (onSimulateScan) {
+      onSimulateScan(
+        "WhatsApp Forward: Urgent alert from Delhi Police Cyber Cell! Your mobile number is found linked to illegal parcel seized by customs at Mumbai Airport. Digital arrest initiated. Join Skype interrogation immediately.",
+        "text"
+      );
+    }
+  };
+
+  const handleSimulateEmail = () => {
+    onClose();
+    if (onSimulateScan) {
+      onSimulateScan(
+        `From: "State Bank of India Security" <no-reply@sbi-fraud-alert.top>
+Reply-To: sbi.kyc.desk.claim@gmail.com
+Subject: URGENT: Complete NetBanking KYC to prevent debit block
+Authentication-Results: spf=fail; dkim=fail; dmarc=fail
+
+Dear SBI Customer,
+Your State Bank of India NetBanking privilege has been temporarily restricted due to missing PAN linking.
+
+Please verify your credentials immediately to avoid account termination:
+<a href="http://sbi-login-portal.top/verify">https://www.onlinesbi.sbi/update</a>
+
+Regards,
+SBI Security Division`,
+        "email_eml"
+      );
+    }
   };
 
   return (
@@ -99,7 +146,18 @@ export const ExtensionGuideModal: React.FC<ExtensionGuideModalProps> = ({ isOpen
               <div className="p-3.5 bg-cyan-950/30 border border-cyan-800/40 rounded-xl text-xs text-cyan-300">
                 🚀 The SafeGuard AI Chrome Extension adds context menu right-click scanning on any webpage, highlights suspicious links, and provides one-tap popup inspection.
               </div>
-              <ol className="space-y-3 list-decimal list-inside text-xs text-slate-300">
+
+              {/* Actionable Live Simulation Button */}
+              <button
+                type="button"
+                onClick={handleSimulateChrome}
+                className="w-full py-2.5 px-4 rounded-xl font-bold text-xs bg-gradient-to-r from-cyan-400 to-blue-500 hover:from-cyan-300 hover:to-blue-400 text-slate-950 shadow-md shadow-cyan-500/20 transition-all flex items-center justify-center gap-2"
+              >
+                <Zap className="w-4 h-4" />
+                <span>⚡ Simulate Live Browser Context-Menu Scan</span>
+              </button>
+
+              <ol className="space-y-3 list-decimal list-inside text-xs text-slate-300 pt-1">
                 <li>
                   Open your browser and navigate to <code className="px-1.5 py-0.5 bg-slate-800 rounded font-mono text-cyan-400">chrome://extensions</code>
                 </li>
@@ -164,7 +222,18 @@ export const ExtensionGuideModal: React.FC<ExtensionGuideModalProps> = ({ isOpen
               <div className="p-3.5 bg-emerald-950/30 border border-emerald-800/40 rounded-xl text-xs text-emerald-300">
                 📲 Mobile Web Share Target enables native &ldquo;Share to SafeGuard&rdquo; directly from WhatsApp, Telegram, or SMS apps!
               </div>
-              <ol className="space-y-2.5 list-decimal list-inside text-xs text-slate-300">
+
+              {/* Actionable Live Simulation Button */}
+              <button
+                type="button"
+                onClick={handleSimulatePwa}
+                className="w-full py-2.5 px-4 rounded-xl font-bold text-xs bg-gradient-to-r from-emerald-400 to-teal-500 hover:from-emerald-300 hover:to-teal-400 text-slate-950 shadow-md shadow-emerald-500/20 transition-all flex items-center justify-center gap-2"
+              >
+                <Zap className="w-4 h-4" />
+                <span>⚡ Simulate Live Mobile Share Target (WhatsApp Phish)</span>
+              </button>
+
+              <ol className="space-y-2.5 list-decimal list-inside text-xs text-slate-300 pt-1">
                 <li>Open SafeGuard in Chrome or Safari on your phone.</li>
                 <li>Tap browser menu → <strong className="text-slate-100">Add to Home Screen</strong> (Install Web App).</li>
                 <li>
@@ -180,7 +249,18 @@ export const ExtensionGuideModal: React.FC<ExtensionGuideModalProps> = ({ isOpen
               <div className="p-3.5 bg-amber-950/30 border border-amber-800/40 rounded-xl text-xs text-amber-300">
                 📨 Forward suspicious emails directly or integrate with your corporate mail flow via webhooks.
               </div>
-              <p className="text-xs text-slate-400">
+
+              {/* Actionable Live Simulation Button */}
+              <button
+                type="button"
+                onClick={handleSimulateEmail}
+                className="w-full py-2.5 px-4 rounded-xl font-bold text-xs bg-gradient-to-r from-amber-400 to-orange-500 hover:from-amber-300 hover:to-orange-400 text-slate-950 shadow-md shadow-amber-500/20 transition-all flex items-center justify-center gap-2"
+              >
+                <Zap className="w-4 h-4" />
+                <span>⚡ Simulate Forwarded Phishing Email Webhook (.EML)</span>
+              </button>
+
+              <p className="text-xs text-slate-400 pt-1">
                 SafeGuard exposes a dedicated inbound mail endpoint at <code className="text-amber-300 font-mono">/api/inbound-mail</code>:
               </p>
               <div className="p-3 bg-slate-950 border border-slate-800 rounded-xl font-mono text-xs text-slate-300 space-y-2">
@@ -206,4 +286,3 @@ export const ExtensionGuideModal: React.FC<ExtensionGuideModalProps> = ({ isOpen
     </div>
   );
 };
-

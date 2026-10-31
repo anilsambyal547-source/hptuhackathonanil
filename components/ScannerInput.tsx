@@ -831,6 +831,7 @@ Amazon Customer Service`;
           ref={fileInputRef}
           accept="image/*,.eml,.txt,.html"
           className="hidden"
+          style={{ display: "none" }}
           onChange={(e) => {
             if (e.target.files && e.target.files[0]) {
               handleImageFile(e.target.files[0]);
@@ -843,6 +844,7 @@ Amazon Customer Service`;
           ref={emailFileInputRef}
           accept=".eml,.txt,.html,message/rfc822"
           className="hidden"
+          style={{ display: "none" }}
           onChange={(e) => {
             if (e.target.files && e.target.files[0]) {
               handleEmailOrTextFile(e.target.files[0]);

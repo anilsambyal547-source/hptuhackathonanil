@@ -8,6 +8,7 @@ import { JudgeAuditConsole } from "@/components/JudgeAuditConsole";
 import { VictimRecoveryDashboard } from "@/components/VictimAssistance/VictimRecoveryDashboard";
 import { ScamIqSuite } from "@/components/scam-iq/ScamIqSuite";
 import { LiveInboxSimulator } from "@/components/LiveInboxSimulator";
+import { KavachBot } from "@/components/KavachBot";
 import { mapAnalysisResultToCategory } from "@/lib/data/scam-routing";
 import { ScamCategoryType } from "@/lib/types/recovery";
 import { ScamAnalysisResult, OcrQualityReport } from "@/lib/types";
@@ -219,6 +220,24 @@ export default function Home() {
           </div>
         </div>
       </footer>
+
+      {/* 24x7 Flipkart-style KavachBot Scam Advisory Assistant */}
+      <KavachBot
+        onNavigateTab={(tab, category, text) => {
+          if (tab === "recovery") {
+            if (category) setImportedCategory(category);
+            if (text) setPrefilledText(text);
+            setActiveTab("recovery");
+          } else if (tab === "scanner") {
+            setActiveTab("scanner");
+            if (text) {
+              handleAnalyze(text);
+            }
+          } else {
+            setActiveTab(tab);
+          }
+        }}
+      />
     </div>
   );
 }

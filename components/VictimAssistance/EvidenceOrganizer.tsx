@@ -84,7 +84,7 @@ export const EvidenceOrganizer: React.FC<EvidenceOrganizerProps> = ({
     return `
 ================================================================================
 OFFICIAL CYBERCRIME INCIDENT SUMMARY DRAFT
-(Generated via SafeGuard AI Victim Assistance for submission on cybercrime.gov.in)
+(Generated via DIGIkavach Victim Assistance for submission on cybercrime.gov.in)
 ================================================================================
 
 1. INCIDENT OVERVIEW
@@ -192,7 +192,7 @@ Report prepared on: ${new Date().toLocaleString("en-IN")}
           </span>
           {isHi
             ? "हम कभी भी आपका पासवर्ड, ओटीपी, यूपीआई पिन या कार्ड सीवीवी नहीं मांगते और न ही स्टोर करते हैं। यह सारा डेटा केवल आपके ब्राउज़र में रहता है।"
-            : "SafeGuard AI never asks for or stores OTPs, PINs, passwords, or CVVs. All inputs remain strictly in your local browser memory for generating your police report."}
+            : "DIGIkavach never asks for or stores OTPs, PINs, passwords, or CVVs. All inputs remain strictly in your local browser memory for generating your incident report."}
         </div>
       </div>
 

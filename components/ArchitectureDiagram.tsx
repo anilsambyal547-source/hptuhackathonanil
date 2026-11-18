@@ -11,11 +11,11 @@ export const ArchitectureDiagram: React.FC = () => {
         <div className="flex items-center gap-2 mb-2">
           <Cpu className="w-5 h-5 text-[#3d5926]" />
           <h2 className="text-xl sm:text-2xl font-serif font-bold text-[#181a15] tracking-tight">
-            SafeGuard Multi-Method Detection Architecture
+            DIGIkavach Multi-Method Detection Architecture
           </h2>
         </div>
         <p className="text-xs sm:text-sm text-[#5c6454] leading-relaxed max-w-3xl">
-          Unlike naive single-prompt AI wrappers, SafeGuard fuses four independent verification engines: deterministic regex heuristics, algorithmic passive URL analysis, official brand impersonation registry, and contextual semantic LLM evaluation.
+          Unlike naive single-prompt AI wrappers, DIGIkavach fuses four independent verification engines: deterministic regex heuristics, algorithmic passive URL analysis, official brand impersonation registry, and contextual semantic LLM evaluation.
         </p>
       </div>
 

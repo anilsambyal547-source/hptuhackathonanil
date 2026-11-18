@@ -1,5 +1,5 @@
 /**
- * SafeGuard AI - Client-Side Credential Masking Engine
+ * DIGIkavach - Client-Side Credential Masking Engine
  * Redacts sensitive credentials (OTPs, PINs, CVVs, card numbers, passwords, bank account numbers)
  * in the user's browser BEFORE any analysis, API dispatch, or AI model processing.
  */

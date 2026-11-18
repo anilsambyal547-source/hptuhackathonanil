@@ -268,8 +268,8 @@ export const AuthorityDirectory: React.FC<AuthorityDirectoryProps> = ({
             {isHi ? "वैधानिक दायित्व मुक्ति (Legal Transparency): " : "Statutory Transparency Statement: "}
           </span>
           {isHi
-            ? "सेफगार्ड एआई पीड़ितों को सही आधिकारिक माध्यमों तक पहुँचाने में सहायता करता है। हमारा प्लेटफॉर्म स्वयं पुलिस में शिकायत दर्ज नहीं करता और न ही सीधे पैसे फ्रीज करने का दावा करता है। पीड़ित को आधिकारिक सरकारी पोर्टल पर जाकर स्वयं आवेदन पूरा करना होगा। किसी भी स्वचालित फंड रिकवरी का झूठा वादा नहीं किया जाता है।"
-            : "SafeGuard AI is an educational victim navigation assistant. Our platform does not directly file police complaints, freeze bank accounts, or guarantee recovery of lost funds. All formal submissions must be completed by the victim directly on authorized government and regulatory portals."}
+            ? "डिजीकवच पीड़ितों को सही आधिकारिक माध्यमों तक पहुँचाने में सहायता करता है। यह कानूनी सलाह नहीं है (Not Legal Advice)। हमारा प्लेटफॉर्म स्वयं पुलिस में शिकायत दर्ज नहीं करता और न ही सीधे पैसे फ्रीज करने का दावा करता है। पीड़ित को आधिकारिक सरकारी पोर्टल पर जाकर स्वयं आवेदन पूरा करना होगा। किसी भी स्वचालित फंड रिकवरी का दावा नहीं किया जाता है।"
+            : "DIGIkavach is an educational victim navigation assistant. This is not legal advice. Our platform does not directly file police complaints, freeze bank accounts, or guarantee recovery of lost funds. All formal submissions must be completed by the victim directly on authorized government and regulatory portals."}
         </div>
       </div>
     </div>

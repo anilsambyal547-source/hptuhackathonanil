@@ -153,7 +153,7 @@ export const QuizMode: React.FC<QuizModeProps> = ({ onComplete, onExit }) => {
           >
             <Activity className="w-3.5 h-3.5 text-[#3d5926]" />
             <span className="hidden sm:inline">Inspect with</span>
-            <span>SafeGuard AI</span>
+            <span>DIGIkavach</span>
           </button>
           <span className="text-xs font-mono text-[#636c5c]">
             Q {questionIdx + 1} / {scenario.questions.length}
@@ -265,7 +265,7 @@ export const QuizMode: React.FC<QuizModeProps> = ({ onComplete, onExit }) => {
                     className="px-3.5 py-2 rounded-2xl text-xs font-semibold bg-[#f4f7f1] hover:bg-[#edf2e7] text-[#181a15] border border-[#dce3d5] transition-colors flex items-center gap-1.5 shadow-2xs"
                   >
                     <Activity className="w-3.5 h-3.5 text-[#3d5926]" />
-                    <span>SafeGuard AI Verdict</span>
+                    <span>DIGIkavach Verdict</span>
                   </button>
                   <button
                     onClick={handleNext}
@@ -281,7 +281,7 @@ export const QuizMode: React.FC<QuizModeProps> = ({ onComplete, onExit }) => {
         </div>
       </div>
 
-      {/* SafeGuard AI Engine Diagnostic Modal */}
+      {/* DIGIkavach Engine Diagnostic Modal */}
       <EngineInspectionModal
         isOpen={isEngineModalOpen}
         onClose={() => setIsEngineModalOpen(false)}

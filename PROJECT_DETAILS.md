@@ -1,6 +1,6 @@
-# SafeGuard AI 🛡️ — Project Summary & Architecture Guide
+# DIGIkavach 🛡️ — Project Summary & Architecture Guide
 
-> **Project Name**: SafeGuard AI  
+> **Project Name**: DIGIkavach  
 > **Repository**: [https://github.com/anilsambyal547-source/hptuhackathonanil.git](https://github.com/anilsambyal547-source/hptuhackathonanil.git)  
 > **Event / Track**: HPTU Hackathon — Question 02: Cybersecurity | AI | Web Development  
 > **Target Problem**: Multimodal Scam Detection, Multi-Method Analysis, Safe Passive URL Inspection & Transparent Risk Assessment  
@@ -9,7 +9,7 @@
 
 ## 1. Executive Summary
 
-**SafeGuard AI** is a privacy-first cybersecurity platform engineered to detect and explain phishing, smishing, and digital extortion attacks in text and screenshots. Rather than relying on a single black-box AI model or risky active web requests, SafeGuard AI uses a **4-layer fused detection engine**:
+**DIGIkavach** is a privacy-first cybersecurity platform engineered to detect and explain phishing, smishing, and digital extortion attacks in text and screenshots. Rather than relying on a single black-box AI model or risky active web requests, DIGIkavach uses a **4-layer fused detection engine**:
 
 1. **80+ Deterministic Heuristic Rules & Hinglish Vectors**
 2. **Safe Passive URL Inspection Engine (Zero Network Fetch)**
@@ -234,7 +234,7 @@ npm run dev
 ## 8. Summary for Hackathon Presentation
 
 When presenting this project to the judges, highlight these key competitive advantages:
-1. **Zero-Fetch Passive URL Analysis**: SafeGuard never visits links, preventing IP logging, drive-by malware downloads, or tipping off fraudsters.
+1. **Zero-Fetch Passive URL Analysis**: DIGIkavach never visits submitted links, preventing IP logging, drive-by malware downloads, or tipping off fraudsters.
 2. **Transparent Evidentiary Highlighting**: Instead of giving an unexplained score, every red flag in the message is highlighted and explained in plain English.
 3. **Hard Confidence Floors & Mathematical Uncertainty**: Prevents AI hallucinations from diluting blatant scams, and explicitly communicates uncertainty when evidence is ambiguous.
 4. **Targeted for Indian Attack Vectors**: Out-of-the-box support for UPI handles, CBI digital arrest coercion, and romanized Hindi/Hinglish smishing phrases.

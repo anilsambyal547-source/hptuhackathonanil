@@ -16,7 +16,8 @@ interface ComplaintTrackerProps {
   language: Language;
 }
 
-const STORAGE_KEY = "safeguard_complaint_records_v1";
+const STORAGE_KEY = "digikavach_complaint_records_v1";
+const LEGACY_STORAGE_KEY = "safeguard_complaint_records_v1";
 
 export const ComplaintTracker: React.FC<ComplaintTrackerProps> = ({ language }) => {
   const isHi = language === "hi";
@@ -35,7 +36,7 @@ export const ComplaintTracker: React.FC<ComplaintTrackerProps> = ({ language }) 
   // Load from localStorage on mount
   useEffect(() => {
     try {
-      const saved = localStorage.getItem(STORAGE_KEY);
+      const saved = localStorage.getItem(STORAGE_KEY) || localStorage.getItem(LEGACY_STORAGE_KEY);
       if (saved) {
         setRecords(JSON.parse(saved));
       }

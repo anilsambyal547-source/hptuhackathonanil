@@ -162,7 +162,7 @@ export const DrillMode: React.FC<DrillModeProps> = ({ onComplete, onExit }) => {
           <div className="p-4 bg-[#f7f9f5] border border-[#e2e6dc] rounded-2xl space-y-1">
             <div className="flex items-center gap-2 text-[#3d5926] font-semibold text-xs">
               <Activity className="w-4 h-4" />
-              <span>SafeGuard AI Verification</span>
+              <span>DIGIkavach Verification</span>
             </div>
             <p className="text-[11px] text-[#636c5c] leading-relaxed">
               Verify any drill item instantly using our integrated 4-layer heuristic and passive URL engine.
@@ -395,7 +395,7 @@ export const DrillMode: React.FC<DrillModeProps> = ({ onComplete, onExit }) => {
                   className="px-3.5 py-2 rounded-xl text-xs font-semibold bg-[#f7f9f5] hover:bg-[#eef2e7] text-[#181a15] border border-[#e2e6dc] transition-colors flex items-center gap-1.5"
                 >
                   <Activity className="w-3.5 h-3.5 text-[#3d5926]" />
-                  <span>Inspect with SafeGuard AI</span>
+                  <span>Inspect with DIGIkavach</span>
                 </button>
 
                 <button
@@ -411,7 +411,7 @@ export const DrillMode: React.FC<DrillModeProps> = ({ onComplete, onExit }) => {
         </div>
       </div>
 
-      {/* SafeGuard AI Engine Diagnostic Modal */}
+      {/* DIGIkavach Engine Diagnostic Modal */}
       <EngineInspectionModal
         isOpen={isEngineModalOpen}
         onClose={() => setIsEngineModalOpen(false)}

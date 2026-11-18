@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     if (!text) return;
 
-    const appUrl = `http://localhost:3000/?text=${encodeURIComponent(text)}`;
+    const appUrl = `/?text=${encodeURIComponent(text)}`;
     chrome.tabs.create({ url: appUrl });
   });
 });

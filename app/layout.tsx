@@ -14,7 +14,7 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "SafeGuard AI - Multimodal Scam Detection & Safe URL Inspection",
+  title: "DIGIkavach - Multimodal Scam Detection & Safe URL Inspection",
   description: "Multi-method scam detection with safe passive URL inspection, transparent uncertainty calibration, and dataset benchmarking.",
 };
 

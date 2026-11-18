@@ -1,15 +1,15 @@
-// SafeGuard AI Chrome Extension - Background Service Worker
+// DIGIkavach Chrome Extension - Background Service Worker
 
 chrome.runtime.onInstalled.addListener(() => {
   chrome.contextMenus.create({
-    id: "safeguard-scan-selection",
-    title: "🛡️ Inspect Selected Text with SafeGuard AI",
+    id: "digikavach-scan-selection",
+    title: "🛡️ Inspect Selected Text with DIGIkavach",
     contexts: ["selection"],
   });
 
   chrome.contextMenus.create({
-    id: "safeguard-scan-link",
-    title: "🛡️ Passively Inspect Link with SafeGuard AI",
+    id: "digikavach-scan-link",
+    title: "🛡️ Passively Inspect Link with DIGIkavach",
     contexts: ["link"],
   });
 });
@@ -18,7 +18,7 @@ chrome.contextMenus.onClicked.addListener((info) => {
   const payload = info.selectionText || info.linkUrl || "";
   if (!payload) return;
 
-  const appUrl = `http://localhost:3000/?text=${encodeURIComponent(payload)}`;
+  const appUrl = `/?text=${encodeURIComponent(payload)}`;
   chrome.tabs.create({ url: appUrl });
 });
 

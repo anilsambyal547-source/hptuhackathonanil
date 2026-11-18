@@ -1,5 +1,5 @@
 /**
- * SafeGuard AI - Local In-Browser OCR Engine
+ * DIGIkavach - Local In-Browser OCR Engine
  * Runs client-side Optical Character Recognition (English + Hindi) via Tesseract.js.
  * Offline-capable: loads worker and language models locally from /public/tesseract/.
  * Ensures screenshot images and extracted text never leave the browser.

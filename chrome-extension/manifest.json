@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "SafeGuard AI - Anti-Phishing & Scam Shield",
+  "name": "DIGIkavach - Anti-Phishing & Scam Shield",
   "version": "1.0.0",
   "description": "Deterministic scam, smishing, and phishing detection extension with zero tracking and safe passive URL inspection.",
   "permissions": [
@@ -8,7 +8,7 @@
     "activeTab"
   ],
   "host_permissions": [
-    "http://localhost:3000/*",
+    "<all_urls>",
     "https://mail.google.com/*",
     "https://web.whatsapp.com/*"
   ],
@@ -27,7 +27,7 @@
   ],
   "action": {
     "default_popup": "popup.html",
-    "default_title": "SafeGuard AI Scanner"
+    "default_title": "DIGIkavach Scanner"
   }
 }
 

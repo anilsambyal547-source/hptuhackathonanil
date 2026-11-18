@@ -19,7 +19,8 @@ export const ExtensionGuideModal: React.FC<ExtensionGuideModalProps> = ({
 
   if (!isOpen) return null;
 
-  const bookmarkletCode = `javascript:(function(){const sel=window.getSelection().toString()||window.location.href;window.open('http://localhost:3000/?text='+encodeURIComponent(sel),'_blank');})();`;
+  const baseAppUrl = typeof window !== "undefined" ? window.location.origin : "";
+  const bookmarkletCode = `javascript:(function(){const sel=window.getSelection().toString()||window.location.href;window.open('${baseAppUrl}/?text='+encodeURIComponent(sel),'_blank');})();`;
 
   const copyToClipboard = (text: string, id: string) => {
     navigator.clipboard.writeText(text);
@@ -79,7 +80,7 @@ SBI Security Division`,
               <ShieldCheck className="w-5 h-5" />
             </div>
             <div>
-              <h2 className="text-lg font-serif font-bold text-[#181a15]">SafeGuard Multi-Channel Ingestion & Integrations</h2>
+              <h2 className="text-lg font-serif font-bold text-[#181a15]">DIGIkavach Multi-Channel Ingestion & Integrations</h2>
               <p className="text-xs text-[#636c5c]">Zero-friction scanning across Browser, Mobile PWA, and Mail</p>
             </div>
           </div>
@@ -144,7 +145,7 @@ SBI Security Division`,
           {activeTab === "chrome" && (
             <div className="space-y-4">
               <div className="p-4 bg-[#eef4e8] border border-[#d5e0cb] rounded-2xl text-xs text-[#2c401c]">
-                🚀 The SafeGuard AI Chrome Extension adds context menu right-click scanning on any webpage, highlights suspicious links, and provides one-tap popup inspection.
+                🚀 The DIGIkavach Chrome Extension adds context menu right-click scanning on any webpage, highlights suspicious links, and provides one-tap popup inspection.
               </div>
 
               {/* Actionable Live Simulation Button */}
@@ -177,7 +178,7 @@ SBI Security Division`,
                   </div>
                 </li>
                 <li>
-                  Highlight any text or right-click any link on the web to trigger <strong className="text-[#181a15]">&ldquo;🛡️ Passively Inspect with SafeGuard AI&rdquo;</strong>.
+                  Highlight any text or right-click any link on the web to trigger <strong className="text-[#181a15]">&ldquo;🛡️ Passively Inspect with DIGIkavach&rdquo;</strong>.
                 </li>
               </ol>
             </div>
@@ -198,7 +199,7 @@ SBI Security Division`,
                   }}
                   className="inline-block px-5 py-2.5 bg-[#bef264] hover:bg-[#aee750] text-[#162704] font-bold text-xs rounded-xl shadow-2xs cursor-grab active:cursor-grabbing border border-[#a8df4a]/70"
                 >
-                  🛡️ Scan with SafeGuard
+                  🛡️ Scan with DIGIkavach
                 </a>
               </div>
               <div>
@@ -220,7 +221,7 @@ SBI Security Division`,
           {activeTab === "pwa" && (
             <div className="space-y-4">
               <div className="p-4 bg-[#eef5e6] border border-[#cbe0b8] rounded-2xl text-xs text-[#2c401c]">
-                📲 Mobile Web Share Target enables native &ldquo;Share to SafeGuard&rdquo; directly from WhatsApp, Telegram, or SMS apps!
+                📲 Mobile Web Share Target enables native &ldquo;Share to DIGIkavach&rdquo; directly from WhatsApp, Telegram, or SMS apps!
               </div>
 
               {/* Actionable Live Simulation Button */}
@@ -234,10 +235,10 @@ SBI Security Division`,
               </button>
 
               <ol className="space-y-2.5 list-decimal list-inside text-xs text-[#525a4c] pt-1">
-                <li>Open SafeGuard in Chrome or Safari on your phone.</li>
+                <li>Open DIGIkavach in Chrome or Safari on your phone.</li>
                 <li>Tap browser menu → <strong className="text-[#181a15]">Add to Home Screen</strong> (Install Web App).</li>
                 <li>
-                  When you receive a suspicious WhatsApp message or SMS, tap <strong className="text-[#181a15]">Share</strong> → select <strong className="text-[#3d5926]">SafeGuard AI</strong>.
+                  When you receive a suspicious WhatsApp message or SMS, tap <strong className="text-[#181a15]">Share</strong> → select <strong className="text-[#3d5926]">DIGIkavach</strong>.
                 </li>
                 <li>The payload is received via Web Share Target and evaluated with passive zero-fetch analysis immediately.</li>
               </ol>
@@ -261,7 +262,7 @@ SBI Security Division`,
               </button>
 
               <p className="text-xs text-[#636c5c] pt-1">
-                SafeGuard exposes a dedicated inbound mail endpoint at <code className="text-[#181a15] font-mono bg-[#f4f7f1] px-1.5 py-0.5 rounded border border-[#dce3d5]">/api/inbound-mail</code>:
+                DIGIkavach exposes a dedicated inbound mail endpoint at <code className="text-[#181a15] font-mono bg-[#f4f7f1] px-1.5 py-0.5 rounded border border-[#dce3d5]">/api/inbound-mail</code>:
               </p>
               <div className="p-3.5 bg-[#f8faf6] border border-[#dce3d5] rounded-2xl font-mono text-xs text-[#181a15] space-y-2 shadow-2xs">
                 <div className="text-[#2c401c] font-bold">POST /api/inbound-mail</div>

@@ -1,6 +1,6 @@
 # Open Source Attribution & Intellectual Property Record
 
-**Project**: SafeGuard AI  
+**Project**: DIGIkavach  
 **Hackathon Track**: Question 02 — Cybersecurity | AI | Web Development  
 **Document**: `/docs/ATTRIBUTION.md`
 

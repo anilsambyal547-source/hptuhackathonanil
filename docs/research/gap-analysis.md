@@ -1,6 +1,6 @@
 # Prior Art & Gap Analysis Report: Multimodal Scam Detection
 
-**Project**: SafeGuard AI  
+**Project**: DIGIkavach  
 **Problem Statement**: Question 02 — Cybersecurity | AI | Web Development  
 **Date**: October 2026  
 **Document**: `/docs/research/gap-analysis.md`
@@ -25,9 +25,9 @@
 
 ## 2. Requirement-by-Requirement Gap Analysis Matrix
 
-Comparing SafeGuard AI against (a) the official Problem Statement requirements and (b) best practices from prior art:
+Comparing DIGIkavach against (a) the official Problem Statement requirements and (b) best practices from prior art:
 
-| # | Problem Statement Requirement / Prior Art Best Idea | Current SafeGuard AI Status | Evidence in Codebase | Identified Gap | Actionable Fix / Implementation |
+| # | Problem Statement Requirement / Prior Art Best Idea | Current DIGIkavach Status | Evidence in Codebase | Identified Gap | Actionable Fix / Implementation |
 | :--- | :--- | :--- | :--- | :--- | :--- |
 | **1.1** | **Raw Text & Screenshot Input** | **MET** | `components/ScannerInput.tsx` lines 30-80 supports both text paste and drag-drop file uploads. | None. | Fully implemented. |
 | **1.2** | **Clipboard Paste (`Ctrl+V`)** | **MET** | `components/ScannerInput.tsx` lines 45-65 has global `window.addEventListener("paste")` handler. | None. | Fully implemented. |

@@ -369,7 +369,7 @@ export const KavachBot: React.FC<KavachBotProps> = ({ onNavigateTab }) => {
           : [{ label: "🛡️ Digital Arrest Defense Plan", actionId: "trigger_recovery_coercion" }],
         {
           type: "open_recovery",
-          label: isHi ? "🛡️ सुरक्षा गाइड खोलें" : "🛡️ Open Legal Safeguard Plan",
+          label: isHi ? "🛡️ सुरक्षा गाइड खोलें" : "🛡️ Open Legal Protection Plan",
           targetTab: "recovery",
           category: "digital_arrest",
         }

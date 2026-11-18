@@ -1,6 +1,6 @@
-# Comprehensive Project Handoff Report: SafeGuard AI
+# Comprehensive Project Handoff Report: DIGIkavach
 
-**Project**: SafeGuard AI — Multimodal Scam Detection, Multi-Method Analysis, Safe Passive URL Inspection, Multi-Channel Ingestion & Transparent Risk Assessment  
+**Project**: DIGIkavach — Multimodal Scam Detection, Multi-Method Analysis, Safe Passive URL Inspection, Multi-Channel Ingestion & Transparent Risk Assessment  
 **Task**: Question 02 | Cybersecurity, AI, Web Development  
 **Timestamp**: 2026-10-31T04:15:00+05:30  
 **Repository**: [https://github.com/anilsambyal547-source/hptuhackathonanil.git](https://github.com/anilsambyal547-source/hptuhackathonanil.git)  
@@ -12,7 +12,7 @@
 
 ### 1.1 Multi-Channel Ingestion Hub, Prior-Art Upgrades & Victim Assistance
 
-To satisfy real-world usability and the official Problem Statement constraints, SafeGuard AI incorporates flexible multi-channel ingestion, zero-fetch telemetry adapted from 7 cybersecurity repositories, and a full bilingual Victim Assistance suite:
+To satisfy real-world usability and the official Problem Statement constraints, DIGIkavach incorporates flexible multi-channel ingestion, zero-fetch telemetry adapted from 7 cybersecurity repositories, and a full bilingual Victim Assistance suite:
 
 1. **Option A — 1-Click Smart Scanner & `.eml` Dropzone** (`components/ScannerInput.tsx`):
    - 1-Click "Paste & Auto-Scan" button reading clipboard text or images via `navigator.clipboard`.
@@ -24,11 +24,11 @@ To satisfy real-world usability and the official Problem Statement constraints, 
    - Reply-To divergence detection (redirecting replies to free webmail hosts like Gmail or Yahoo).
    - Deceptive HTML `<a href="...">` anchor-text mismatch extraction (visible domain differing from actual destination).
 3. **Option C — Live Mail & SMS Inbox Simulator** (`components/LiveInboxSimulator.tsx`, `/api/inbound-mail`):
-   - Split-pane inbox client rendering incoming emails and SMS messages with inline SafeGuard security banners.
+   - Split-pane inbox client rendering incoming emails and SMS messages with inline DIGIkavach security banners.
    - Interactive webhook composer for testing forwarded raw emails in real time.
 4. **Option D — Browser Extension & Mobile PWA Share Target** (`chrome-extension/*`, `app/manifest.ts`):
    - Unpacked Chrome extension offering right-click context menu inspection and popup scanner.
-   - PWA Web Share Target enabling native "Share to SafeGuard" from WhatsApp, Messages, or Telegram.
+   - PWA Web Share Target enabling native "Share to DIGIkavach" from WhatsApp, Messages, or Telegram.
    - In-app Extension & Integrations Guide modal (`components/ExtensionGuideModal.tsx`).
 5. **Victim Recovery & Official Complaint Assistant** (`components/VictimAssistance/*`):
    - Emergency Golden Hour protocol (1930 immediate dialing, interbank account freezes).
@@ -170,7 +170,7 @@ All RFC-822 Email Parser Tests Passed Successfully! (6/6)
 Command: `npx tsx tests/generalization.test.ts`
 ```
 ===============================================================
-  SafeGuard AI - Generalization Test Suite (12 Unseen Samples)
+  DIGIkavach - Generalization Test Suite (12 Unseen Samples)
 ===============================================================
 
 ✓ [PASS] gen-scam-01 (HIGH -> HIGH [77%]): Bank NetBanking suspension phishing with deceptive link

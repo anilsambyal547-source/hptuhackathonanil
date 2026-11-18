@@ -190,8 +190,8 @@ export default function Home() {
           <div className="flex flex-wrap items-center gap-2 sm:gap-3">
             <div className="flex items-center gap-2">
               <Lock className="w-4 h-4 text-[#3d5926]" />
-              <span className="font-medium text-[#181a15]">SafeGuard AI</span>
-              <span>• Built for Cybersecurity Scam Detection & Recovery</span>
+              <span className="font-medium text-[#181a15]">DIGIkavach</span>
+              <span>• Multimodal Scam Detection & Recovery System</span>
             </div>
             <span className="hidden sm:inline text-[#ccd4c4]">•</span>
             <button

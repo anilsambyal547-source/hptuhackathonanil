@@ -1,5 +1,5 @@
 /**
- * SafeGuard AI - Generalization Test Suite
+ * DIGIkavach - Generalization Test Suite
  * 12 unseen messages (never in dev or holdout benchmark) across:
  * Banks, Couriers, Law Enforcement, Discom Utilities, Recruitment, and Email spoofing.
  *
@@ -101,7 +101,7 @@ Dear Valued Customer, please confirm your login:
 
 async function runGeneralizationSuite() {
   console.log("===============================================================");
-  console.log("  SafeGuard AI - Generalization Test Suite (12 Unseen Samples)");
+  console.log("  DIGIkavach - Generalization Test Suite (12 Unseen Samples)");
   console.log("===============================================================\n");
 
   let correct = 0;

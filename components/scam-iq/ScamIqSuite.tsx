@@ -145,7 +145,7 @@ export const ScamIqSuite: React.FC = () => {
           )}
           <span className="text-xs font-mono font-bold text-[#3d5926] uppercase tracking-wider flex items-center gap-1.5">
             <Sparkles className="w-3.5 h-3.5 text-[#3d5926]" />
-            <span>SafeGuard Lab • Scam IQ Test Suite</span>
+            <span>DIGIkavach Lab • Scam IQ Test Suite</span>
           </span>
         </div>
 
@@ -336,7 +336,7 @@ export const ScamIqSuite: React.FC = () => {
                   </h3>
                   <p className="text-xs font-semibold text-rose-700">Trust Your Gut</p>
                   <p className="text-xs text-[#525a4c] leading-relaxed font-sans">
-                    Real or Scam? Make the call, message after message. 20-second active timer with streak multipliers and instant SafeGuard engine verdicts.
+                    Real or Scam? Make the call, message after message. 20-second active timer with streak multipliers and instant DIGIkavach engine verdicts.
                   </p>
                 </div>
               </div>

@@ -95,7 +95,7 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({
           {/* Titles */}
           <div className="space-y-1">
             <span className="text-[11px] font-mono tracking-widest uppercase text-[#3d5926] font-bold">
-              SafeGuard AI • ScamAdviser Fraud Defense Initiative
+              DIGIkavach • Scam Defense Initiative
             </span>
             <h1 className="text-2xl sm:text-3xl font-serif font-bold tracking-wide text-[#181a15] uppercase">
               Certificate of Fraud Defense Acumen
@@ -163,7 +163,7 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({
             </div>
 
             <div className="text-right">
-              <div className="font-serif italic text-[#181a15] text-sm">SafeGuard Engine</div>
+              <div className="font-serif italic text-[#181a15] text-sm">DIGIkavach Engine</div>
               <div className="text-[10px] text-[#717a69] font-mono">Algorithmic Evaluator</div>
               <div className="text-[10px] text-[#3d5926] font-mono flex items-center gap-1 justify-end font-semibold">
                 <CheckCircle2 className="w-3 h-3 text-[#5c8a27]" />

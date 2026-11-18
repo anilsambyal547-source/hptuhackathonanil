@@ -93,7 +93,7 @@ export const EngineInspectionModal: React.FC<EngineInspectionModalProps> = ({
             <div>
               <div className="flex items-center gap-2">
                 <span className="text-[11px] font-mono uppercase tracking-wider text-[#3d5926] font-semibold">
-                  SafeGuard AI Engine Diagnostic
+                  DIGIkavach Engine Diagnostic
                 </span>
                 <span className="px-2 py-0.5 rounded-full text-[10px] font-mono bg-[#eef5e6] border border-[#d5e0cb] text-[#3d5926]">
                   Deterministic Core
@@ -256,7 +256,7 @@ export const EngineInspectionModal: React.FC<EngineInspectionModalProps> = ({
         <div className="p-4 border-t border-[#e2e6dc] bg-[#f7f9f5] flex items-center justify-between">
           <div className="flex items-center gap-1.5 text-[11px] text-[#717a69]">
             <Sparkles className="w-3.5 h-3.5 text-[#5c8a27]" />
-            <span>Integrated with SafeGuard AI 4-Layer Detection Pipeline</span>
+            <span>Integrated with DIGIkavach 4-Layer Detection Pipeline</span>
           </div>
           <button
             onClick={onClose}

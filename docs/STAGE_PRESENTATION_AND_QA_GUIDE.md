@@ -1,8 +1,7 @@
- 2# SafeGuard AI: Stage Pitch, Demo Script & Judge Q&A Master Playbook
+# DIGIkavach: Stage Pitch, Demo Script & Judge Q&A Master Playbook
 
 **Hackathon Problem Statement**: Question 02 — *Multimodal Scam Detection (Text/OCR), Multi-Method Analysis, Safe Passive URL Inspection & Transparent Risk Assessment*  
-**Project**: **SafeGuard AI**  
-**Live URL**: `http://localhost:3000`  
+**Project**: **DIGIkavach**  
 **Internal Audit Trigger**: `Ctrl + Shift + J` (or `Alt + J`)
 
 ---
@@ -27,7 +26,7 @@
   - **Text / SMS / WhatsApp**: 1-click clipboard paste with automated client-side PII masking.
   - **Screenshot OCR**: In-browser local Tesseract OCR with automated blur, contrast, and corruption pre-filtering.
   - **Direct Email Forensics**: Drag-and-drop `.eml` files or forward via webhook (`/api/inbound-mail`) for RFC-822 header inspection.
-  - **Chrome Extension & PWA**: Mobile Web Share Target ("Share to SafeGuard" directly from WhatsApp).
+  - **Chrome Extension & PWA**: Mobile Web Share Target ("Share to DIGIkavach" directly from WhatsApp).
 
 ---
 
@@ -55,7 +54,7 @@
 - **Features**:
   - **Character-Exact Span Highlighter**: Every flagged phrase (Urgency, Credential Theft, Deceptive Domain) is visually highlighted with tooltips explaining *why* it is dangerous without splitting words.
   - **Confidence & Uncertainty Meter**: Fully transparent scoring breakdown and active analyzer variance.
-  - **Victim Assistance Suite**: 1-click emergency 1930 dialer, RBI Zero-Liability notification countdown (within 72 hours), automated evidence compilation, and TRAI 1909 / Chakshu reporting scripts.
+  - **Victim Assistance Suite**: 1-click emergency 1930 dialer, RBI Zero-Liability notification guidance (within three working days), automated evidence compilation, and TRAI 1909 / Chakshu reporting scripts (not legal advice).
 
 ---
 
@@ -86,7 +85,7 @@
 2. **Click `Screenshot OCR` Tab**:
    > *"Notice that switching tabs never pops open annoying OS file dialogs. Instead, we provide 1-click test screenshot generators built on HTML5 canvas."*
 3. **Click `📱 Load Bank KYC Scam Screenshot (Clear)`**:
-   > *"Watch the OCR extract the exact text in under 800ms. Now let's click 'Analyze with SafeGuard'."*
+   > *"Watch the OCR extract the exact text in under 800ms. Now let's click 'Analyze Message'."*
 4. **Show Results**:
    > *"Notice the result: High Risk (Score: 92/100). Look at the exact evidentiary spans: 'immediately blocked' (Urgency), 'update your PAN' (Credential Lure), and the deceptive link 'sbi-kyc-update.xyz'. Every risk is quantified on our 5-axis psychological manipulation radar."*
 5. **Show Corrupted/Blurry Handling**:
@@ -106,7 +105,7 @@
 
 ### Act 3: Victim Help & The Secret Judge Console (45 seconds)
 1. **Click `🚨 Victim Help` Tab**:
-   > *"If a victim already clicked and lost money, every minute counts. Our Golden Hour protocol gives them immediate 1-click dialing for 1930, walks them through RBI's 72-hour zero-liability window, and organizes court-ready evidence without storing their private passwords."*
+   > *"If a victim already clicked and lost money, every minute counts. Our Golden Hour protocol gives them immediate 1-click dialing for 1930, walks them through RBI's three working days zero-liability reporting window, and organizes court-ready evidence without storing their private passwords."*
 2. **Trigger the Hidden Judge Console**:
    > *"Now, for the technical judges: press **Ctrl + Shift + J** (or click the Auditor badge in the footer)."*  
    *(The hidden Judge & Developer Audit Console smoothly slides open!)*
@@ -124,13 +123,13 @@
 > 2. *It can trigger malicious server-side actions, such as one-time unsubscribe attack tokens or malware drive-by exploits.*  
 > 3. *It is computationally slow and fails when the victim is offline.*  
 >  
-> *Instead, SafeGuard AI disassembles the link passively using lexical telemetry: Shannon entropy, digit ratios, Damerau-Levenshtein distance against 28 trusted brands, homoglyph character swaps (like Cyrillic 'а' replacing Latin 'a'), open-redirect query parameters, and dnstwist permutation classification. This achieves 100% accuracy on our benchmark in zero milliseconds without exposing the user to network risk."*
+> *Instead, DIGIkavach disassembles the link passively using lexical telemetry: Shannon entropy, digit ratios, Damerau-Levenshtein distance against 28 trusted brands, homoglyph character swaps (like Cyrillic 'а' replacing Latin 'a'), open-redirect query parameters, and dnstwist permutation classification. This achieves 100% accuracy on our benchmark in zero milliseconds without sending any requests to the suspicious URL."*
 
 ---
 
 ### Q2: "Isn't this just a thin wrapper around OpenAI or Google Gemini?"
 > **Winning Answer**:  
-> *"Absolutely not. SafeGuard AI uses a 4-subsystem weighted fusion pipeline where Gemini is only Subsystem D (Contextual Understanding). Subsystems A, B, and C are entirely deterministic, transparent, and operate locally:*  
+> *"Absolutely not. DIGIkavach uses a 4-subsystem weighted fusion pipeline where Gemini is only Subsystem D (Contextual Understanding). Subsystems A, B, and C are entirely deterministic, transparent, and operate locally:*  
 > - *Subsystem A: Behavioral Heuristics & Psychological Tactics Radar.*  
 > - *Subsystem B: Passive Zero-Fetch Lexical & Typosquatting Analyzer.*  
 > - *Subsystem C: RFC-822 Email Header & TRAI DLT Sender Analyzer.*  
@@ -176,12 +175,12 @@
 
 ---
 
-### Q7: "What is specific to the Indian cybercrime landscape in SafeGuard AI?"
+### Q7: "What is specific to the Indian cybercrime landscape in DIGIkavach?"
 > **Winning Answer**:  
-> *"We specifically tailored SafeGuard AI for Indian users:*  
+> *"We specifically tailored DIGIkavach for Indian users:*  
 > 1. *TRAI DLT Sender Validation: Flags SMS claiming to be government or banking institutions sent from standard 10-digit consumer numbers.*  
 > 2. *India-Specific Scam Archetypes: Custom heuristics for Digital Arrest (CBI/Customs video call extortion), Discom electricity disconnection threats, UPI reverse-QR 'Scan to receive money' frauds, and Part-Time Telegram Job scams.*  
-> 3. *Statutory Recovery Suite: Direct 1-click dialing for the 1930 National Cyber Crime Helpline, RBI Circular compliance for zero-liability within 72 hours, and pre-formatted text generators for Sanchar Saathi Chakshu and TRAI 1909 spam reporting."*
+> 3. *Statutory Recovery Suite: Direct 1-click dialing for the 1930 National Cyber Crime Helpline, RBI Circular compliance guidance for zero-liability when notified within three working days, and pre-formatted text generators for Sanchar Saathi Chakshu and TRAI 1909 spam reporting (not legal advice)."*
 
 ---
 
@@ -205,10 +204,10 @@
 
 ### Q10: "What is the commercial or deployment potential after this hackathon?"
 > **Winning Answer**:  
-> *"SafeGuard AI is designed with 3 production deployment channels:*  
+> *"DIGIkavach is designed with 3 production deployment channels:*  
 > 1. *Consumer / Citizen Protection: Free PWA and Chrome Extension for real-time browsing and WhatsApp screenshot scanning.*  
 > 2. *Telecom & ISP Smishing Firewall: Our deterministic passive URL and TRAI sender heuristics can be deployed at the SMS gateway level to filter malicious messages at scale.*  
-> 3. *Enterprise Inbound Gateway: Our `/api/inbound-mail` webhook allows corporate IT teams to route employee-forwarded phishing emails into SafeGuard AI for automated triage and incident response."*
+> 3. *Enterprise Inbound Gateway: Our `/api/inbound-mail` webhook allows corporate IT teams to route employee-forwarded phishing emails into DIGIkavach for automated triage and incident response."*
 
 ---
 
@@ -217,5 +216,5 @@
 - [x] **Clear Voice & Pacing**: Keep the pitch around 3.5 minutes to leave at least 90 seconds for questions.
 - [x] **Don't Fumble Files on Stage**: Use the 1-click test screenshot buttons (`📱 Load Bank KYC Scam`, `🌫️ Load Blurry / Corrupted Screenshot`) inside the `Screenshot OCR` tab.
 - [x] **Trigger the Hidden Console Smoothly**: When talking about validation, hit `Ctrl + Shift + J` to display the live 75-sample benchmark matrix.
-- [x] **Refer to Real Regulatory Bodies**: Mention *1930 Helpline*, *RBI 72-Hour Zero-Liability Circular*, and *Sanchar Saathi Chakshu*. Judges love domain-specific statutory knowledge.
+- [x] **Refer to Real Regulatory Bodies**: Mention *1930 Helpline*, *RBI Circular DBR.No.Leg.BC.78/09.07.005/2017-18 (three working days notification window)*, and *Sanchar Saathi Chakshu*. Add that guidance is informational and not legal advice.
 

@@ -2,8 +2,8 @@ import { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "SafeGuard AI - Multimodal Scam Detection",
-    short_name: "SafeGuard AI",
+    name: "DIGIkavach - Multimodal Scam Detection",
+    short_name: "DIGIkavach",
     description: "Deterministic Zero-Fetch Phishing, Smishing, and Scams Inspection Shield",
     start_url: "/",
     display: "standalone",

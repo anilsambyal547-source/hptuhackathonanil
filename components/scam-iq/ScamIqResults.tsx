@@ -76,7 +76,7 @@ export const ScamIqResults: React.FC<ScamIqResultsProps> = ({
 
   const handleShare = async () => {
     soundEffects.playClick();
-    const text = `My Official Scam IQ: ${scoreCard.totalScore}/300 pts\n• Scenario Knowledge: ${scoreCard.quizScore}/100\n• Instinct Drill: ${scoreCard.drillScore}/100\n• Red Flag Spotter: ${scoreCard.redFlagScore}/100\nRank: ${tier.name} 🛡️\nTest your digital scam defense on SafeGuard AI!`;
+    const text = `My Official Scam IQ: ${scoreCard.totalScore}/300 pts\n• Scenario Knowledge: ${scoreCard.quizScore}/100\n• Instinct Drill: ${scoreCard.drillScore}/100\n• Red Flag Spotter: ${scoreCard.redFlagScore}/100\nRank: ${tier.name} 🛡️\nTest your digital scam defense on DIGIkavach!`;
     try {
       if (navigator.clipboard) {
         await navigator.clipboard.writeText(text);
@@ -100,7 +100,7 @@ export const ScamIqResults: React.FC<ScamIqResultsProps> = ({
       <div className="p-8 sm:p-10 bg-white border border-[#e2e6dc] rounded-3xl text-center space-y-6 shadow-[0_4px_24px_-4px_rgba(0,0,0,0.04)] relative overflow-hidden">
         <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#f7f9f5] border border-[#e2e6dc] text-xs font-mono text-[#636c5c]">
           <Sparkles className="w-3.5 h-3.5 text-[#5c8a27]" />
-          <span>Accredited SafeGuard AI × ScamAdviser Evaluation</span>
+          <span>DIGIkavach Scam IQ Evaluation</span>
         </div>
 
         <div>

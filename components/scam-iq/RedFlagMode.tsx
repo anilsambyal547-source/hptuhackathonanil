@@ -158,7 +158,7 @@ export const RedFlagMode: React.FC<RedFlagModeProps> = ({ onComplete, onExit }) 
     );
   }
 
-  // Aggregate message payload text for SafeGuard engine scan
+  // Aggregate message payload text for DIGIkavach engine scan
   const fullArtifactText = artifact.elements.map((e) => e.displayText).join("\n");
 
   return (
@@ -178,7 +178,7 @@ export const RedFlagMode: React.FC<RedFlagModeProps> = ({ onComplete, onExit }) 
           >
             <Activity className="w-3.5 h-3.5 text-[#3d5926]" />
             <span className="hidden sm:inline">Inspect with</span>
-            <span>SafeGuard AI</span>
+            <span>DIGIkavach</span>
           </button>
           <span className="text-[#636c5c]">Flagged: <strong className="text-purple-700">{selectedElementIds.size}</strong></span>
           <span className="px-2.5 py-0.5 rounded-lg bg-[#f7f9f5] border border-[#e2e6dc] text-[#181a15] font-bold">
@@ -346,7 +346,7 @@ export const RedFlagMode: React.FC<RedFlagModeProps> = ({ onComplete, onExit }) 
               className="w-full sm:w-auto px-4 py-2 rounded-2xl text-xs font-semibold bg-[#f7f9f5] hover:bg-[#eef2e7] text-[#181a15] border border-[#e2e6dc] transition-colors flex items-center justify-center gap-1.5"
             >
               <Activity className="w-3.5 h-3.5 text-[#3d5926]" />
-              <span>SafeGuard AI Verdict</span>
+              <span>DIGIkavach Verdict</span>
             </button>
             <button
               onClick={handleNextArtifact}
@@ -359,7 +359,7 @@ export const RedFlagMode: React.FC<RedFlagModeProps> = ({ onComplete, onExit }) 
         </div>
       )}
 
-      {/* SafeGuard AI Engine Diagnostic Modal */}
+      {/* DIGIkavach Engine Diagnostic Modal */}
       <EngineInspectionModal
         isOpen={isEngineModalOpen}
         onClose={() => setIsEngineModalOpen(false)}

@@ -32,7 +32,7 @@ export const ActionStepsCard: React.FC<ActionStepsCardProps> = ({
   const handleDownloadForensicReport = () => {
     if (!fullResult) return;
     const reportData = {
-      reportTitle: "SafeGuard AI Forensic Threat Intelligence Report",
+      reportTitle: "DIGIkavach Forensic Threat Intelligence Report",
       incidentId: fullResult.id,
       generatedTimestamp: fullResult.timestamp,
       overallRisk: fullResult.overallRisk.toUpperCase(),
@@ -67,7 +67,7 @@ export const ActionStepsCard: React.FC<ActionStepsCardProps> = ({
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.download = `safeguard-forensic-report-${Date.now()}.json`;
+    link.download = `digikavach-forensic-report-${Date.now()}.json`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -103,7 +103,7 @@ Raw Communication Payload:
 ${fullResult.inputText}
 """
 
-Generated via SafeGuard AI Deterministic Detection Engine
+Generated via DIGIkavach Deterministic Detection Engine
 Evidence Attachment: cybercrime.gov.in / National Helpline: 1930
 ======================================================
 `.trim();

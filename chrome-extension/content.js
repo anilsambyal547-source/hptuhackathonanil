@@ -1,13 +1,13 @@
-// SafeGuard AI Content Script for Gmail & WhatsApp Web
+// DIGIkavach Content Script for Gmail & WhatsApp Web
 
 (function () {
   // Inject floating scan button
   function injectFloatingShield() {
-    if (document.getElementById("safeguard-floating-btn")) return;
+    if (document.getElementById("digikavach-floating-btn")) return;
 
     const btn = document.createElement("button");
-    btn.id = "safeguard-floating-btn";
-    btn.innerHTML = `🛡️ Scan with SafeGuard AI`;
+    btn.id = "digikavach-floating-btn";
+    btn.innerHTML = `🛡️ Scan with DIGIkavach`;
     btn.style.cssText = `
       position: fixed;
       bottom: 24px;
@@ -61,16 +61,16 @@
     }
 
     if (!extractedText.trim()) {
-      alert("SafeGuard AI: Please select text or open an email/chat to scan.");
+      alert("DIGIkavach: Please select text or open an email/chat to scan.");
       return;
     }
 
-    // Call SafeGuard AI local engine endpoint
-    const btn = document.getElementById("safeguard-floating-btn");
+    // Call DIGIkavach local engine endpoint
+    const btn = document.getElementById("digikavach-floating-btn");
     if (btn) btn.innerHTML = `⏳ Analyzing...`;
 
     try {
-      const res = await fetch("http://localhost:3000/api/analyze", {
+      const res = await fetch("/api/analyze", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -83,24 +83,24 @@
         const data = await res.json();
         renderResultOverlay(data);
       } else {
-        window.open(`http://localhost:3000/?text=${encodeURIComponent(extractedText)}`, "_blank");
+        window.open(`/?text=${encodeURIComponent(extractedText)}`, "_blank");
       }
     } catch {
-      window.open(`http://localhost:3000/?text=${encodeURIComponent(extractedText)}`, "_blank");
+      window.open(`/?text=${encodeURIComponent(extractedText)}`, "_blank");
     } finally {
-      if (btn) btn.innerHTML = `🛡️ Scan with SafeGuard AI`;
+      if (btn) btn.innerHTML = `🛡️ Scan with DIGIkavach`;
     }
   }
 
   function renderResultOverlay(result) {
-    const existing = document.getElementById("safeguard-result-overlay");
+    const existing = document.getElementById("digikavach-result-overlay");
     if (existing) existing.remove();
 
     const isHigh = result.overallRisk === "high";
     const isSusp = result.overallRisk === "suspicious";
 
     const overlay = document.createElement("div");
-    overlay.id = "safeguard-result-overlay";
+    overlay.id = "digikavach-result-overlay";
     overlay.style.cssText = `
       position: fixed;
       bottom: 80px;
@@ -121,9 +121,9 @@
         <span style="font-size:11px; font-weight:800; font-family:monospace; text-transform:uppercase; color:${
           isHigh ? "#f87171" : isSusp ? "#fbbf24" : "#34d399"
         };">
-          SafeGuard AI: ${result.overallRisk.toUpperCase()} RISK (${result.riskScore}/100)
+          DIGIkavach: ${result.overallRisk.toUpperCase()} RISK (${result.riskScore}/100)
         </span>
-        <button id="safeguard-close-overlay" style="background:none; border:none; color:#94a3b8; font-size:16px; cursor:pointer;">✕</button>
+        <button id="digikavach-close-overlay" style="background:none; border:none; color:#94a3b8; font-size:16px; cursor:pointer;">✕</button>
       </div>
       <p style="font-size:12px; line-height:1.4; color:#e2e8f0; margin-bottom:12px;">
         ${result.plainLanguageSummary}
@@ -131,13 +131,13 @@
       <div style="font-size:11px; color:#94a3b8; margin-bottom:12px;">
         ${result.heuristicsHits.length} Heuristics • ${result.urlReports.length} URLs Inspected Passively
       </div>
-      <a href="http://localhost:3000/?text=${encodeURIComponent(result.inputText)}" target="_blank" style="display:block; text-align:center; background:#0284c7; color:#0f172a; font-weight:700; padding:8px; border-radius:10px; font-size:12px; text-decoration:none;">
+      <a href="/?text=${encodeURIComponent(result.inputText)}" target="_blank" style="display:block; text-align:center; background:#0284c7; color:#0f172a; font-weight:700; padding:8px; border-radius:10px; font-size:12px; text-decoration:none;">
         Open Full Forensic Report →
       </a>
     `;
 
     document.body.appendChild(overlay);
-    document.getElementById("safeguard-close-overlay")?.addEventListener("click", () => overlay.remove());
+    document.getElementById("digikavach-close-overlay")?.addEventListener("click", () => overlay.remove());
   }
 
   // Initialize

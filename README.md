@@ -1,4 +1,4 @@
-# SafeGuard AI 🛡️
+# DIGIkavach 🛡️
 
 ### Multimodal Scam Detection, Zero-Fetch URL Forensics, Multi-Channel Ingestion & Transparent Risk Assessment
 
@@ -27,8 +27,8 @@
 
 ## 🏆 Hackathon Achievement: 2nd Prize Winner
 
-SafeGuard AI was awarded **2nd Prize** at the **HPTU Hackathon 2026** for successfully solving **Question 02** with:
-- **100% Benchmark Precision**: 75/75 ground-truth samples (40 Dev + 35 blind Holdout) classified with 0 false positives.
+DIGIkavach AI was awarded **2nd Prize** at the **HPTU Hackathon 2026** for successfully solving **Question 02** with:
+- **100% Benchmark Precision**: 75/75 ground-truth samples (40 Dev + 35 blind Holdout) classified with 0 false positives for the provided keywords and conditions.
 - **Inviolable Zero-Fetch Safety**: Proved mathematically with 0 outbound network requests to submitted URLs.
 - **Explainable Evidence**: Character-exact, token-aligned span highlighting without mid-word cutting.
 - **Statutory Indian Citizen Protection**: Direct 1-click **1930 Cyber Crime Helpline** dialing, **RBI 72-Hour Zero-Liability** timers, and **DoT Sanchar Saathi Chakshu** reporting.
